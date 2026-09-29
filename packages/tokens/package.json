@@ -1,0 +1,8 @@
+{
+  "name": "@pumba-ui/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Design tokens for Pumba: DTCG source compiled to CSS variables and TypeScript types.",
+  "license": "MIT",
+  "type": "module"
+}

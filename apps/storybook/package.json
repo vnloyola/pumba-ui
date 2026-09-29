@@ -1,0 +1,8 @@
+{
+  "name": "@pumba-ui/storybook",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Storybook for developing Pumba components in isolation.",
+  "license": "MIT",
+  "type": "module"
+}
