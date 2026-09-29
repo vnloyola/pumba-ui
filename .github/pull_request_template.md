@@ -1,4 +1,4 @@
-Card: VIT-
+Card: VIT-x <!-- or "none" if there is no card -->
 
 ## Summary
 

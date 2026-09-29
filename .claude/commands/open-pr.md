@@ -1,6 +1,6 @@
 ---
 description: Open a pull request against dev using the repo's PR template
-argument-hint: <card id, e.g. VIT-3>
+argument-hint: <card id, e.g. VIT-3, or "none">
 allowed-tools: Bash(git status:*), Bash(git branch:*), Bash(git log:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(gh pr create:*), Bash(gh pr view:*), Read
 ---
 
@@ -13,7 +13,8 @@ Open a pull request for the current branch. Card: $ARGUMENTS
 - Never run `git push`. If the branch is not on the remote, stop and give the user the exact
   `git push -u origin <branch>` command.
 - Stop if the current branch is `main` or `dev`.
-- If no card id was given, ask for it. Do not invent one.
+- If no card was given, ask "which card, or `none`?". Do not invent one and do not leave it
+  empty. `none` is a valid answer: write `Card: none`.
 
 ## Steps
 
@@ -22,7 +23,7 @@ Open a pull request for the current branch. Card: $ARGUMENTS
 2. Read the commits and the diff against the base: `git log dev..HEAD --oneline` and
    `git diff dev...HEAD --stat`, then read the relevant changes.
 3. Read `.github/pull_request_template.md` and fill in every section:
-   - **Card:** `Card: <card id>`.
+   - **Card:** `Card: <card id>` or `Card: none`.
    - **Summary / Changes:** what the diff actually contains, not what was planned.
    - **How it was tested:** only what was really run in this session. If nothing was run,
      say so.
