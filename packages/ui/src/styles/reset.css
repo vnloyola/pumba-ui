@@ -1,5 +1,3 @@
-/* Optional. Not part of styles.css: import it yourself, before styles.css, if you want it.
-   With Tailwind, skip it: Tailwind's preflight already does this job. */
 @import url("./layers.css");
 
 @layer pumba.reset {
