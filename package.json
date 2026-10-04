@@ -10,6 +10,7 @@
     "build": "pnpm -r --if-present build",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
+    "check:package": "pnpm -r --if-present check:package",
     "lint": "pnpm lint:js && pnpm lint:css",
     "lint:js": "biome check .",
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",

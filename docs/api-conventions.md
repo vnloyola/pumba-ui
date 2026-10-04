@@ -285,6 +285,10 @@ packages/ui/src/button/
 └── button.test.tsx
 ```
 
+Relative imports inside `src` carry the `.js` extension (`import { Button } from "./button.js"`),
+even though the file is `.ts` or `.tsx`. TypeScript resolves them to the source, and the
+emitted `.d.ts` files stay valid under Node's ESM rules.
+
 **Why:** what changes together lives together, so touching a component means touching one
 folder. Kebab-case avoids case-sensitivity problems between macOS and Linux (CI) and matches
 the CSS class names.

@@ -1,0 +1,3 @@
+/* Layer order. Names live under `pumba.*` so they never merge with Tailwind's own
+   `base` and `components` layers. Every Pumba stylesheet starts with this statement. */
+@layer pumba.reset, pumba.tokens, pumba.base, pumba.components;

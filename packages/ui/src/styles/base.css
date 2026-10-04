@@ -1,0 +1,11 @@
+/* Minimal base for Pumba components. It does not touch elements outside `.pumba-*`. */
+@layer pumba.base {
+  :where([class^="pumba-"], [class*=" pumba-"]) {
+    box-sizing: border-box;
+  }
+
+  :where([class^="pumba-"], [class*=" pumba-"]):focus-visible {
+    outline: 2px solid var(--pumba-color-focus);
+    outline-offset: 2px;
+  }
+}
