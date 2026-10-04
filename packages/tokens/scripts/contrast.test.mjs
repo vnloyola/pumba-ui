@@ -7,7 +7,6 @@ const readFiles = (dir) =>
 
 const readTokens = (dir) => Object.assign({}, ...readFiles(dir));
 
-// Every primitive file has the same `primitive` root, so merge the groups inside it.
 const primitive = Object.assign({}, ...readFiles("src/primitives").map((file) => file.primitive));
 const { color: semanticColors } = readTokens("src/semantic");
 
@@ -17,7 +16,6 @@ const lookup = (reference) =>
     .split(".")
     .reduce((node, key) => node[key], { primitive }).$value;
 
-// OKLCH -> linear sRGB (https://bottosson.github.io/posts/oklab/), clipped to the gamut.
 const toLinearRgb = (oklch) => {
   const [lightness, chroma, hue] = oklch
     .match(/oklch\(([^)]+)\)/)[1]
@@ -47,7 +45,6 @@ const contrast = (first, second) => {
 
 const colorOf = (token, mode) => lookup(semanticColors[token].$extensions.mode[mode]);
 
-// [foreground, background, minimum ratio]. WCAG AA: 4.5 for text, 3 for UI components.
 const TEXT = 4.5;
 const UI = 3;
 const pairs = [

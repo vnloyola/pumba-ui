@@ -1,0 +1,13 @@
+.pumba-placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pumba-space-gap);
+  padding: var(--pumba-space-control-y) var(--pumba-space-control-x);
+  border-radius: var(--pumba-radius-control);
+  background: var(--pumba-color-accent-subtle);
+  color: var(--pumba-color-text);
+  font-family: var(--pumba-text-label-font-family);
+  font-size: var(--pumba-text-label-font-size);
+  font-weight: var(--pumba-text-label-font-weight);
+  line-height: var(--pumba-text-label-line-height);
+}
