@@ -3,6 +3,8 @@
   gap: var(--pumba-space-12);
   padding: var(--pumba-space-8);
   max-width: 72rem;
+  background: var(--pumba-color-background);
+  color: var(--pumba-color-text);
 }
 
 .tokens-page h2 {

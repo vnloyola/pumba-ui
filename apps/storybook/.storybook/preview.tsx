@@ -44,7 +44,7 @@ const preview: Preview = {
     },
   },
   parameters: {
-    backgrounds: { disabled: true },
+    backgrounds: { disable: true },
     layout: "fullscreen",
   },
 };
