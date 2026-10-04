@@ -1,0 +1,38 @@
+.tokens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: var(--pumba-space-4);
+}
+
+.tokens-scales {
+  display: grid;
+  gap: var(--pumba-space-6);
+}
+
+.tokens-scale {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: var(--pumba-space-2);
+}
+
+.tokens-swatch {
+  display: grid;
+  gap: var(--pumba-space-1);
+  min-width: 0;
+}
+
+.tokens-swatch-color {
+  display: block;
+  height: 3rem;
+  border: 1px solid var(--pumba-color-border);
+  border-radius: var(--pumba-radius-control);
+}
+
+.tokens-swatch-name {
+  overflow-wrap: anywhere;
+}
+
+.tokens-swatch-value {
+  color: var(--pumba-color-text-secondary);
+  font-size: var(--pumba-text-caption-font-size);
+}

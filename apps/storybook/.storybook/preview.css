@@ -1,0 +1,8 @@
+body {
+  margin: 0;
+  background: var(--pumba-color-background);
+  color: var(--pumba-color-text);
+  font-family: var(--pumba-text-body-font-family);
+  font-size: var(--pumba-text-body-font-size);
+  line-height: var(--pumba-text-body-line-height);
+}
