@@ -1,0 +1,14 @@
+{
+  "shadow": {
+    "raised": {
+      "$type": "shadow",
+      "$value": "{primitive.shadow.sm}",
+      "$description": "Elevated surfaces."
+    },
+    "overlay": {
+      "$type": "shadow",
+      "$value": "{primitive.shadow.lg}",
+      "$description": "Popovers, menus and dialogs."
+    }
+  }
+}

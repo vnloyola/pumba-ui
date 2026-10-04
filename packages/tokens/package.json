@@ -19,7 +19,8 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "node build.mjs"
+    "build": "node build.mjs",
+    "test": "node --test \"scripts/*.test.mjs\""
   },
   "devDependencies": {
     "style-dictionary": "catalog:"

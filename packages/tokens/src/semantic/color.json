@@ -1,0 +1,250 @@
+{
+  "color": {
+    "$description": "Each token has a light and a dark value (light-dark() in the CSS output).",
+    "background": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.50}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.50}",
+          "dark": "{primitive.color.neutral.950}"
+        }
+      },
+      "$description": "Page background."
+    },
+    "surface": {
+      "$type": "color",
+      "$value": "{primitive.color.white}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.white}",
+          "dark": "{primitive.color.neutral.900}"
+        }
+      },
+      "$description": "Cards, panels and other raised containers."
+    },
+    "surface-raised": {
+      "$type": "color",
+      "$value": "{primitive.color.white}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.white}",
+          "dark": "{primitive.color.neutral.800}"
+        }
+      },
+      "$description": "Popovers and menus, above a surface."
+    },
+    "text": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.900}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.900}",
+          "dark": "{primitive.color.neutral.50}"
+        }
+      },
+      "$description": "Primary text."
+    },
+    "text-secondary": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.600}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.600}",
+          "dark": "{primitive.color.neutral.400}"
+        }
+      },
+      "$description": "Supporting text."
+    },
+    "text-disabled": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.400}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.400}",
+          "dark": "{primitive.color.neutral.600}"
+        }
+      },
+      "$description": "Disabled text. Exempt from contrast requirements."
+    },
+    "border": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.200}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.200}",
+          "dark": "{primitive.color.neutral.800}"
+        }
+      },
+      "$description": "Decorative dividers and container outlines."
+    },
+    "border-strong": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.500}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.500}",
+          "dark": "{primitive.color.neutral.500}"
+        }
+      },
+      "$description": "Outlines of interactive controls, which need 3:1 against the background."
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{primitive.color.brand.600}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.brand.600}",
+          "dark": "{primitive.color.brand.400}"
+        }
+      },
+      "$description": "Main interactive color."
+    },
+    "accent-hover": {
+      "$type": "color",
+      "$value": "{primitive.color.brand.700}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.brand.700}",
+          "dark": "{primitive.color.brand.300}"
+        }
+      }
+    },
+    "accent-pressed": {
+      "$type": "color",
+      "$value": "{primitive.color.brand.800}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.brand.800}",
+          "dark": "{primitive.color.brand.200}"
+        }
+      }
+    },
+    "accent-subtle": {
+      "$type": "color",
+      "$value": "{primitive.color.brand.50}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.brand.50}",
+          "dark": "{primitive.color.brand.950}"
+        }
+      },
+      "$description": "Tinted background, for example a selected item."
+    },
+    "accent-text": {
+      "$type": "color",
+      "$value": "{primitive.color.white}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.white}",
+          "dark": "{primitive.color.neutral.950}"
+        }
+      },
+      "$description": "Text and icons on top of accent."
+    },
+    "focus": {
+      "$type": "color",
+      "$value": "{primitive.color.brand.600}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.brand.600}",
+          "dark": "{primitive.color.brand.400}"
+        }
+      },
+      "$description": "Focus ring."
+    },
+    "success": {
+      "$type": "color",
+      "$value": "{primitive.color.success.600}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.success.600}",
+          "dark": "{primitive.color.success.400}"
+        }
+      },
+      "$description": "Positive state."
+    },
+    "success-subtle": {
+      "$type": "color",
+      "$value": "{primitive.color.success.50}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.success.50}",
+          "dark": "{primitive.color.success.950}"
+        }
+      }
+    },
+    "success-text": {
+      "$type": "color",
+      "$value": "{primitive.color.success.700}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.success.700}",
+          "dark": "{primitive.color.success.300}"
+        }
+      }
+    },
+    "error": {
+      "$type": "color",
+      "$value": "{primitive.color.error.600}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.error.600}",
+          "dark": "{primitive.color.error.400}"
+        }
+      },
+      "$description": "Error state."
+    },
+    "error-subtle": {
+      "$type": "color",
+      "$value": "{primitive.color.error.50}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.error.50}",
+          "dark": "{primitive.color.error.950}"
+        }
+      }
+    },
+    "error-text": {
+      "$type": "color",
+      "$value": "{primitive.color.error.700}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.error.700}",
+          "dark": "{primitive.color.error.300}"
+        }
+      }
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{primitive.color.warning.600}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.warning.600}",
+          "dark": "{primitive.color.warning.400}"
+        }
+      },
+      "$description": "Warning state."
+    },
+    "warning-subtle": {
+      "$type": "color",
+      "$value": "{primitive.color.warning.50}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.warning.50}",
+          "dark": "{primitive.color.warning.950}"
+        }
+      }
+    },
+    "warning-text": {
+      "$type": "color",
+      "$value": "{primitive.color.warning.700}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.warning.700}",
+          "dark": "{primitive.color.warning.300}"
+        }
+      }
+    }
+  }
+}
