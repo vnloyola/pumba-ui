@@ -1,0 +1,105 @@
+{
+  "color": {
+    "$description": "Raw palette. Components never use these directly; semantic tokens do.",
+    "white": {
+      "$value": "oklch(1 0 0)",
+      "$type": "color"
+    },
+    "black": {
+      "$value": "oklch(0 0 0)",
+      "$type": "color"
+    },
+    "neutral": {
+      "50": {
+        "$value": "oklch(0.985 0.002 265)",
+        "$type": "color"
+      },
+      "100": {
+        "$value": "oklch(0.967 0.003 265)",
+        "$type": "color"
+      },
+      "200": {
+        "$value": "oklch(0.922 0.004 265)",
+        "$type": "color"
+      },
+      "300": {
+        "$value": "oklch(0.87 0.006 265)",
+        "$type": "color"
+      },
+      "400": {
+        "$value": "oklch(0.708 0.01 265)",
+        "$type": "color"
+      },
+      "500": {
+        "$value": "oklch(0.556 0.014 265)",
+        "$type": "color"
+      },
+      "600": {
+        "$value": "oklch(0.439 0.015 265)",
+        "$type": "color"
+      },
+      "700": {
+        "$value": "oklch(0.371 0.015 265)",
+        "$type": "color"
+      },
+      "800": {
+        "$value": "oklch(0.269 0.014 265)",
+        "$type": "color"
+      },
+      "900": {
+        "$value": "oklch(0.205 0.012 265)",
+        "$type": "color"
+      },
+      "950": {
+        "$value": "oklch(0.145 0.008 265)",
+        "$type": "color"
+      }
+    },
+    "brand": {
+      "50": {
+        "$value": "oklch(0.97 0.014 265)",
+        "$type": "color"
+      },
+      "100": {
+        "$value": "oklch(0.94 0.03 265)",
+        "$type": "color"
+      },
+      "200": {
+        "$value": "oklch(0.88 0.06 265)",
+        "$type": "color"
+      },
+      "300": {
+        "$value": "oklch(0.8 0.1 265)",
+        "$type": "color"
+      },
+      "400": {
+        "$value": "oklch(0.7 0.15 265)",
+        "$type": "color"
+      },
+      "500": {
+        "$value": "oklch(0.6 0.2 265)",
+        "$type": "color"
+      },
+      "600": {
+        "$value": "oklch(0.52 0.22 265)",
+        "$type": "color"
+      },
+      "700": {
+        "$value": "oklch(0.45 0.2 265)",
+        "$type": "color"
+      },
+      "800": {
+        "$value": "oklch(0.38 0.17 265)",
+        "$type": "color"
+      },
+      "900": {
+        "$value": "oklch(0.31 0.13 265)",
+        "$type": "color"
+      },
+      "950": {
+        "$value": "oklch(0.23 0.09 265)",
+        "$type": "color"
+      }
+    }
+  }
+}

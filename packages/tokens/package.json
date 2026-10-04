@@ -4,5 +4,24 @@
   "private": true,
   "description": "Design tokens for Pumba: DTCG source compiled to CSS variables and TypeScript types.",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "style-dictionary": "catalog:"
+  }
 }
