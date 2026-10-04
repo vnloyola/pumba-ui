@@ -1,0 +1,30 @@
+{
+  "motion": {
+    "duration": {
+      "feedback": {
+        "$type": "duration",
+        "$value": "{primitive.motion.duration.fast}",
+        "$description": "Hover and pressed feedback."
+      },
+      "transition": {
+        "$type": "duration",
+        "$value": "{primitive.motion.duration.normal}",
+        "$description": "Elements entering, leaving or changing."
+      }
+    },
+    "easing": {
+      "standard": {
+        "$type": "cubicBezier",
+        "$value": "{primitive.motion.easing.standard}"
+      },
+      "enter": {
+        "$type": "cubicBezier",
+        "$value": "{primitive.motion.easing.out}"
+      },
+      "exit": {
+        "$type": "cubicBezier",
+        "$value": "{primitive.motion.easing.in}"
+      }
+    }
+  }
+}

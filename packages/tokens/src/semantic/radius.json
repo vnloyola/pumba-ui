@@ -1,0 +1,19 @@
+{
+  "radius": {
+    "control": {
+      "$type": "dimension",
+      "$value": "{primitive.radius.md}",
+      "$description": "Buttons, inputs and other controls."
+    },
+    "surface": {
+      "$type": "dimension",
+      "$value": "{primitive.radius.lg}",
+      "$description": "Cards, dialogs and popovers."
+    },
+    "pill": {
+      "$type": "dimension",
+      "$value": "{primitive.radius.full}",
+      "$description": "Fully rounded shapes, such as badges."
+    }
+  }
+}

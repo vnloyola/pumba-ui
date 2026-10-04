@@ -1,0 +1,70 @@
+{
+  "text": {
+    "heading": {
+      "$type": "typography",
+      "$description": "Page and section titles.",
+      "$value": {
+        "fontFamily": "{primitive.font-family.sans}",
+        "fontSize": "{primitive.font-size.3xl}",
+        "fontWeight": "{primitive.font-weight.bold}",
+        "lineHeight": "{primitive.line-height.tight}",
+        "letterSpacing": "{primitive.letter-spacing.tight}"
+      }
+    },
+    "subheading": {
+      "$type": "typography",
+      "$description": "Titles inside a section or a card.",
+      "$value": {
+        "fontFamily": "{primitive.font-family.sans}",
+        "fontSize": "{primitive.font-size.xl}",
+        "fontWeight": "{primitive.font-weight.semibold}",
+        "lineHeight": "{primitive.line-height.snug}",
+        "letterSpacing": "{primitive.letter-spacing.normal}"
+      }
+    },
+    "body": {
+      "$type": "typography",
+      "$description": "Running text.",
+      "$value": {
+        "fontFamily": "{primitive.font-family.sans}",
+        "fontSize": "{primitive.font-size.md}",
+        "fontWeight": "{primitive.font-weight.regular}",
+        "lineHeight": "{primitive.line-height.normal}",
+        "letterSpacing": "{primitive.letter-spacing.normal}"
+      }
+    },
+    "label": {
+      "$type": "typography",
+      "$description": "Buttons, form labels and menu items.",
+      "$value": {
+        "fontFamily": "{primitive.font-family.sans}",
+        "fontSize": "{primitive.font-size.sm}",
+        "fontWeight": "{primitive.font-weight.medium}",
+        "lineHeight": "{primitive.line-height.tight}",
+        "letterSpacing": "{primitive.letter-spacing.normal}"
+      }
+    },
+    "caption": {
+      "$type": "typography",
+      "$description": "Help text and metadata.",
+      "$value": {
+        "fontFamily": "{primitive.font-family.sans}",
+        "fontSize": "{primitive.font-size.xs}",
+        "fontWeight": "{primitive.font-weight.regular}",
+        "lineHeight": "{primitive.line-height.normal}",
+        "letterSpacing": "{primitive.letter-spacing.wide}"
+      }
+    },
+    "code": {
+      "$type": "typography",
+      "$description": "Inline and block code.",
+      "$value": {
+        "fontFamily": "{primitive.font-family.mono}",
+        "fontSize": "{primitive.font-size.sm}",
+        "fontWeight": "{primitive.font-weight.regular}",
+        "lineHeight": "{primitive.line-height.normal}",
+        "letterSpacing": "{primitive.letter-spacing.normal}"
+      }
+    }
+  }
+}

@@ -439,3 +439,100 @@ With Tailwind, do not import the reset: Tailwind's preflight already fills that 
 **Why:** a consumer with Tailwind already has a reset, and two resets fighting over the
 same elements produce hard-to-trace differences. Without Tailwind, the consumer decides
 whether they want Pumba's.
+
+## 16. Tokens and theming
+
+Tokens come in two layers, defined in `@pumba-ui/tokens` as DTCG JSON and compiled to CSS
+variables and TypeScript names.
+
+| Layer | Prefix | Example | Used by |
+| --- | --- | --- | --- |
+| Primitive | `--pumba-primitive-` | `--pumba-primitive-color-brand-600` | Only the semantic layer |
+| Semantic | `--pumba-` | `--pumba-color-accent` | Components and consumers |
+
+A component never references a primitive. A semantic token points at a primitive with
+`var()`, so each value lives in one place and changing a primitive (for example the font)
+reaches every component that uses it.
+
+**Why:** primitives answer "what values exist", semantic tokens answer "what is this value
+for". Restyling the library, or adding a theme, means re-pointing semantic tokens without
+touching any component.
+
+### Semantic token names
+
+| Group | Names |
+| --- | --- |
+| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-text`, `focus`, and `success`, `error`, `warning` each with `-subtle` and `-text` |
+| Space | The scale `space-0` to `space-24`, plus `space-control-x`, `space-control-y`, `space-gap`, `space-stack`, `space-inset` |
+| Radius | `radius-control`, `radius-surface`, `radius-pill` |
+| Shadow | `shadow-raised`, `shadow-overlay` |
+| Motion | `motion-duration-feedback`, `motion-duration-transition`, `motion-easing-standard`, `motion-easing-enter`, `motion-easing-exit` |
+| Typography | `text-heading`, `text-subheading`, `text-body`, `text-label`, `text-caption`, `text-code`, each expanded into `-font-family`, `-font-size`, `-font-weight`, `-line-height` and `-letter-spacing` |
+
+CSS has no variable that holds several properties, so a typography style is five variables:
+
+```css
+.pumba-button {
+  font-family: var(--pumba-text-label-font-family);
+  font-size: var(--pumba-text-label-font-size);
+  font-weight: var(--pumba-text-label-font-weight);
+  line-height: var(--pumba-text-label-line-height);
+  letter-spacing: var(--pumba-text-label-letter-spacing);
+}
+```
+
+To change the typeface of the whole library, change `font-family.sans` in
+`packages/tokens/src/primitives/typography.json`. To give headings their own, add a
+primitive (for example `font-family.display`) and point `text.heading` at it.
+
+### Light and dark
+
+Color tokens use `light-dark()`, and `color-scheme` decides which side wins:
+
+```css
+:root { color-scheme: light dark; }          /* follows the OS (prefers-color-scheme) */
+[data-theme="dark"]  { color-scheme: dark; } /* manual override, on any element */
+[data-theme="light"] { color-scheme: light; }
+```
+
+- With no attribute, the theme follows the OS.
+- `data-theme` on `<html>` forces a theme for the whole page. On any other element it
+  themes only that subtree, because `light-dark()` is resolved where the variable is used.
+- A themed subtree sets its own `color`, since text color is inherited from the parent.
+
+**Why:** the alternative, overriding every variable inside `[data-theme="dark"]` plus a
+`prefers-color-scheme` media query, repeats each color twice and needs the dark values in two
+places. With `light-dark()` each token declares both values once. The cost is browser
+support: it needs a browser from 2024 or later.
+
+Only colors change with the theme. Space, radius, typography and motion are the same in both.
+
+### Avoiding the wrong-theme flash
+
+If the user's choice is stored (for example in `localStorage`), apply it before the first
+paint with a blocking inline script in `<head>`, not after React mounts:
+
+```html
+<script>
+  const theme = localStorage.getItem("theme");
+  if (theme === "light" || theme === "dark") {
+    document.documentElement.dataset.theme = theme;
+  }
+</script>
+```
+
+**Why:** the CSS alone never flashes, because `prefers-color-scheme` is known before
+rendering. The flash appears when a stored preference is applied by JavaScript after the page
+has painted with the OS theme.
+
+### Contrast
+
+Text and background pairs meet WCAG AA (4.5:1 for text, 3:1 for UI components such as
+`accent`, `focus` and `border-strong`) in both themes. `pnpm --filter @pumba-ui/tokens test`
+checks every pair, so changing a primitive that breaks a pair fails the test.
+
+### How this was verified
+
+Built `dist/tokens.css` and loaded it in a Chromium-based browser. With the OS in dark mode and
+no attribute, `--pumba-color-surface` resolved to the dark value. `data-theme="dark"` and
+`data-theme="light"` on `<html>` forced each theme, and on a `<div>` themed only that subtree.
