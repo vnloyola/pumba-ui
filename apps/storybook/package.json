@@ -4,5 +4,25 @@
   "private": true,
   "description": "Storybook for developing Pumba components in isolation.",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev --port 6006",
+    "build-storybook": "storybook build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pumba-ui/tokens": "workspace:*",
+    "@pumba-ui/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-docs": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "storybook": "catalog:",
+    "vite": "catalog:"
+  }
 }
