@@ -3,6 +3,7 @@
     "font-family": {
       "sans": {
         "$value": [
+          "Figtree Variable",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -15,7 +16,14 @@
         "$type": "fontFamily"
       },
       "mono": {
-        "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
+        "$value": [
+          "JetBrains Mono Variable",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
         "$type": "fontFamily"
       }
     },
