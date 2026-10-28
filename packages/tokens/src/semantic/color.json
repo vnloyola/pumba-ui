@@ -217,10 +217,10 @@
     },
     "warning": {
       "$type": "color",
-      "$value": "{primitive.color.warning.600}",
+      "$value": "{primitive.color.warning.500}",
       "$extensions": {
         "mode": {
-          "light": "{primitive.color.warning.600}",
+          "light": "{primitive.color.warning.500}",
           "dark": "{primitive.color.warning.400}"
         }
       },
