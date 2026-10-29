@@ -16,7 +16,8 @@
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
     "storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook storybook",
     "build-storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook build-storybook",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "add:component": "pnpm --filter @pumba-ui/ui add:component"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

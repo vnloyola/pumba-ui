@@ -112,7 +112,13 @@ keeps its class, its `data-*` attributes and its `ref`.
 
 Reference: <https://base-ui.com/react/handbook/composition>
 
-**Why:** one simple, testable rule instead of deciding component by component.
+**Implementation.** Components call Base UI's `useRender` and `mergeProps` internally. The
+public `render` prop is typed `ReactElement | ((props) => ReactElement)`, so no Base UI type
+appears in a signature (section 7). `mergeProps` joins the component's class with the
+consumer's `className` and chains event handlers.
+
+**Why:** one simple, testable rule instead of deciding component by component, and one place
+(Base UI) that merges props and refs correctly.
 
 ### A separate `Link` component
 
@@ -282,8 +288,15 @@ packages/ui/src/button/
 ├── button.tsx
 ├── button.css
 ├── button.stories.tsx
-└── button.test.tsx
+├── button.test.tsx
+└── index.ts
 ```
+
+New components are generated with `pnpm add:component <Name>` (PascalCase, for example
+`Button` or `ButtonGroup`). The command creates the folder, adds the export to `src/index.ts`
+and the stylesheet to `src/styles/styles.css`, and fails without changing anything if the
+folder already exists. The templates live in `packages/ui/scripts/templates/`. Compound
+components (several parts) are not generated yet.
 
 Relative imports inside `src` carry the `.js` extension (`import { Button } from "./button.js"`),
 even though the file is `.ts` or `.tsx`. TypeScript resolves them to the source, and the
@@ -540,3 +553,20 @@ checks every pair, so changing a primitive that breaks a pair fails the test.
 Built `dist/tokens.css` and loaded it in a Chromium-based browser. With the OS in dark mode and
 no attribute, `--pumba-color-surface` resolved to the dark value. `data-theme="dark"` and
 `data-theme="light"` on `<html>` forced each theme, and on a `<div>` themed only that subtree.
+
+## 17. Tests
+
+Component tests run with Vitest, Testing Library and jsdom (`pnpm --filter @pumba-ui/ui
+test`). The generated test covers, for every component:
+
+- its class and the default `data-variant` and `data-size`,
+- the consumer's `className` appended to its own,
+- the `ref`,
+- `render={<a />}`, keeping class, `data-*` attributes and `ref` (section 5),
+- no accessibility violations according to axe-core.
+
+The axe `color-contrast` rule is disabled in these tests because jsdom does not compute
+styles. Contrast is covered by the token test (see "Contrast" in section 16).
+
+**Why:** the same five checks for every component keep the contract of sections 3 to 5 from
+depending on someone remembering to test it.
