@@ -22,7 +22,9 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs",
     "typecheck": "tsc --noEmit",
-    "check:package": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./reset.css"
+    "check:package": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./reset.css",
+    "test": "vitest run",
+    "add:component": "node scripts/add-component.mjs"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -35,13 +37,19 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@testing-library/dom": "catalog:",
+    "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "axe-core": "catalog:",
+    "jsdom": "catalog:",
     "postcss": "catalog:",
     "postcss-import": "catalog:",
     "publint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   }
 }

@@ -26,6 +26,7 @@ pnpm build                              # every package, in dependency order
 pnpm lint                               # Biome (JS/TS) and Stylelint (CSS)
 pnpm typecheck                          # needs `pnpm build` first
 pnpm test
+pnpm add:component <Name>               # generates a component folder from templates
 pnpm check:package                      # publint and arethetypeswrong
 pnpm build-storybook
 pnpm --filter @pumba-ui/ui build        # one package
