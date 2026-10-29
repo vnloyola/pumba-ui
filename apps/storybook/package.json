@@ -11,6 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource-variable/figtree": "catalog:",
+    "@fontsource-variable/jetbrains-mono": "catalog:",
     "@pumba-ui/tokens": "workspace:*",
     "@pumba-ui/ui": "workspace:*"
   },

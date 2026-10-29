@@ -1,3 +1,5 @@
+import "@fontsource-variable/figtree";
+import "@fontsource-variable/jetbrains-mono";
 import "@pumba-ui/ui/styles.css";
 import "./preview.css";
 import type { Decorator, Preview } from "@storybook/react-vite";
