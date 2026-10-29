@@ -1,4 +1,6 @@
+import { writeFileSync } from "node:fs";
 import StyleDictionary from "style-dictionary";
+import { buildFigmaTokens } from "./scripts/figma.mjs";
 
 const PREFIX = "pumba";
 
@@ -138,3 +140,5 @@ const sd = new StyleDictionary({
 });
 
 await sd.buildAllPlatforms();
+
+writeFileSync("dist/figma.json", `${JSON.stringify(buildFigmaTokens(), null, 2)}\n`);
