@@ -14,16 +14,19 @@ How the Figma file `pumba` stays in step with the tokens. The DTCG JSON in `pack
 
 ## 2. What the export contains
 
-`pnpm --filter @pumba-ui/tokens build` writes `dist/figma.json` with two collections:
+`pnpm --filter @pumba-ui/tokens build` writes `dist/figma.json` with two collections. In Figma they become three, because the Starter plan allows one mode per collection:
 
-| Collection | Contents | Modes |
+| Figma collection | Contents | Mode |
 | --- | --- | --- |
-| `Primitives` | color, radius, space, font-size, font-weight, line-height, letter-spacing | One |
-| `Semantic` | color, radius, space | Colors have `light` and `dark` |
+| `Primitives` | color, radius, space, font-size, font-weight, line-height, letter-spacing | `Value` |
+| `Semantic` | color, radius, space | `Light` |
+| `Semantic Dark` | color only; radius and space do not change between themes | `Dark` |
 
-Semantic variables are aliases of primitives, written as `{Primitives.color.brand.600}`, so a primitive still has a single value.
+Semantic variables are aliases of primitives, written as `{Primitives.color.brand.600}` in the JSON and as variable aliases in Figma, so a primitive still has a single value. `Semantic Dark` repeats the names of the semantic colors, so a layer is bound to the theme by choosing the collection. With a plan that allows two modes, the two semantic collections can merge into one with `Light` and `Dark` modes, which is what the JSON describes.
 
-Left out because a Figma variable cannot hold them: shadows, font families, motion, and the composite text styles. Text styles and shadows are created by hand in Figma, using the values from `src/primitives` and `src/semantic/typography.json`.
+Every variable carries a scope (fill, text, stroke, gap, corner radius) and a web code syntax such as `var(--pumba-color-accent)`, the same name the CSS uses.
+
+Left out because a Figma variable cannot hold them: shadows, font families, motion, and the composite text styles. Text styles and shadows are created in Figma from the values in `src/primitives` and `src/semantic/typography.json`. The `Foundations` page holds the six text styles (`text/heading`, `text/subheading`, `text/body`, `text/label`, `text/caption`, `text/code`) with a specimen of each, and the five color scales with every swatch bound to its primitive variable. Text styles use literal values, so a change to a font size or weight in the JSON has to be repeated in the style by hand.
 
 ## 3. Color and units
 
@@ -35,10 +38,10 @@ Left out because a Figma variable cannot hold them: shadows, font families, moti
 ## 4. Import
 
 1. Run `pnpm build`.
-2. In Figma, open the `pumba` file and import `packages/tokens/dist/figma.json`: with Figma's own Variables import if your account has it, or with the TokensBrücke plugin (Import tokens, beta).
-3. Check that `Primitives` and `Semantic` appear as collections and that `Semantic` colors have `Light` and `Dark` modes.
+2. Create the variables from `packages/tokens/dist/figma.json` in the `Pumba` file. Claude does this through the Figma MCP server: it reads the file and writes the collections with the `use_figma` tool, which also sets scopes and code syntax. The TokensBrücke plugin (Import tokens, beta) or Figma's own Variables import can also read the file; the plugin reads modes from `$extensions.mode`.
+3. Check that `Primitives`, `Semantic` and `Semantic Dark` exist, that every semantic variable is an alias, and that none uses all scopes.
 
-The plugin creates a collection per top-level key and reads modes from `$extensions.mode`. Reimporting updates existing variables by name.
+The plugin reimport updates existing variables by name. Through the MCP route, ask Claude to update the values of the existing variables; it does not recreate them.
 
 ## 5. What changes where
 
