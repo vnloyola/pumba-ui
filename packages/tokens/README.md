@@ -4,7 +4,7 @@ Design tokens for Pumba. The source of truth is DTCG JSON in `src/`; `build.mjs`
 Style Dictionary to CSS variables and TypeScript names.
 
 ```bash
-pnpm --filter @pumba-ui/tokens build   # dist/tokens.css, dist/index.js, dist/index.d.ts
+pnpm --filter @pumba-ui/tokens build   # dist/tokens.css, dist/index.js, dist/index.d.ts, dist/figma.json
 pnpm --filter @pumba-ui/tokens test    # WCAG AA contrast of every text/background pair
 ```
 
