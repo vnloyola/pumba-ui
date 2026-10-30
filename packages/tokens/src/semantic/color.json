@@ -29,7 +29,7 @@
       "$extensions": {
         "mode": {
           "light": "{primitive.color.white}",
-          "dark": "{primitive.color.neutral.800}"
+          "dark": "{primitive.color.neutral.700}"
         }
       },
       "$description": "Popovers and menus, above a surface."
@@ -88,6 +88,17 @@
         }
       },
       "$description": "Outlines of interactive controls, which need 3:1 against the background."
+    },
+    "scrim": {
+      "$type": "color",
+      "$value": "{primitive.color.black}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.black}",
+          "dark": "{primitive.color.black}"
+        }
+      },
+      "$description": "Base color of the layer behind a modal; components apply their own opacity."
     },
     "field": {
       "$type": "color",
