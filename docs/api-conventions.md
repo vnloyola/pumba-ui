@@ -199,9 +199,14 @@ assembles them. It takes an optional `container`, the element the dialog is rend
 needed to theme a subtree: the portal goes to `document.body` by default, outside any
 `data-theme` wrapper, so a dialog opened from a dark subtree would come out light.
 `Dialog.Close` is a separate part so the consumer decides where closing lives: an icon-only
-Button with an `aria-label`, or a "Cancel" button. A `Dialog.Trigger` or `Dialog.Close` that
-renders something other than a `<button>` must pass `nativeButton={false}`; rendering a Pumba
-`Button` needs nothing.
+Button with an `aria-label`, or a "Cancel" button.
+
+`Dialog.Trigger` and `Dialog.Close` are buttons, so a Button placed inside them would nest two
+buttons. Instead, when their only child is an element, they render that element in place of their
+own and give it their behavior and class: `<Dialog.Trigger><Button>Open</Button></Dialog.Trigger>`
+produces one `<button>` that is both. This reads like the icons in a Button and keeps the Button's
+own props where the consumer writes them. `render` still works for the other cases, and a trigger
+or close that renders something other than a `<button>` must pass `nativeButton={false}`.
 
 Long content scrolls inside the dialog, in a body element that keeps its scrollbar within the
 dialog's padding, so the bar never touches the rounded corners. The body has its own padding,

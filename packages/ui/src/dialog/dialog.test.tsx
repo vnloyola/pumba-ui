@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import axe from "axe-core";
 import { createRef, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { Button } from "../button/index.js";
 import { Dialog } from "./dialog.js";
 
 const demo = (props: Partial<React.ComponentProps<typeof Dialog.Root>> = {}) => (
@@ -77,6 +78,47 @@ describe("Dialog", () => {
     expect(title.current).toBe(screen.getByText("Title"));
     expect(description.current).toBe(screen.getByText("Description"));
     expect(close.current).toBe(screen.getByRole("button", { name: "Close" }));
+  });
+
+  it("renders an element nested in the trigger instead of a second button", () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>
+          <Button variant="secondary">Open dialog</Button>
+        </Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+          <Dialog.Close>
+            <Button>Done</Button>
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+    expect(trigger.querySelector("button")).toBeNull();
+    expect(trigger.classList.contains("pumba-dialog-trigger")).toBe(true);
+    expect(trigger.classList.contains("pumba-button")).toBe(true);
+    expect(trigger.getAttribute("data-variant")).toBe("secondary");
+    fireEvent.click(trigger);
+    const done = screen.getByRole("button", { name: "Done" });
+    expect(done.querySelector("button")).toBeNull();
+    expect(done.classList.contains("pumba-dialog-close")).toBe(true);
+    expect(done.classList.contains("pumba-button")).toBe(true);
+  });
+
+  it("closes from a nested close element", async () => {
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+          <Dialog.Close>
+            <Button>Done</Button>
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   });
 
   it("keeps its class and ref with render={<a />}", () => {

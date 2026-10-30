@@ -34,8 +34,12 @@ function ConfirmDelete({ container }: { container?: HTMLElement | null }) {
         undone.
       </Dialog.Description>
       <div className="dialog-story-actions">
-        <Dialog.Close render={<Button variant="secondary" />}>Cancel</Dialog.Close>
-        <Dialog.Close render={<Button />}>Delete project</Dialog.Close>
+        <Dialog.Close>
+          <Button variant="secondary">Cancel</Button>
+        </Dialog.Close>
+        <Dialog.Close>
+          <Button>Delete project</Button>
+        </Dialog.Close>
       </div>
     </Dialog.Content>
   );
@@ -44,7 +48,9 @@ function ConfirmDelete({ container }: { container?: HTMLElement | null }) {
 export const Default: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
-      <Dialog.Trigger render={<Button />}>Delete project</Dialog.Trigger>
+      <Dialog.Trigger>
+        <Button>Delete project</Button>
+      </Dialog.Trigger>
       <ConfirmDelete />
     </Dialog.Root>
   ),
@@ -55,7 +61,9 @@ export const OpenByDefault: Story = {
   parameters: openInFrame,
   render: (args) => (
     <Dialog.Root {...args}>
-      <Dialog.Trigger render={<Button />}>Delete project</Dialog.Trigger>
+      <Dialog.Trigger>
+        <Button>Delete project</Button>
+      </Dialog.Trigger>
       <ConfirmDelete />
     </Dialog.Root>
   ),
@@ -87,8 +95,10 @@ function InviteForm() {
             They will get an email with a link to join your workspace.
           </Dialog.Description>
         </div>
-        <Dialog.Close render={<Button variant="ghost" iconOnly aria-label="Close" />}>
-          <CloseIcon aria-hidden="true" />
+        <Dialog.Close>
+          <Button variant="ghost" iconOnly aria-label="Close">
+            <CloseIcon aria-hidden="true" />
+          </Button>
         </Dialog.Close>
       </div>
       <form className="dialog-story-stack" onSubmit={(event) => event.preventDefault()}>
@@ -99,7 +109,9 @@ function InviteForm() {
           <Input id={id} type="email" placeholder="ana@example.com" autoComplete="email" />
         </div>
         <div className="dialog-story-actions">
-          <Dialog.Close render={<Button variant="secondary" />}>Cancel</Dialog.Close>
+          <Dialog.Close>
+            <Button variant="secondary">Cancel</Button>
+          </Dialog.Close>
           <Button type="submit">Send invitation</Button>
         </div>
       </form>
@@ -110,7 +122,9 @@ function InviteForm() {
 export const WithForm: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
-      <Dialog.Trigger render={<Button variant="secondary" />}>Invite teammate</Dialog.Trigger>
+      <Dialog.Trigger>
+        <Button variant="secondary">Invite teammate</Button>
+      </Dialog.Trigger>
       <InviteForm />
     </Dialog.Root>
   ),
@@ -132,7 +146,9 @@ export const LongContent: Story = {
   parameters: openInFrame,
   render: (args) => (
     <Dialog.Root {...args}>
-      <Dialog.Trigger render={<Button variant="secondary" />}>Read the terms</Dialog.Trigger>
+      <Dialog.Trigger>
+        <Button variant="secondary">Read the terms</Button>
+      </Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Title>Terms of service</Dialog.Title>
         <Dialog.Description>Read them carefully before you continue.</Dialog.Description>
@@ -143,7 +159,9 @@ export const LongContent: Story = {
           </p>
         ))}
         <div className="dialog-story-actions">
-          <Dialog.Close render={<Button />}>I agree</Dialog.Close>
+          <Dialog.Close>
+            <Button>I agree</Button>
+          </Dialog.Close>
         </div>
       </Dialog.Content>
     </Dialog.Root>
@@ -157,7 +175,9 @@ export const OpenDark: Story = {
     return (
       <div className="dialog-story-dark" data-theme="dark" ref={setContainer}>
         <Dialog.Root defaultOpen>
-          <Dialog.Trigger render={<Button />}>Delete project</Dialog.Trigger>
+          <Dialog.Trigger>
+            <Button>Delete project</Button>
+          </Dialog.Trigger>
           <ConfirmDelete container={container} />
         </Dialog.Root>
       </div>
@@ -168,7 +188,9 @@ export const OpenDark: Story = {
 export const KeyboardNavigation: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
-      <Dialog.Trigger render={<Button />}>Delete project</Dialog.Trigger>
+      <Dialog.Trigger>
+        <Button>Delete project</Button>
+      </Dialog.Trigger>
       <ConfirmDelete />
     </Dialog.Root>
   ),

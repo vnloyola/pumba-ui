@@ -1,5 +1,12 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import { type ComponentProps, type ReactElement, type ReactNode, type Ref, useRef } from "react";
+import {
+  type ComponentProps,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+  type Ref,
+  useRef,
+} from "react";
 
 type Render<Tag extends "div" | "button" | "h2" | "p"> =
   | ReactElement
@@ -38,14 +45,28 @@ const setRefs =
     }
   };
 
+const elementFromChild = (
+  children: ReactNode,
+  render: Render<"button"> | undefined,
+): { render: Render<"button"> | undefined; children: ReactNode } =>
+  render === undefined && isValidElement<{ children?: ReactNode }>(children)
+    ? { render: children, children: children.props.children }
+    : { render, children };
+
 const join = (own: string, className?: string) => (className ? `${own} ${className}` : own);
 
 function DialogRoot({ onOpenChange, ...rest }: DialogProps) {
   return <BaseDialog.Root onOpenChange={(open) => onOpenChange?.(open)} {...rest} />;
 }
 
-function DialogTrigger({ className, ...rest }: DialogTriggerProps) {
-  return <BaseDialog.Trigger className={join("pumba-dialog-trigger", className)} {...rest} />;
+function DialogTrigger({ className, children, render, ...rest }: DialogTriggerProps) {
+  return (
+    <BaseDialog.Trigger
+      className={join("pumba-dialog-trigger", className)}
+      {...elementFromChild(children, render)}
+      {...rest}
+    />
+  );
 }
 
 function DialogContent({ className, container, children, ref, ...rest }: DialogContentProps) {
@@ -79,8 +100,14 @@ function DialogDescription({ className, ...rest }: DialogDescriptionProps) {
   );
 }
 
-function DialogClose({ className, ...rest }: DialogCloseProps) {
-  return <BaseDialog.Close className={join("pumba-dialog-close", className)} {...rest} />;
+function DialogClose({ className, children, render, ...rest }: DialogCloseProps) {
+  return (
+    <BaseDialog.Close
+      className={join("pumba-dialog-close", className)}
+      {...elementFromChild(children, render)}
+      {...rest}
+    />
+  );
 }
 
 export const Dialog = {
