@@ -149,6 +149,22 @@ Base UI types are never exposed in Pumba's public API.
 and keeping Base UI types out of the API lets us change the headless layer without a
 breaking change.
 
+### Card
+
+Card is compound: `Card.Root`, `Card.Header`, `Card.Content` and `Card.Footer`. Every part is a
+`div` that accepts `render` and extends the native props. `Card.Root` carries the surface
+(`surface`, `border`, `radius-surface`, `shadow-raised`), the `space-inset` padding and the
+`space-stack` gap between parts; `Card.Footer` lays out its children in a row. Card has no
+`variant` or `size` because nothing needs one yet.
+
+The parts are plain `div`s and not `<header>` or `<footer>`: outside a sectioning element those
+tags become landmarks, so a dashboard with many cards would announce a banner and a footer per
+card. A consumer who wants a landmark uses `render`.
+
+**Why:** headers and footers repeat in every dashboard card, so the parts keep spacing and
+alignment in one place instead of in each consumer. The generator only creates the root, so the
+parts are written by hand in the same file.
+
 ### Controlled and uncontrolled
 
 Both modes are supported, with the names React developers already expect:
