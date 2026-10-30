@@ -89,6 +89,28 @@
       },
       "$description": "Outlines of interactive controls, which need 3:1 against the background."
     },
+    "field": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.200}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.200}",
+          "dark": "{primitive.color.neutral.800}"
+        }
+      },
+      "$description": "Fill of text fields; it replaces an outline, so it must stand apart from the page and from a surface."
+    },
+    "field-hover": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.300}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.300}",
+          "dark": "{primitive.color.neutral.700}"
+        }
+      },
+      "$description": "Fill of a text field under the pointer."
+    },
     "accent": {
       "$type": "color",
       "$value": "{primitive.color.brand.600}",

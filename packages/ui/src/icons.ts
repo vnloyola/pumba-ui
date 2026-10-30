@@ -11,6 +11,7 @@ export {
   Star as StarIcon,
   TrendingDown as TrendingDownIcon,
   TrendingUp as TrendingUpIcon,
+  TriangleAlert as WarningIcon,
   Users as UsersIcon,
   X as CloseIcon,
 } from "lucide-react";
