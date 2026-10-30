@@ -21,7 +21,7 @@ All scales are OKLCH, steps 50 to 950, with light and dark values coming from th
 | Decision | Value | Why |
 | --- | --- | --- |
 | Neutral hue | 60, chroma 0.002 to 0.004 | Near-pure grays keep interfaces dense and sober, like a dashboard, and let the accent carry the warmth. |
-| Dark depth | `neutral.950` 0.115, `neutral.900` 0.165, `neutral.800` 0.225 | Page, surface and border are close in lightness, so layers read through subtle steps and borders, not shadows. |
+| Dark depth | `neutral.950` 0.115, `neutral.900` 0.165, `neutral.800` 0.225, `neutral.700` 0.30 | Page, surface, border and raised surface are close in lightness, so layers read through subtle steps and borders, not shadows. Raised surfaces (selected tabs, dialogs) take the lightest step. |
 | Brand hue | 55 (mahogany), chroma up to 0.14 | The markings of the breed. One accent only. |
 | Accent in light mode | `brand.600` | Gives white text at least 4.5:1. |
 | Accent in dark mode | `brand.400` | Keeps 3:1 against dark surfaces, with dark text on top. |

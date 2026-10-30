@@ -187,6 +187,31 @@ card. A consumer who wants a landmark uses `render`.
 alignment in one place instead of in each consumer. The generator only creates the root, so the
 parts are written by hand in the same file.
 
+### Tabs
+
+Tabs is compound, on Base UI: `Tabs.Root`, `Tabs.List`, `Tabs.Tab` and `Tabs.Panel`. Each part
+accepts `render` and the native props of its element, and no Base UI type appears in a signature.
+A tab is identified by a string `value`, shared by its `Tabs.Tab` and its `Tabs.Panel`. It is
+uncontrolled with `defaultValue` and controlled with `value` plus `onValueChange(value)`; the
+callback only runs for a real tab, so its argument is always a string.
+
+The look is a segmented control: the list is a track filled with `field`, and the selected tab
+is marked by a raised pill (`surface-raised` and `shadow-raised`) that slides to the new tab with
+`motion-duration-transition` and `motion-easing-standard`, and does not move under
+`prefers-reduced-motion`. The pill is Base UI's indicator, which `Tabs.List` renders itself, so
+it is not a public part. Its radius is the list radius minus its padding, so it follows the
+track's corner like the radii in section 16. The selected tab only changes its text color
+(`data-active`). Hover and focus-visible also come as `data-hovered` and `data-focus-visible`.
+
+Keyboard behavior is Base UI's: Tab moves into the list, the arrow keys, Home and End move focus
+between tabs, and Enter or Space selects the focused one. A disabled tab stays focusable, as the
+ARIA pattern allows, but it cannot be selected. Jsdom cannot run this navigation, so it is tested
+in the browser with a story `play` function (section 17).
+
+**Why:** the parts let a consumer put anything in a panel and arrange the list freely, and
+keeping the selection logic in Base UI gives the roles, ids and keyboard model of the ARIA tabs
+pattern without reimplementing them.
+
 ### Controlled and uncontrolled
 
 Both modes are supported, with the names React developers already expect:
@@ -626,6 +651,9 @@ test`). The generated test covers, for every component:
 - the `ref`,
 - `render={<a />}`, keeping class, `data-*` attributes and `ref` (section 5),
 - no accessibility violations according to axe-core.
+
+Behavior that jsdom cannot run, such as keyboard navigation between composite items, is tested in
+a story with a `play` function, which the Storybook test run executes in a real browser.
 
 The axe `color-contrast` rule is disabled in these tests because jsdom does not compute
 styles. Contrast is covered by the token test (see "Contrast" in section 16).
