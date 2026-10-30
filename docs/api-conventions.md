@@ -46,6 +46,18 @@ Simple components (Button, Badge, Card, ...) follow these rules:
 **Why:** consumers can treat a Pumba component as the native element it wraps, and add
 their own classes without losing the base styles.
 
+### Icons in Button
+
+Icons are regular children, and their order decides the side:
+`<Button><CheckIcon />Save</Button>` puts the icon before the label, and the reverse puts it
+after. Icons come from `packages/ui/src/icons.ts` and should carry `aria-hidden="true"`.
+`iconOnly` makes the button square; its icon is the only child and the consumer must provide
+an `aria-label`. While `loading`, the spinner is added before the content, and an `iconOnly`
+button shows only the spinner.
+
+**Why:** it is the same shape as plain HTML and needs no props, so there is nothing new to
+learn or to keep in the contract.
+
 ### Example: simple component
 
 ```tsx
@@ -172,6 +184,9 @@ accessibility that plain HTML does not give). Where it does not, we use semantic
 - Components Base UI does not offer (Badge, Card) use semantic HTML.
 - Components that exist in both (Button, Input, Separator, Avatar) are decided case by case
   in each component's card.
+- **Button** uses the native `<button>`, with Base UI's `useRender` only for `render`. Base
+  UI's Button adds `focusableWhenDisabled` and role/keyboard handling for non-button elements,
+  and no consumer needs either yet. Revisit if one does.
 - Base UI types are never part of the public API.
 
 **Why:** accessible dialogs, menus and selects take years to get right, so we do not
@@ -567,6 +582,12 @@ test`). The generated test covers, for every component:
 
 The axe `color-contrast` rule is disabled in these tests because jsdom does not compute
 styles. Contrast is covered by the token test (see "Contrast" in section 16).
+
+Stories are also tests. `pnpm --filter @pumba-ui/storybook test` runs every story in a real
+browser through the Storybook Vitest addon, and any axe violation fails it
+(`a11y: { test: "error" }`). Each component has a story with `globals: { theme: "dark" }`, so
+both themes are checked. Run `pnpm --filter @pumba-ui/storybook exec playwright install chromium`
+once to get the browser.
 
 **Why:** the same five checks for every component keep the contract of sections 3 to 5 from
 depending on someone remembering to test it.

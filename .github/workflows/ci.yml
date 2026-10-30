@@ -65,4 +65,6 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm --filter @pumba-ui/storybook exec playwright install --with-deps chromium
       - run: pnpm test

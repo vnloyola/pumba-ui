@@ -95,5 +95,3 @@ Three tools, one job each:
 - Every Pumba stylesheet starts with the layer order, which lives in `src/styles/layers.css`.
   The names sit under `pumba.*` so they never merge with Tailwind's own `base` and `components`
   layers.
-- `src/placeholder` exists only to exercise the pipeline and is deleted when the first real
-  component lands.
