@@ -5,3 +5,4 @@
 @import url("../card/card.css") layer(pumba.components);
 @import url("../badge/badge.css") layer(pumba.components);
 @import url("../input/input.css") layer(pumba.components);
+@import url("../tabs/tabs.css") layer(pumba.components);
