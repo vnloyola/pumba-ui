@@ -601,9 +601,45 @@ styles. Contrast is covered by the token test (see "Contrast" in section 16).
 
 Stories are also tests. `pnpm --filter @pumba-ui/storybook test` runs every story in a real
 browser through the Storybook Vitest addon, and any axe violation fails it
-(`a11y: { test: "error" }`). Each component has a story with `globals: { theme: "dark" }`, so
-both themes are checked. Run `pnpm --filter @pumba-ui/storybook exec playwright install chromium`
+(`a11y: { test: "error" }`). Each component has a `...Dark` story (section 18), so both themes
+are checked. Run `pnpm --filter @pumba-ui/storybook exec playwright install chromium`
 once to get the browser.
 
 **Why:** the same five checks for every component keep the contract of sections 3 to 5 from
 depending on someone remembering to test it.
+
+## 18. Stories
+
+Stories are the living documentation of a component and also its test (section 17), so they
+follow one shape for every component. `Button` and `Card` are the reference.
+
+- **Title.** `Components/<Name>`, with `tags: ["autodocs"]` coming from the preview.
+- **One idea per story.** Name the story after what it shows: `Default`, `Variants`, `Sizes`,
+  `WithIcons`, `IconOnly`, `Disabled`, `Loading`, `AsLink`. A group of related values goes in one
+  story as a row, not in one story per value. `Default` takes its values from the controls, so
+  `args` and `argTypes` stay on the meta.
+- **Real content.** Use text, icons and other Pumba components a consumer would actually write
+  ("Add to cart", a `Card` with a footer), not "Lorem ipsum" or bare labels. Icons come from
+  `src/icons.ts`, with `aria-hidden="true"` when the text already names the action. Add an icon
+  to `icons.ts` only when a story uses it.
+- **Compose with what exists.** When a component needs a context (Button in a Card footer, Card
+  with Buttons), build it from the real components. When the component it needs does not exist
+  yet, leave that story out until it does.
+- **State stories.** One story per interaction state forced with its attribute (`Hovered`,
+  `Pressed`, `FocusVisible`), plus a `ForcedStates` story that shows every state of every
+  variant, so states can be reviewed without a mouse.
+- **Dark theme.** A `...Dark` story wraps the content in an element with `data-theme="dark"`,
+  its own `background` and `color`, and renders the light story inside it. Do not use
+  `globals: { theme: "dark" }`: on the Docs page every story shares one document, so the last one
+  would turn the whole page dark.
+- **Layout.** A decorator on the meta centers the story. Layout styles go in
+  `<name>.stories.css`, with classes prefixed `<name>-story-`, never in `style` props and never in
+  the component's CSS. The file is only created when a story needs it and is not part of the
+  published package.
+- **Images.** Sample images live in `packages/assets/` and are served at `/assets/` by
+  Storybook, so a story uses `src="/assets/<file>"` and gives the image a real `alt`.
+- **Accessibility.** Every story runs axe in the browser (section 17), so each one must pass.
+  A story that exists to show a failing case does not belong in the file.
+
+**Why:** the same shape means a reader finds a component's variants, states and examples in the
+same place every time, and a new story is copied from an existing one instead of invented.

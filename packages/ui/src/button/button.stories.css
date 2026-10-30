@@ -1,0 +1,42 @@
+.button-story-canvas {
+  display: flex;
+  justify-content: center;
+  padding: var(--pumba-space-8) var(--pumba-space-6);
+}
+
+.button-story-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pumba-space-4);
+}
+
+.button-story-grid {
+  display: grid;
+  gap: var(--pumba-space-6);
+}
+
+.button-story-narrow {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.button-story-text {
+  margin: 0;
+  color: var(--pumba-color-text-secondary);
+}
+
+.button-story-title {
+  margin: 0;
+  font-size: var(--pumba-text-label-font-size);
+  font-weight: 600;
+}
+
+.button-story-dark {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: var(--pumba-space-8) var(--pumba-space-6);
+  background: var(--pumba-color-background);
+  color: var(--pumba-color-text);
+}
