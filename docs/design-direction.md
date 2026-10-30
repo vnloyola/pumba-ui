@@ -64,8 +64,8 @@ These follow the standard design-system scale; the existing tokens already expre
 
 | Decision | Value | Why |
 | --- | --- | --- |
-| Control radius | `radius.md`, 0.5rem | Rounded enough to feel warm without looking playful. |
-| Surface radius | `radius.lg`, 0.75rem | Cards and panels sit one step above controls. |
+| Control radius | `radius.lg`, 0.75rem | Soft corners that feel friendly and modern. |
+| Surface radius | `radius.2xl`, 1.5rem | Cards and panels sit one step above controls and read as clearly rounder. |
 | Pill radius | `radius.full` | Badges and tags. |
 | Raised shadow | `shadow.sm` | Elevation relies mostly on borders and surfaces. |
 | Overlay shadow | `shadow.lg` | Reserved for popovers and dialogs. |

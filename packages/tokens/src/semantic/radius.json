@@ -2,12 +2,12 @@
   "radius": {
     "control": {
       "$type": "dimension",
-      "$value": "{primitive.radius.md}",
+      "$value": "{primitive.radius.lg}",
       "$description": "Buttons, inputs and other controls."
     },
     "surface": {
       "$type": "dimension",
-      "$value": "{primitive.radius.lg}",
+      "$value": "{primitive.radius.2xl}",
       "$description": "Cards, dialogs and popovers."
     },
     "pill": {
