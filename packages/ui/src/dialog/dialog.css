@@ -1,0 +1,83 @@
+.pumba-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in oklch, var(--pumba-color-scrim) 55%, transparent);
+  opacity: 1;
+  transition: opacity var(--pumba-motion-duration-transition) var(--pumba-motion-easing-standard);
+}
+
+.pumba-dialog-backdrop[data-starting-style],
+.pumba-dialog-backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+.pumba-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: min(32rem, calc(100vw - 2 * var(--pumba-space-6)));
+  max-height: calc(100dvh - 2 * var(--pumba-space-6));
+  padding: var(--pumba-space-inset);
+  overflow: hidden;
+  border: 1px solid var(--pumba-color-border);
+  border-radius: var(--pumba-radius-surface);
+  background: var(--pumba-color-surface-raised);
+  box-shadow: var(--pumba-shadow-overlay);
+  color: var(--pumba-color-text);
+  font-family: var(--pumba-text-body-font-family);
+  font-size: var(--pumba-text-body-font-size);
+  font-weight: var(--pumba-text-body-font-weight);
+  line-height: var(--pumba-text-body-line-height);
+  letter-spacing: var(--pumba-text-body-letter-spacing);
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  transition-property: opacity, transform;
+  transition-duration: var(--pumba-motion-duration-transition);
+  transition-timing-function: var(--pumba-motion-easing-enter);
+}
+
+.pumba-dialog[data-ending-style] {
+  transition-timing-function: var(--pumba-motion-easing-exit);
+}
+
+.pumba-dialog[data-starting-style],
+.pumba-dialog[data-ending-style] {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+.pumba-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pumba-space-stack);
+  min-height: 0;
+  margin: calc(-1 * var(--pumba-space-1)) calc(-1 * var(--pumba-space-2));
+  padding: var(--pumba-space-1) var(--pumba-space-2);
+  overflow-y: auto;
+  scrollbar-color: var(--pumba-color-border-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.pumba-dialog-title {
+  margin: 0;
+  font-family: var(--pumba-text-subheading-font-family);
+  font-size: var(--pumba-text-subheading-font-size);
+  font-weight: var(--pumba-text-subheading-font-weight);
+  line-height: var(--pumba-text-subheading-line-height);
+  letter-spacing: var(--pumba-text-subheading-letter-spacing);
+}
+
+.pumba-dialog-description {
+  margin: 0;
+  color: var(--pumba-color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pumba-dialog-backdrop,
+  .pumba-dialog {
+    transition: none;
+  }
+}

@@ -187,6 +187,44 @@ card. A consumer who wants a landmark uses `render`.
 alignment in one place instead of in each consumer. The generator only creates the root, so the
 parts are written by hand in the same file.
 
+### Dialog
+
+Dialog is compound, on Base UI: `Dialog.Root`, `Dialog.Trigger`, `Dialog.Content`, `Dialog.Title`,
+`Dialog.Description` and `Dialog.Close`. No Base UI type appears in a signature. `Dialog.Root`
+renders no element; it takes `open` with `onOpenChange(open)` when controlled and `defaultOpen`
+when not. The other parts accept `render` and the native props of their element.
+
+`Dialog.Content` renders the portal, the backdrop and the dialog itself, so the consumer never
+assembles them. It takes an optional `container`, the element the dialog is rendered into. This is
+needed to theme a subtree: the portal goes to `document.body` by default, outside any
+`data-theme` wrapper, so a dialog opened from a dark subtree would come out light.
+`Dialog.Close` is a separate part so the consumer decides where closing lives: an icon-only
+Button with an `aria-label`, or a "Cancel" button.
+
+`Dialog.Trigger` and `Dialog.Close` are buttons, so a Button placed inside them would nest two
+buttons. Instead, when their only child is an element, they render that element in place of their
+own and give it their behavior and class: `<Dialog.Trigger><Button>Open</Button></Dialog.Trigger>`
+produces one `<button>` that is both. This reads like the icons in a Button and keeps the Button's
+own props where the consumer writes them. `render` still works for the other cases, and a trigger
+or close that renders something other than a `<button>` must pass `nativeButton={false}`.
+
+Long content scrolls inside the dialog, in a body element that keeps its scrollbar within the
+dialog's padding, so the bar never touches the rounded corners. The body has its own padding,
+offset by an equal negative margin, so the focus ring of the first and last controls is not
+clipped by its scroll area.
+
+Visuals use `surface-raised`, `radius-surface` and `shadow-overlay`, with the new `scrim` token
+for the layer behind (each component applies its own opacity). Enter and exit are animated with
+Base UI's `data-starting-style` and `data-ending-style`, with `motion-duration-transition` and
+the enter and exit easings, and do not animate under `prefers-reduced-motion`. Focus trapping,
+closing with Escape, returning focus to the trigger and the `aria-labelledby` and
+`aria-describedby` links come from Base UI and are tested in the browser with a story `play`
+function. Stories that start open set `docs.story.inline` to `false` so they render in their own
+frame and do not cover the Docs page.
+
+**Why:** accessible modals take years to get right (section 7), and the parts let a consumer
+arrange the header, body and actions without a prop for every layout.
+
 ### Controlled and uncontrolled
 
 Both modes are supported, with the names React developers already expect:
@@ -536,7 +574,7 @@ touching any component.
 
 | Group | Names |
 | --- | --- |
-| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-text`, `focus`, and `success`, `error`, `warning` each with `-subtle` and `-text` |
+| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `scrim`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-text`, `focus`, and `success`, `error`, `warning` each with `-subtle` and `-text` |
 | Space | The scale `space-0` to `space-24`, plus `space-control-x`, `space-control-y`, `space-gap`, `space-stack`, `space-inset` |
 | Radius | `radius-control`, `radius-surface`, `radius-pill` |
 | Shadow | `shadow-raised`, `shadow-overlay` |
