@@ -4,13 +4,13 @@ The visual personality of Pumba and the concrete decisions that follow from it. 
 
 ## 1. Personality
 
-**Warm, simple and firm.** Pumba is named after a Rottweiler: black coat, mahogany markings, calm and sturdy. The system is minimalist, with soft blacks and a single mahogany accent.
+**Warm, simple and firm.** Pumba is named after a Rottweiler: black coat, mahogany markings, calm and sturdy. The system is minimalist, with deep blacks, almost pure grays and a single mahogany accent.
 
 It speaks to developers who build their own interfaces and want something sober that does not feel cold.
 
 | Quality | What it means in practice |
 | --- | --- |
-| Warm | Neutrals lean warm, not blue. Medium radii, no sharp corners. |
+| Warm | The accent is warm and the neutrals are almost pure, never blue. Medium radii, no sharp corners. |
 | Simple | One accent color, one font family, restrained shadows. |
 | Firm | Strong contrast, clear focus, no decorative effects. |
 
@@ -20,7 +20,8 @@ All scales are OKLCH, steps 50 to 950, with light and dark values coming from th
 
 | Decision | Value | Why |
 | --- | --- | --- |
-| Neutral hue | 60, chroma 0.004 to 0.017 | Warm grays and soft blacks read as the coat, not as a default blue-gray. |
+| Neutral hue | 60, chroma 0.002 to 0.004 | Near-pure grays keep interfaces dense and sober, like a dashboard, and let the accent carry the warmth. |
+| Dark depth | `neutral.950` 0.115, `neutral.900` 0.165, `neutral.800` 0.225 | Page, surface and border are close in lightness, so layers read through subtle steps and borders, not shadows. |
 | Brand hue | 55 (mahogany), chroma up to 0.14 | The markings of the breed. One accent only. |
 | Accent in light mode | `brand.600` | Gives white text at least 4.5:1. |
 | Accent in dark mode | `brand.400` | Keeps 3:1 against dark surfaces, with dark text on top. |
