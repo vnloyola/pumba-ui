@@ -1,5 +1,15 @@
+import "./button.stories.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CheckIcon, ChevronDownIcon } from "../icons.js";
+import { Card } from "../card/index.js";
+import {
+  ArrowUpRightIcon,
+  CartIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  CloseIcon,
+  HeartIcon,
+  ShareIcon,
+} from "../icons.js";
 import { Button } from "./button.js";
 
 const meta = {
@@ -13,47 +23,141 @@ const meta = {
     loading: { control: "boolean" },
     iconOnly: { control: "boolean" },
   },
+  decorators: [
+    (Story) => (
+      <div className="button-story-canvas">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof Button>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const variants = ["primary", "secondary", "ghost"] as const;
+
 export const Default: Story = {};
 
-export const Secondary: Story = { args: { variant: "secondary" } };
-
-export const Ghost: Story = { args: { variant: "ghost" } };
-
-export const Small: Story = { args: { size: "sm" } };
-
-export const Large: Story = { args: { size: "lg" } };
-
-export const StartIcon: Story = {
+export const Variants: Story = {
   render: (args) => (
-    <Button {...args}>
-      <CheckIcon aria-hidden="true" />
-      Confirm
-    </Button>
+    <div className="button-story-row">
+      <Button {...args} variant="primary">
+        Primary
+      </Button>
+      <Button {...args} variant="secondary">
+        Secondary
+      </Button>
+      <Button {...args} variant="ghost">
+        Ghost
+      </Button>
+    </div>
   ),
 };
 
-export const EndIcon: Story = {
+export const Sizes: Story = {
   render: (args) => (
-    <Button {...args}>
-      Options
-      <ChevronDownIcon aria-hidden="true" />
-    </Button>
+    <div className="button-story-row">
+      <Button {...args} size="sm">
+        Small
+      </Button>
+      <Button {...args} size="md">
+        Medium
+      </Button>
+      <Button {...args} size="lg">
+        Large
+      </Button>
+    </div>
+  ),
+};
+
+export const WithIcons: Story = {
+  render: (args) => (
+    <div className="button-story-row">
+      <Button {...args}>
+        <CartIcon aria-hidden="true" />
+        Add to cart
+      </Button>
+      <Button {...args} variant="secondary">
+        Options
+        <ChevronDownIcon aria-hidden="true" />
+      </Button>
+      <Button {...args} variant="ghost">
+        <CheckIcon aria-hidden="true" />
+        Mark as done
+      </Button>
+    </div>
   ),
 };
 
 export const IconOnly: Story = {
-  args: { iconOnly: true, "aria-label": "Confirm", children: <CheckIcon aria-hidden="true" /> },
+  render: (args) => (
+    <div className="button-story-row">
+      <Button {...args} iconOnly aria-label="Save to favorites">
+        <HeartIcon aria-hidden="true" />
+      </Button>
+      <Button {...args} variant="secondary" iconOnly aria-label="Share">
+        <ShareIcon aria-hidden="true" />
+      </Button>
+      <Button {...args} variant="ghost" iconOnly aria-label="Close">
+        <CloseIcon aria-hidden="true" />
+      </Button>
+    </div>
+  ),
 };
 
-export const Disabled: Story = { args: { disabled: true } };
+export const Disabled: Story = {
+  render: (args) => (
+    <div className="button-story-row">
+      {variants.map((variant) => (
+        <Button key={variant} {...args} variant={variant} disabled>
+          {variant}
+        </Button>
+      ))}
+    </div>
+  ),
+};
 
-export const Loading: Story = { args: { loading: true } };
+export const Loading: Story = {
+  render: (args) => (
+    <div className="button-story-row">
+      {variants.map((variant) => (
+        <Button key={variant} {...args} variant={variant} loading>
+          Saving
+        </Button>
+      ))}
+    </div>
+  ),
+};
+
+export const AsLink: Story = {
+  render: (args) => (
+    <Button {...args} variant="secondary" render={<a href="#docs" />}>
+      Read the docs
+      <ArrowUpRightIcon aria-hidden="true" />
+    </Button>
+  ),
+};
+
+export const InACard: Story = {
+  render: () => (
+    <Card.Root className="button-story-narrow">
+      <Card.Header>
+        <h3 className="button-story-title">Publish your site</h3>
+      </Card.Header>
+      <Card.Content>
+        <p className="button-story-text">
+          Your changes will be visible to everyone with the link. You can unpublish at any time.
+        </p>
+      </Card.Content>
+      <Card.Footer>
+        <Button>Publish</Button>
+        <Button variant="ghost">Cancel</Button>
+      </Card.Footer>
+    </Card.Root>
+  ),
+};
 
 export const Hovered: Story = {
   render: (args) => <Button {...args} data-hovered />,
@@ -67,13 +171,11 @@ export const FocusVisible: Story = {
   render: (args) => <Button {...args} data-focus-visible />,
 };
 
-const variants = ["primary", "secondary", "ghost"] as const;
-
 export const ForcedStates: Story = {
   render: (args) => (
-    <div style={{ display: "grid", gap: "var(--pumba-space-4)", padding: "var(--pumba-space-6)" }}>
+    <div className="button-story-grid">
       {variants.map((variant) => (
-        <div key={variant} style={{ display: "flex", gap: "var(--pumba-space-4)" }}>
+        <div key={variant} className="button-story-row">
           <Button {...args} variant={variant}>
             Default
           </Button>
@@ -99,6 +201,17 @@ export const ForcedStates: Story = {
 };
 
 export const ForcedStatesDark: Story = {
-  ...ForcedStates,
-  globals: { theme: "dark" },
+  render: (args, context) => (
+    <div className="button-story-dark" data-theme="dark">
+      {ForcedStates.render?.(args, context)}
+    </div>
+  ),
+};
+
+export const SizesDark: Story = {
+  render: (args, context) => (
+    <div className="button-story-dark" data-theme="dark">
+      {Sizes.render?.(args, context)}
+    </div>
+  ),
 };

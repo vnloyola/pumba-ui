@@ -1,1 +1,16 @@
-export { Check as CheckIcon, ChevronDown as ChevronDownIcon, X as CloseIcon } from "lucide-react";
+export {
+  ArrowUpRight as ArrowUpRightIcon,
+  Check as CheckIcon,
+  ChevronDown as ChevronDownIcon,
+  DollarSign as DollarIcon,
+  Heart as HeartIcon,
+  MapPin as MapPinIcon,
+  Share2 as ShareIcon,
+  ShoppingCart as CartIcon,
+  Sparkles as SparklesIcon,
+  Star as StarIcon,
+  TrendingDown as TrendingDownIcon,
+  TrendingUp as TrendingUpIcon,
+  Users as UsersIcon,
+  X as CloseIcon,
+} from "lucide-react";

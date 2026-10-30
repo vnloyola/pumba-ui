@@ -2,3 +2,4 @@
 @import url("@pumba-ui/tokens/tokens.css");
 @import url("./base.css");
 @import url("../button/button.css") layer(pumba.components);
+@import url("../card/card.css") layer(pumba.components);

@@ -4,13 +4,13 @@ The visual personality of Pumba and the concrete decisions that follow from it. 
 
 ## 1. Personality
 
-**Warm, simple and firm.** Pumba is named after a Rottweiler: black coat, mahogany markings, calm and sturdy. The system is minimalist, with soft blacks and a single mahogany accent.
+**Warm, simple and firm.** Pumba is named after a Rottweiler: black coat, mahogany markings, calm and sturdy. The system is minimalist, with deep blacks, almost pure grays and a single mahogany accent.
 
 It speaks to developers who build their own interfaces and want something sober that does not feel cold.
 
 | Quality | What it means in practice |
 | --- | --- |
-| Warm | Neutrals lean warm, not blue. Medium radii, no sharp corners. |
+| Warm | The accent is warm and the neutrals are almost pure, never blue. Medium radii, no sharp corners. |
 | Simple | One accent color, one font family, restrained shadows. |
 | Firm | Strong contrast, clear focus, no decorative effects. |
 
@@ -20,7 +20,8 @@ All scales are OKLCH, steps 50 to 950, with light and dark values coming from th
 
 | Decision | Value | Why |
 | --- | --- | --- |
-| Neutral hue | 60, chroma 0.004 to 0.017 | Warm grays and soft blacks read as the coat, not as a default blue-gray. |
+| Neutral hue | 60, chroma 0.002 to 0.004 | Near-pure grays keep interfaces dense and sober, like a dashboard, and let the accent carry the warmth. |
+| Dark depth | `neutral.950` 0.115, `neutral.900` 0.165, `neutral.800` 0.225 | Page, surface and border are close in lightness, so layers read through subtle steps and borders, not shadows. |
 | Brand hue | 55 (mahogany), chroma up to 0.14 | The markings of the breed. One accent only. |
 | Accent in light mode | `brand.600` | Gives white text at least 4.5:1. |
 | Accent in dark mode | `brand.400` | Keeps 3:1 against dark surfaces, with dark text on top. |
@@ -64,12 +65,16 @@ These follow the standard design-system scale; the existing tokens already expre
 
 | Decision | Value | Why |
 | --- | --- | --- |
-| Control radius | `radius.md`, 0.5rem | Rounded enough to feel warm without looking playful. |
-| Surface radius | `radius.lg`, 0.75rem | Cards and panels sit one step above controls. |
+| Control radius | `radius.lg`, 0.75rem | Soft corners that feel friendly and modern. |
+| Surface radius | `radius.2xl`, 1.75rem | Cards and panels sit one step above controls and read as clearly rounder. |
 | Pill radius | `radius.full` | Badges and tags. |
 | Raised shadow | `shadow.sm` | Elevation relies mostly on borders and surfaces. |
 | Overlay shadow | `shadow.lg` | Reserved for popovers and dialogs. |
 | Density | Medium: 4px spacing scale, 1rem base text | The default of most systems; compact or spacious can be added later if a consumer needs it. |
+
+Radii nest: the surface radius is the control radius plus the inset (0.75rem + 1rem = 1.75rem),
+so a button or an image that fills a card's padding follows the card's corner exactly. The
+token test fails if one of the three values changes without the others.
 
 ## 6. Out of scope
 
