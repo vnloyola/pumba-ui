@@ -48,6 +48,7 @@ const preview: Preview = {
   parameters: {
     backgrounds: { disable: true },
     layout: "fullscreen",
+    a11y: { test: "error" },
   },
 };
 

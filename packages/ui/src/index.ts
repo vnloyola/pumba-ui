@@ -1,1 +1,1 @@
-export { Placeholder, type PlaceholderProps } from "./placeholder/index.js";
+export { Button, type ButtonProps } from "./button/index.js";
