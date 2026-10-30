@@ -37,6 +37,7 @@ const pairs = [
   ["text", "surface-raised", TEXT],
   ["text-secondary", "background", TEXT],
   ["text-secondary", "surface", TEXT],
+  ["text", "accent-subtle", TEXT],
   ["text", "field", TEXT],
   ["text", "field-hover", TEXT],
   ["text-secondary", "field", TEXT],

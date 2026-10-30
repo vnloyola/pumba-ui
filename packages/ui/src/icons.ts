@@ -2,6 +2,7 @@ export {
   ArrowUpRight as ArrowUpRightIcon,
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
+  Clock as ClockIcon,
   DollarSign as DollarIcon,
   Heart as HeartIcon,
   MapPin as MapPinIcon,

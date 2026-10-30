@@ -3,4 +3,5 @@
 @import url("./base.css");
 @import url("../button/button.css") layer(pumba.components);
 @import url("../card/card.css") layer(pumba.components);
+@import url("../badge/badge.css") layer(pumba.components);
 @import url("../input/input.css") layer(pumba.components);
