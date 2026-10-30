@@ -2,6 +2,7 @@ export {
   ArrowUpRight as ArrowUpRightIcon,
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
+  Clock as ClockIcon,
   DollarSign as DollarIcon,
   Heart as HeartIcon,
   MapPin as MapPinIcon,
@@ -11,6 +12,7 @@ export {
   Star as StarIcon,
   TrendingDown as TrendingDownIcon,
   TrendingUp as TrendingUpIcon,
+  TriangleAlert as WarningIcon,
   Users as UsersIcon,
   X as CloseIcon,
 } from "lucide-react";
