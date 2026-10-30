@@ -65,11 +65,15 @@ These follow the standard design-system scale; the existing tokens already expre
 | Decision | Value | Why |
 | --- | --- | --- |
 | Control radius | `radius.lg`, 0.75rem | Soft corners that feel friendly and modern. |
-| Surface radius | `radius.2xl`, 1.5rem | Cards and panels sit one step above controls and read as clearly rounder. |
+| Surface radius | `radius.2xl`, 1.75rem | Cards and panels sit one step above controls and read as clearly rounder. |
 | Pill radius | `radius.full` | Badges and tags. |
 | Raised shadow | `shadow.sm` | Elevation relies mostly on borders and surfaces. |
 | Overlay shadow | `shadow.lg` | Reserved for popovers and dialogs. |
 | Density | Medium: 4px spacing scale, 1rem base text | The default of most systems; compact or spacious can be added later if a consumer needs it. |
+
+Radii nest: the surface radius is the control radius plus the inset (0.75rem + 1rem = 1.75rem),
+so a button or an image that fills a card's padding follows the card's corner exactly. The
+token test fails if one of the three values changes without the others.
 
 ## 6. Out of scope
 

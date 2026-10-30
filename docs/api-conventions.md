@@ -553,6 +553,11 @@ Color tokens use `light-dark()`, and `color-scheme` decides which side wins:
 places. With `light-dark()` each token declares both values once. The cost is browser
 support: it needs a browser from 2024 or later.
 
+Radii nest: `radius-surface` equals `radius-control` plus `space-inset`. Anything inside a
+surface that follows the surface's corner, such as an image or a button in a card's footer, uses
+`radius-control` and lines up with the card without extra math. `pnpm --filter @pumba-ui/tokens
+test` checks the equality.
+
 Only colors change with the theme. Space, radius, typography and motion are the same in both.
 
 ### Avoiding the wrong-theme flash

@@ -22,7 +22,7 @@
         "$type": "dimension"
       },
       "2xl": {
-        "$value": "1.5rem",
+        "$value": "1.75rem",
         "$type": "dimension"
       },
       "full": {
