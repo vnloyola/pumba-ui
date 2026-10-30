@@ -58,6 +58,28 @@ button shows only the spinner.
 **Why:** it is the same shape as plain HTML and needs no props, so there is nothing new to
 learn or to keep in the contract.
 
+### Input
+
+`Input` is a native `<input>`: `value` and `defaultValue` work as they do natively, so it is
+controlled or uncontrolled by the consumer. Its `size` is `sm`, `md` or `lg`, reflected as
+`data-size`, and it **replaces** the native numeric `size` attribute, which is left out of the
+type so every component keeps one meaning for `size`. Control widths come from CSS.
+
+A text field is filled, not outlined: its background is `field` (`field-hover` under the pointer)
+and its border is transparent until the state needs one (read-only, invalid). The fill must stand
+apart from both the page and a surface, which the contrast test checks only for text; the fill
+against its surroundings is a visual choice, so a field always needs a visible label.
+
+`invalid` writes `aria-invalid="true"` and `data-invalid`, and gives the field an error-colored
+border of double width, so the state is not carried by color alone. The error message is the
+consumer's: a visible text associated with `aria-describedby`, and ideally an icon. `disabled`
+and `readOnly` also write `data-disabled` and `data-readonly`. The consumer provides the label
+(`<label htmlFor>` or `aria-label`); a `Field` component that wires label, hint and error
+together is not built yet.
+
+**Why:** the native element already gives validation, autofill, mobile keyboards and form
+participation, so wrapping it would only add things to keep in sync.
+
 ### Example: simple component
 
 ```tsx
@@ -203,6 +225,10 @@ accessibility that plain HTML does not give). Where it does not, we use semantic
 - **Button** uses the native `<button>`, with Base UI's `useRender` only for `render`. Base
   UI's Button adds `focusableWhenDisabled` and role/keyboard handling for non-button elements,
   and no consumer needs either yet. Revisit if one does.
+- **Input** uses the native `<input>` with `useRender` for `render`. Base UI's Input only adds
+  `data-invalid`, `data-touched` and `data-focused` inside `Field.Root`, and Pumba has no `Field`
+  yet, so those attributes would not appear on a standalone control. Revisit when a `Field`
+  component is built.
 - Base UI types are never part of the public API.
 
 **Why:** accessible dialogs, menus and selects take years to get right, so we do not
@@ -510,7 +536,7 @@ touching any component.
 
 | Group | Names |
 | --- | --- |
-| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-text`, `focus`, and `success`, `error`, `warning` each with `-subtle` and `-text` |
+| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-text`, `focus`, and `success`, `error`, `warning` each with `-subtle` and `-text` |
 | Space | The scale `space-0` to `space-24`, plus `space-control-x`, `space-control-y`, `space-gap`, `space-stack`, `space-inset` |
 | Radius | `radius-control`, `radius-surface`, `radius-pill` |
 | Shadow | `shadow-raised`, `shadow-overlay` |
