@@ -89,6 +89,17 @@
       },
       "$description": "Outlines of interactive controls, which need 3:1 against the background."
     },
+    "scrim": {
+      "$type": "color",
+      "$value": "{primitive.color.black}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.black}",
+          "dark": "{primitive.color.black}"
+        }
+      },
+      "$description": "Base color of the layer behind a modal; components apply their own opacity."
+    },
     "field": {
       "$type": "color",
       "$value": "{primitive.color.neutral.200}",

@@ -1,0 +1,53 @@
+.dialog-story-canvas {
+  display: flex;
+  justify-content: center;
+  padding: var(--pumba-space-8) var(--pumba-space-6);
+}
+
+.dialog-story-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--pumba-space-gap);
+}
+
+.dialog-story-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pumba-space-gap);
+}
+
+.dialog-story-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pumba-space-4);
+}
+
+.dialog-story-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pumba-space-1);
+}
+
+.dialog-story-label {
+  font-size: var(--pumba-text-label-font-size);
+  font-weight: 600;
+}
+
+.dialog-story-row {
+  display: flex;
+  align-items: center;
+  gap: var(--pumba-space-gap);
+}
+
+.dialog-story-text {
+  margin: 0;
+  color: var(--pumba-color-text-secondary);
+}
+
+.dialog-story-dark {
+  min-height: 24rem;
+  padding: var(--pumba-space-8) var(--pumba-space-6);
+  background: var(--pumba-color-background);
+  color: var(--pumba-color-text);
+}

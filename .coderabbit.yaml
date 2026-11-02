@@ -1,0 +1,21 @@
+language: en-US
+reviews:
+  auto_review:
+    base_branches:
+      - dev
+      - main
+  path_filters:
+    - "!**/dist/**"
+    - "!**/storybook-static/**"
+    - "!pnpm-lock.yaml"
+  path_instructions:
+    - path: "packages/ui/src/**"
+      instructions: >-
+        Check against docs/api-conventions.md and CLAUDE.md. Flag Base UI types in public
+        signatures, primitive tokens referenced from component CSS, lucide-react imports outside
+        icons.ts, missing `render` support, and relative imports without the .js extension. Do not
+        ask for comments, JSDoc or features no consumer needs.
+    - path: "packages/tokens/**"
+      instructions: >-
+        Flag renamed or removed tokens (major change) and text/background pairs that may break
+        WCAG AA contrast. Do not ask for comments.
