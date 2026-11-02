@@ -141,6 +141,8 @@ const terms = [
   "If a clause is found unenforceable, the rest of the terms stay in force.",
 ];
 
+const clauses = [...terms, ...terms].map((text, number) => ({ number: number + 1, text }));
+
 export const LongContent: Story = {
   args: { defaultOpen: true },
   parameters: openInFrame,
@@ -152,10 +154,9 @@ export const LongContent: Story = {
       <Dialog.Content>
         <Dialog.Title>Terms of service</Dialog.Title>
         <Dialog.Description>Read them carefully before you continue.</Dialog.Description>
-        {[...terms, ...terms].map((paragraph, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: static repeated sample text
-          <p key={index} className="dialog-story-text">
-            {paragraph}
+        {clauses.map(({ number, text }) => (
+          <p key={number} className="dialog-story-text">
+            {text}
           </p>
         ))}
         <div className="dialog-story-actions">
