@@ -158,6 +158,19 @@ describe("Dialog", () => {
     expect(dialog.classList.contains("pumba-dialog")).toBe(true);
   });
 
+  it("moves the initial focus to the first visible control, skipping hidden inputs", async () => {
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+          <input type="hidden" name="token" value="abc" />
+          <input aria-label="Name" />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Name")));
+  });
+
   it("is uncontrolled with defaultOpen and closes with Dialog.Close", async () => {
     render(demo({ defaultOpen: true }));
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
