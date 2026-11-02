@@ -76,7 +76,9 @@ Three tools, one job each:
 - **Vite** bundles `src/index.ts` into one readable ESM file (`minify: false`; the consumer's
   bundler minifies). `react`, `react-dom`, `lucide-react` and `@base-ui/react` stay external, so
   the consumer installs each once. `emptyOutDir` is off because `dist/` also holds the types and
-  CSS.
+  CSS. The bundle starts with a `"use client";` banner, because the components call hooks
+  (`useRender`, `useRef`) and an app using React Server Components, such as Next.js, would fail
+  to import them from a server file otherwise. Base UI's own files carry the same directive.
 - **`tsc`** emits the declarations (`tsconfig.build.json`, which excludes tests and stories).
   Relative imports in `src` carry the `.js` extension so the emitted types resolve under Node's
   ESM rules.
