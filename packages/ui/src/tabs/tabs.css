@@ -1,0 +1,79 @@
+.pumba-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pumba-space-stack);
+  color: var(--pumba-color-text);
+  font-family: var(--pumba-text-body-font-family);
+  font-size: var(--pumba-text-body-font-size);
+  font-weight: var(--pumba-text-body-font-weight);
+  line-height: var(--pumba-text-body-line-height);
+  letter-spacing: var(--pumba-text-body-letter-spacing);
+}
+
+.pumba-tabs-list {
+  position: relative;
+  display: inline-flex;
+  align-self: flex-start;
+  gap: var(--pumba-space-1);
+  padding: var(--pumba-space-1);
+  border-radius: var(--pumba-radius-control);
+  background: var(--pumba-color-field);
+}
+
+.pumba-tabs-indicator {
+  position: absolute;
+  top: var(--active-tab-top);
+  left: var(--active-tab-left);
+  width: var(--active-tab-width);
+  height: var(--active-tab-height);
+  border-radius: calc(var(--pumba-radius-control) - var(--pumba-space-1));
+  background: var(--pumba-color-surface-raised);
+  box-shadow: var(--pumba-shadow-raised);
+  transition-property: top, left, width, height;
+  transition-duration: var(--pumba-motion-duration-transition);
+  transition-timing-function: var(--pumba-motion-easing-standard);
+}
+
+.pumba-tabs-tab {
+  position: relative;
+  z-index: 1;
+  padding: var(--pumba-space-1) var(--pumba-space-4);
+  border: 0;
+  border-radius: calc(var(--pumba-radius-control) - var(--pumba-space-1));
+  background: transparent;
+  color: var(--pumba-color-text-secondary);
+  font-family: var(--pumba-text-label-font-family);
+  font-size: var(--pumba-text-label-font-size);
+  font-weight: var(--pumba-text-label-font-weight);
+  line-height: var(--pumba-text-label-line-height);
+  letter-spacing: var(--pumba-text-label-letter-spacing);
+  cursor: pointer;
+  transition: color var(--pumba-motion-duration-feedback) var(--pumba-motion-easing-standard);
+}
+
+.pumba-tabs-tab:hover,
+.pumba-tabs-tab[data-hovered] {
+  color: var(--pumba-color-text);
+}
+
+.pumba-tabs-tab[data-active] {
+  color: var(--pumba-color-text);
+}
+
+.pumba-tabs-tab:focus-visible,
+.pumba-tabs-tab[data-focus-visible] {
+  outline: 2px solid var(--pumba-color-focus);
+  outline-offset: 2px;
+}
+
+.pumba-tabs-tab[data-disabled],
+.pumba-tabs-tab[data-disabled]:hover {
+  color: var(--pumba-color-text-disabled);
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pumba-tabs-indicator {
+    transition: none;
+  }
+}
