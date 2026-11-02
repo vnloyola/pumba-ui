@@ -14,6 +14,7 @@ export default defineConfig({
     emptyOutDir: false,
     minify: false,
     rollupOptions: {
+      output: { banner: '"use client";' },
       external: [
         /^react($|\/)/,
         /^react-dom($|\/)/,
