@@ -203,6 +203,9 @@ it is not a public part. Its radius is the list radius minus its padding, so it 
 track's corner like the radii in section 16. The selected tab only changes its text color
 (`data-active`). Hover and focus-visible also come as `data-hovered` and `data-focus-visible`.
 
+A `Tabs.Tab` that renders something other than a `<button>` must pass `nativeButton={false}`, like
+the other Base UI buttons; rendering a `<button>` or a Pumba `Button` needs nothing.
+
 Keyboard behavior is Base UI's: Tab moves into the list, the arrow keys, Home and End move focus
 between tabs, and Enter or Space selects the focused one. A disabled tab stays focusable, as the
 ARIA pattern allows, but it cannot be selected. Jsdom cannot run this navigation, so it is tested

@@ -13,7 +13,11 @@ export type TabsProps = Omit<ComponentProps<"div">, "defaultValue"> & {
 };
 
 type TabsListProps = ComponentProps<"div"> & { render?: Render<"div"> };
-type TabsTabProps = ComponentProps<"button"> & { value: string; render?: Render<"button"> };
+type TabsTabProps = ComponentProps<"button"> & {
+  value: string;
+  nativeButton?: boolean;
+  render?: Render<"button">;
+};
 type TabsPanelProps = ComponentProps<"div"> & { value: string; render?: Render<"div"> };
 
 const join = (own: string, className?: string) => (className ? `${own} ${className}` : own);
@@ -39,15 +43,8 @@ function TabsList({ className, children, ...rest }: TabsListProps) {
   );
 }
 
-function TabsTab({ className, render, ...rest }: TabsTabProps) {
-  return (
-    <BaseTabs.Tab
-      className={join("pumba-tabs-tab", className)}
-      nativeButton={!render}
-      render={render}
-      {...rest}
-    />
-  );
+function TabsTab({ className, ...rest }: TabsTabProps) {
+  return <BaseTabs.Tab className={join("pumba-tabs-tab", className)} {...rest} />;
 }
 
 function TabsPanel({ className, ...rest }: TabsPanelProps) {

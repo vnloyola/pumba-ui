@@ -21,6 +21,8 @@ const basic = (props: Partial<React.ComponentProps<typeof Tabs.Root>> = {}) => (
   </Tabs.Root>
 );
 
+const Plain = "button";
+
 const tab = (name: string) => screen.getByRole("tab", { name });
 
 describe("Tabs", () => {
@@ -85,6 +87,7 @@ describe("Tabs", () => {
         <Tabs.List aria-label="Demo">
           <Tabs.Tab
             value="a"
+            nativeButton={false}
             ref={(element) => {
               node = element;
             }}
@@ -100,6 +103,27 @@ describe("Tabs", () => {
     expect(link.tagName).toBe("A");
     expect(link.classList.contains("pumba-tabs-tab")).toBe(true);
     expect(node).toBe(link);
+  });
+
+  it("keeps a native button as a button when it is rendered with render", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List aria-label="Demo">
+          <Tabs.Tab value="a" render={<Plain data-custom="yes" />}>
+            A
+          </Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="a">Panel</Tabs.Panel>
+      </Tabs.Root>,
+    );
+    const button = tab("A");
+    expect(button.tagName).toBe("BUTTON");
+    expect(button.getAttribute("data-custom")).toBe("yes");
+    expect(button.getAttribute("type")).toBe("button");
+    expect(button.classList.contains("pumba-tabs-tab")).toBe(true);
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
   });
 
   it("keeps the class and ref of the list, panel and root with render={<a />}", () => {
