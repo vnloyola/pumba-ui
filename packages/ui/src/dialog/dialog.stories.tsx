@@ -186,6 +186,28 @@ export const OpenDark: Story = {
   },
 };
 
+export const HiddenFirstControl: Story = {
+  args: { defaultOpen: true },
+  parameters: openInFrame,
+  render: (args) => (
+    <Dialog.Root {...args}>
+      <Dialog.Content>
+        <Dialog.Title>Rename project</Dialog.Title>
+        <Dialog.Description>The first control in the markup is not visible.</Dialog.Description>
+        <button type="button" className="dialog-story-hidden">
+          Hidden shortcut
+        </button>
+        <Input aria-label="Project name" defaultValue="Website redesign" />
+      </Dialog.Content>
+    </Dialog.Root>
+  ),
+  play: async () => {
+    const dialog = await within(document.body).findByRole("dialog");
+    const input = within(dialog).getByRole("textbox", { name: "Project name" });
+    await waitFor(() => expect(input).toHaveFocus());
+  },
+};
+
 export const KeyboardNavigation: Story = {
   render: (args) => (
     <Dialog.Root {...args}>

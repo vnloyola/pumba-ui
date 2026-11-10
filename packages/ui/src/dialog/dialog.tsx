@@ -78,9 +78,9 @@ function DialogContent({ className, container, children, ref, ...rest }: DialogC
         className={join("pumba-dialog", className)}
         ref={setRefs(ref, popup)}
         initialFocus={() => {
-          const first = popup.current?.querySelector<HTMLElement>(FOCUSABLE);
-          (first ?? popup.current)?.focus({ preventScroll: true });
-          return false;
+          const target = popup.current?.querySelector<HTMLElement>(FOCUSABLE) ?? popup.current;
+          target?.focus({ preventScroll: true });
+          return document.activeElement === target ? false : null;
         }}
         {...rest}
       >

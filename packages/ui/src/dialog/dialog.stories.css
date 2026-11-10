@@ -51,3 +51,7 @@
   background: var(--pumba-color-background);
   color: var(--pumba-color-text);
 }
+
+.dialog-story-hidden {
+  display: none;
+}
