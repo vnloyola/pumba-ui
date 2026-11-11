@@ -1,9 +1,26 @@
 {
   "name": "@pumba-ui/ui",
   "version": "0.0.0",
-  "private": true,
   "description": "Accessible React components for the Pumba design system.",
   "license": "MIT",
+  "homepage": "https://github.com/vnloyola/pumba-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vnloyola/pumba-ui.git",
+    "directory": "packages/ui"
+  },
+  "bugs": {
+    "url": "https://github.com/vnloyola/pumba-ui/issues"
+  },
+  "keywords": [
+    "react",
+    "design-system",
+    "components",
+    "accessible",
+    "base-ui",
+    "css-layers",
+    "dark-mode"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -32,11 +49,11 @@
   },
   "dependencies": {
     "@base-ui/react": "catalog:",
-    "@pumba-ui/tokens": "workspace:*",
     "lucide-react": "catalog:"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
+    "@pumba-ui/tokens": "workspace:*",
     "@storybook/react-vite": "catalog:",
     "@testing-library/dom": "catalog:",
     "@testing-library/react": "catalog:",
@@ -52,5 +69,9 @@
     "storybook": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }
