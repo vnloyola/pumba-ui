@@ -1,3 +1,5 @@
+# TODO: after dev is released to main, move the commit and cleanup jobs to a workflow_run workflow
+# on main, so the file that holds the write token does not come from the PR branch.
 name: Update visual baselines
 
 on:
@@ -36,3 +38,63 @@ jobs:
           path: apps/storybook/visual/stories.visual.ts-snapshots/**/*.png
           if-no-files-found: error
           retention-days: 1
+
+  commit:
+    name: Commit
+    needs: generate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: visual-baselines
+          path: ${{ runner.temp }}/baselines
+      - name: Check that the artifact only holds the expected images
+        run: |
+          set -euo pipefail
+          source_dir="$RUNNER_TEMP/baselines"
+          if find "$source_dir" -type f ! -name '*-chromium-linux.png' | grep -q .; then
+            echo "The artifact holds files other than the reference images."
+            exit 1
+          fi
+          if find "$source_dir" -mindepth 1 -maxdepth 1 ! -name light ! -name dark | grep -q .; then
+            echo "The artifact has an unexpected layout."
+            exit 1
+          fi
+      - name: Replace the baselines and commit them
+        run: |
+          set -euo pipefail
+          target=apps/storybook/visual/stories.visual.ts-snapshots
+          rm -rf "$target"
+          mkdir -p "$target"
+          cp -R "$RUNNER_TEMP/baselines/." "$target/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$target"
+          if git diff --cached --quiet; then
+            echo "The baselines did not change."
+          else
+            git commit -m "chore: update visual baselines"
+            git push
+          fi
+
+  cleanup:
+    name: Remove the label
+    needs: [generate, commit]
+    if: >-
+      always() &&
+      github.event.label.name == 'update-visual-baselines' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - run: gh pr edit "$PR_NUMBER" --repo "$REPOSITORY" --remove-label update-visual-baselines
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
