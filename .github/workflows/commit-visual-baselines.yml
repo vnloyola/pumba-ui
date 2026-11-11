@@ -1,0 +1,29 @@
+name: Commit visual baselines
+
+on:
+  workflow_run:
+    workflows: [Update visual baselines]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  commit:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+      pull-requests: write
+    steps:
+      # workflow_run uses the default branch. Never check out or execute PR code here.
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const baseline = require('./.github/scripts/commit-visual-baselines.cjs');
+            await baseline({ github, context, core });
