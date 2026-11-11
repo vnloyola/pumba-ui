@@ -29,7 +29,10 @@ Open a pull request for the current branch. Card: $ARGUMENTS
      say so.
    - **Not tested:** anything not verified. Write "Nothing" only if that is true.
    - **Checklist:** tick only what was verified.
-4. Title format: `type: description`, where type is one of `feature`, `chore`, `docs`,
-   `a11y`, `fix`. Lowercase description, imperative, no card id in the title.
+4. Title format: Conventional Commits, `type(scope): description`. Types are `feat`, `fix`,
+   `docs`, `chore`, `refactor`, `test`, `ci`, `build`, `perf`, `style` and `revert`; the scope is
+   optional. An accessibility change is `fix(a11y)` or `feat(a11y)`, and a change that breaks the
+   public API adds `!` after the type. Lowercase description, imperative, no card id in the
+   title. CI rejects a title that does not follow this (`commitlint.config.mjs`).
 5. Show the title and body to the user and wait for a clear yes.
 6. Run `gh pr create --base dev --title "<title>" --body "<body>"` and print the PR URL.
