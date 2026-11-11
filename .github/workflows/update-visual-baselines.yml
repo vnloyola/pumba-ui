@@ -48,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/download-artifact@v4
         with:
           name: visual-baselines
@@ -66,6 +66,9 @@ jobs:
             exit 1
           fi
       - name: Replace the baselines and commit them
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          GENERATED_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           target=apps/storybook/visual/stories.visual.ts-snapshots
@@ -79,7 +82,7 @@ jobs:
             echo "The baselines did not change."
           else
             git commit -m "chore: update visual baselines"
-            git push
+            git push --force-with-lease="refs/heads/$BRANCH:$GENERATED_SHA" origin "HEAD:refs/heads/$BRANCH"
           fi
 
   cleanup:

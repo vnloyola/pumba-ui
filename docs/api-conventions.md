@@ -724,7 +724,8 @@ to the PR. The "Update visual baselines" workflow regenerates every reference on
 them to the PR branch and removes the label, even when it fails, so the label can be added again.
 The job that builds and runs the PR's code has read-only permissions and keeps no credentials; a
 second job, which runs none of that code, only copies the generated `.png` files after checking
-them and commits them. A push made by a workflow does not start CI, so
+them and commits them on top of the exact commit they were generated from; if the branch moved in
+the meantime the push is rejected, and the label is still removed so it can be added again. A push made by a workflow does not start CI, so
 re-run the failed checks after it. Review the new images in the PR diff before merging: a
 reference that changed is a visual change that someone accepted.
 
