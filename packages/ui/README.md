@@ -11,6 +11,10 @@ pnpm add @pumba-ui/ui
 `react` and `react-dom` (19 or later) are peer dependencies: your app provides them, so there
 is only one copy of React.
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:039b805ca661751acb0ed362745aa7ab0a57cbeb432f596183512041beeb4a2a -->
+
 ## Quick start
 
 Import the styles once, then use the components:
@@ -20,6 +24,8 @@ Import the styles once, then use the components:
 ```
 
 ```tsx
+"use client";
+
 import { Button, Card } from "@pumba-ui/ui";
 
 export function Welcome() {
@@ -34,8 +40,12 @@ export function Welcome() {
 }
 ```
 
-The package ships the `"use client"` directive, so it can be imported from React Server
-Components such as Next.js.
+The package ships the `"use client"` directive. Compound components such as `Card` must be
+rendered through a Client Component, as in the example above. When using them from a Server
+Component (for example, in Next.js), import and render that Client Component (`Welcome`)
+instead of accessing `Card.Root` directly.
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 ## Components
 
