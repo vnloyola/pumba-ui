@@ -28,14 +28,17 @@ pnpm typecheck                          # needs `pnpm build` first
 pnpm test
 pnpm add:component <Name>               # generates a component folder from templates
 pnpm lint:title                         # validates a commit message or PR title read from stdin
+pnpm test:visual                        # screenshots of every story; needs build-storybook first
 pnpm check:package                      # publint and arethetypeswrong
 pnpm build-storybook
 pnpm --filter @pumba-ui/ui build        # one package
 ```
 
 Done means `pnpm lint && pnpm typecheck && pnpm test` pass, plus `pnpm build` when you touched
-`tokens`, `ui` or `storybook`. CI runs lint, typecheck, build, check:package, build-storybook and
-test on every PR.
+`tokens`, `ui` or `storybook`. CI runs lint, typecheck, build, check:package, build-storybook, test
+and the visual regression check on every PR. A PR that changes how a story looks on purpose gets
+the `update-visual-baselines` label to refresh the reference images (section 17 of
+`docs/api-conventions.md`).
 
 ## Components
 
