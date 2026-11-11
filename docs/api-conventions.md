@@ -719,6 +719,16 @@ The reference images live in `apps/storybook/visual/stories.visual.ts-snapshots/
 and are rendered on Linux only: fonts and antialiasing differ on macOS, so a local run is for
 debugging, writes `*-darwin.png` files that git ignores, and is not what CI compares against.
 
+The jobs that drive a browser (`Test`, `Visual` and the baselines generation) run inside the
+official Playwright image, `mcr.microsoft.com/playwright:v<version>-noble`, which already holds
+the browser, its system libraries and its fonts. Installing them with `apt` on every run failed
+whenever the runner could not reach Ubuntu's mirror, and the fonts of that install were the ones
+the first references were drawn with. The version in the image tag must be the exact version of
+`playwright` and `@playwright/test` pinned in `pnpm-workspace.yaml`, so upgrading Playwright means
+changing those two pins and the tag in `ci.yml` and `update-visual-baselines.yml` together, and
+regenerating the references with the label below. Every job also has a `timeout-minutes`, so a
+hung network step fails in minutes instead of holding the PR.
+
 To update the references after an intended visual change, add the `update-visual-baselines` label
 to the PR. The "Update visual baselines" workflow regenerates every reference on Linux, commits
 them to the PR branch and removes the label, even when it fails, so the label can be added again.

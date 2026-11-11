@@ -183,7 +183,7 @@ catalogs:
       specifier: ^5.3.0
       version: 5.3.0
     '@playwright/test':
-      specifier: ~1.64.1
+      specifier: 1.64.1
       version: 1.64.1
     '@storybook/addon-a11y':
       specifier: ^10.6.1
@@ -225,7 +225,7 @@ catalogs:
       specifier: ^1.52.0
       version: 1.52.0
     playwright:
-      specifier: ~1.64.1
+      specifier: 1.64.1
       version: 1.64.1
     postcss:
       specifier: ^8.5.0

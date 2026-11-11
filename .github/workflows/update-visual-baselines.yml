@@ -15,6 +15,9 @@ jobs:
       github.event.label.name == 'update-visual-baselines' &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
     permissions:
       contents: read
     steps:
@@ -29,7 +32,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build-storybook
-      - run: pnpm --filter @pumba-ui/storybook exec playwright install --with-deps chromium
       - run: rm -rf apps/storybook/visual/stories.visual.ts-snapshots
       - run: pnpm --filter @pumba-ui/storybook exec playwright test --update-snapshots=all
       - uses: actions/upload-artifact@v4
@@ -43,6 +45,7 @@ jobs:
     name: Commit
     needs: generate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
@@ -88,6 +91,7 @@ jobs:
   cleanup:
     name: Remove the label
     needs: [generate, commit]
+    timeout-minutes: 5
     if: >-
       always() &&
       github.event.label.name == 'update-visual-baselines' &&
