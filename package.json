@@ -18,6 +18,7 @@
     "storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook storybook",
     "build-storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook build-storybook",
     "format": "biome format --write .",
+    "lint:title": "commitlint",
     "add:component": "pnpm --filter @pumba-ui/ui add:component",
     "changeset": "changeset",
     "version-packages": "changeset version",
@@ -26,6 +27,8 @@
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "@changesets/cli": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
     "stylelint": "catalog:",
     "stylelint-config-standard": "catalog:",
     "typescript": "catalog:"

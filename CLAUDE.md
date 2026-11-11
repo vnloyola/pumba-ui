@@ -27,7 +27,7 @@ pnpm lint                               # Biome (JS/TS) and Stylelint (CSS)
 pnpm typecheck                          # needs `pnpm build` first
 pnpm test
 pnpm add:component <Name>               # generates a component folder from templates
-pnpm changeset                          # records a version bump and changelog line for a PR
+pnpm lint:title                         # validates a commit message or PR title read from stdin
 pnpm test:visual                        # screenshots of every story; needs build-storybook first
 pnpm check:package                      # publint and arethetypeswrong
 pnpm build-storybook
@@ -70,15 +70,19 @@ before deciding, then record it in that file. Quick reminders:
 
 - Default branch is `main`. Work goes `feature branch -> dev` (squash and merge), then
   `dev -> main` (merge commit). Never rebase-merge.
-- Branch names: `feature/`, `fix/`, `chore/`, `docs/`, `a11y/` followed by a short kebab-case
-  description.
-- PR title is `type: description`: type is `feature`, `chore`, `docs`, `a11y` or `fix`, the
-  description is lowercase and imperative, with no card id.
+- Branch names are a commit type, a slash and a short kebab-case description: `feat/`, `fix/`,
+  `docs/`, `chore/`, `refactor/`, `test/` or `ci/`.
+- PR titles and commit messages follow Conventional Commits: `type(scope): description`. The
+  scope is optional and usually a component or package (`feat(button): add a loading state`). The
+  description is lowercase and imperative, with no card id. Types are `feat`, `fix`, `docs`,
+  `chore`, `refactor`, `test`, `ci`, `build`, `perf`, `style` and `revert`.
+- An accessibility change is `fix(a11y)` or `feat(a11y)`. A change that breaks the public API
+  (section 8 of `docs/api-conventions.md`) adds `!` after the type, as in
+  `feat(tokens)!: rename a token`, or a `BREAKING CHANGE:` footer.
+- The squash merge uses the PR title as the commit message on `dev`, so CI validates the title
+  (`commitlint.config.mjs`). `pnpm lint:title` checks one by hand.
 - Open PRs with `/open-pr <card id or none>`. The body follows `.github/pull_request_template.md`
   and states only what was actually run.
-- Commit messages follow the same `type: description` format.
-- A PR that changes what `@pumba-ui/tokens` or `@pumba-ui/ui` publish carries a changeset
-  (`pnpm changeset`). The rule and the bump to choose are in `.changeset/README.md`.
 
 ## Working rules
 
