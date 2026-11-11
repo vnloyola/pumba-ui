@@ -11,6 +11,39 @@ pnpm add @pumba-ui/ui
 `react` and `react-dom` (19 or later) are peer dependencies: your app provides them, so there
 is only one copy of React.
 
+## Quick start
+
+Import the styles once, then use the components:
+
+```css
+@import "@pumba-ui/ui/styles.css";
+```
+
+```tsx
+import { Button, Card } from "@pumba-ui/ui";
+
+export function Welcome() {
+  return (
+    <Card.Root>
+      <Card.Content>Ready to go.</Card.Content>
+      <Card.Footer>
+        <Button>Get started</Button>
+      </Card.Footer>
+    </Card.Root>
+  );
+}
+```
+
+The package ships the `"use client"` directive, so it can be imported from React Server
+Components such as Next.js.
+
+## Components
+
+`Button`, `Card`, `Badge`, `Input`, `Tabs` and `Dialog`. They accept the native props of the
+element they render, append your `className` to their own, and take a `render` prop to change
+the element they render. The rules every component follows are in
+[`docs/api-conventions.md`](https://github.com/vnloyola/pumba-ui/blob/main/docs/api-conventions.md).
+
 ## Styles
 
 Import the stylesheet once, in your app's entry CSS or JS:
@@ -62,14 +95,16 @@ section 13 of `docs/api-conventions.md` for the cases tested.
 Colors follow the OS (`prefers-color-scheme`). Set `data-theme="light"` or `data-theme="dark"`
 on `<html>`, or on any element to theme only its subtree.
 
-## Development
+## For maintainers
+
+### Development
 
 ```bash
 pnpm --filter @pumba-ui/ui build           # dist/: index.js, .d.ts, styles.css, reset.css
 pnpm --filter @pumba-ui/ui check:package   # publint and arethetypeswrong
 ```
 
-## How the package is built
+### How the package is built
 
 Three tools, one job each:
 
@@ -87,7 +122,7 @@ Three tools, one job each:
   The CSS is otherwise left as written, so the layer order statement stays at the top of
   `styles.css` and the files stay readable and unminified.
 
-## Conventions
+### Conventions
 
 - `src/icons.ts` is the only file that imports `lucide-react`. Components import icons from it,
   so the icon library can change without touching them.

@@ -1,9 +1,25 @@
 {
   "name": "@pumba-ui/tokens",
   "version": "0.0.0",
-  "private": true,
   "description": "Design tokens for Pumba: DTCG source compiled to CSS variables and TypeScript types.",
   "license": "MIT",
+  "homepage": "https://github.com/vnloyola/pumba-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vnloyola/pumba-ui.git",
+    "directory": "packages/tokens"
+  },
+  "bugs": {
+    "url": "https://github.com/vnloyola/pumba-ui/issues"
+  },
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "css-variables",
+    "dtcg",
+    "oklch",
+    "dark-mode"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -13,7 +29,8 @@
     "./tokens.css": "./dist/tokens.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "!dist/figma.json"
   ],
   "sideEffects": [
     "**/*.css"
@@ -24,5 +41,9 @@
   },
   "devDependencies": {
     "style-dictionary": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }
