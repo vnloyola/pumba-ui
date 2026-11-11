@@ -725,8 +725,10 @@ them to the PR branch and removes the label, even when it fails, so the label ca
 The job that builds and runs the PR's code has read-only permissions and keeps no credentials; a
 second job, which runs none of that code, only copies the generated `.png` files after checking
 them and commits them on top of the exact commit they were generated from; if the branch moved in
-the meantime the push is rejected, and the label is still removed so it can be added again. The
-commit it pushes starts CI on the PR like any other. A regeneration can also change a few pixels of
+the meantime the push is rejected, and the label is still removed so it can be added again. GitHub
+creates the CI run for the commit it pushes but holds it as "action required", because a bot made
+the push: open the PR's checks and approve the run, or re-run it, before merging. A regeneration can
+also change a few pixels of
 stories that measure fractional widths, such as the Tabs indicator, by less than the comparison
 tolerance; those images change in the diff without a visible difference. Review the new images in
 the PR diff before merging: a
