@@ -705,8 +705,29 @@ browser through the Storybook Vitest addon, and any axe violation fails it
 are checked. Run `pnpm --filter @pumba-ui/storybook exec playwright install chromium`
 once to get the browser.
 
+### Visual regression
+
+`pnpm build-storybook` followed by `pnpm test:visual` opens every story of the built Storybook in
+Chromium with Playwright and compares a screenshot of it with a reference image. A story is
+captured in light and dark by setting the `theme` global; the `...Dark` stories (section 18) are
+captured once, because they already force their own theme. The window is fixed at 900 by 700,
+animations are disabled and the browser asks for reduced motion, so a screenshot depends only on
+the component. A change to a component or a token that alters how a story looks fails the run and
+the diff is in `apps/storybook/playwright-report`.
+
+The reference images live in `apps/storybook/visual/stories.visual.ts-snapshots/`, split by theme,
+and are rendered on Linux only: fonts and antialiasing differ on macOS, so a local run is for
+debugging, writes `*-darwin.png` files that git ignores, and is not what CI compares against.
+
+To update the references after an intended visual change, add the `update-visual-baselines` label
+to the PR. The "Update visual baselines" workflow regenerates every reference on Linux, commits
+them to the PR branch and removes the label. A push made by a workflow does not start CI, so
+re-run the failed checks after it. Review the new images in the PR diff before merging: a
+reference that changed is a visual change that someone accepted.
+
 **Why:** the same five checks for every component keep the contract of sections 3 to 5 from
-depending on someone remembering to test it.
+depending on someone remembering to test it, and a screenshot catches what none of them can see:
+a token or a stylesheet that makes something look different without breaking anything.
 
 ## 18. Stories
 

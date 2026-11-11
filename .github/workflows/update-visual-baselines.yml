@@ -1,0 +1,47 @@
+name: Update visual baselines
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    name: Update
+    if: >-
+      github.event.label.name == 'update-visual-baselines' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build-storybook
+      - run: pnpm --filter @pumba-ui/storybook exec playwright install --with-deps chromium
+      - run: rm -rf apps/storybook/visual/stories.visual.ts-snapshots
+      - run: pnpm --filter @pumba-ui/storybook exec playwright test --update-snapshots=all
+      - name: Commit the baselines
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/storybook/visual
+          if git diff --cached --quiet; then
+            echo "The baselines did not change."
+          else
+            git commit -m "chore: update visual baselines"
+            git push
+          fi
+      - name: Remove the label
+        run: gh pr edit "$PR_NUMBER" --remove-label update-visual-baselines
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
