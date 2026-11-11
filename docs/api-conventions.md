@@ -721,7 +721,10 @@ debugging, writes `*-darwin.png` files that git ignores, and is not what CI comp
 
 To update the references after an intended visual change, add the `update-visual-baselines` label
 to the PR. The "Update visual baselines" workflow regenerates every reference on Linux, commits
-them to the PR branch and removes the label. A push made by a workflow does not start CI, so
+them to the PR branch and removes the label, even when it fails, so the label can be added again.
+The job that builds and runs the PR's code has read-only permissions and keeps no credentials; a
+second job, which runs none of that code, only copies the generated `.png` files after checking
+them and commits them. A push made by a workflow does not start CI, so
 re-run the failed checks after it. Review the new images in the PR diff before merging: a
 reference that changed is a visual change that someone accepted.
 
