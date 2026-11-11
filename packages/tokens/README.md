@@ -12,10 +12,6 @@ when you want the tokens without the components, or the token names in TypeScrip
 pnpm add @pumba-ui/tokens
 ```
 
-<!-- coderabbit-ai-generated:v1 -->
-
-<!-- coderabbit-ai-generated-section:v1:f9436e3786bfe4ab151ff05d221bea8cf13c60ca622c82d68df4cb232f6db9d6 -->
-
 ## Use
 
 Import the CSS once. Every token is a `--pumba-*` variable inside `@layer pumba.tokens`:
@@ -44,8 +40,6 @@ element.style.color = tokens["pumba-color-text"];
 `primitives` and `PrimitiveTokenName` do the same for the raw palette, which components and your
 own code should not use directly. The names and the reasoning behind them are in section 16 of
 [`docs/api-conventions.md`](https://github.com/vnloyola/pumba-ui/blob/main/docs/api-conventions.md).
-
-<!-- /coderabbit-ai-generated:v1 -->
 
 ## For maintainers
 
