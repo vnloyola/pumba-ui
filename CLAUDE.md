@@ -27,6 +27,7 @@ pnpm lint                               # Biome (JS/TS) and Stylelint (CSS)
 pnpm typecheck                          # needs `pnpm build` first
 pnpm test
 pnpm add:component <Name>               # generates a component folder from templates
+pnpm changeset                          # records a version bump and changelog line for a PR
 pnpm check:package                      # publint and arethetypeswrong
 pnpm build-storybook
 pnpm --filter @pumba-ui/ui build        # one package
@@ -73,6 +74,8 @@ before deciding, then record it in that file. Quick reminders:
 - Open PRs with `/open-pr <card id or none>`. The body follows `.github/pull_request_template.md`
   and states only what was actually run.
 - Commit messages follow the same `type: description` format.
+- A PR that changes what `@pumba-ui/tokens` or `@pumba-ui/ui` publish carries a changeset
+  (`pnpm changeset`). The rule and the bump to choose are in `.changeset/README.md`.
 
 ## Working rules
 

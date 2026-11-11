@@ -28,3 +28,4 @@ Card: VIT-x <!-- or "none" if there is no card -->
 - [ ] Title follows `type: description` (feature, chore, docs, a11y, fix)
 - [ ] `pnpm lint`, `pnpm typecheck` and `pnpm test` pass
 - [ ] Public API changes are reflected in `docs/api-conventions.md`
+- [ ] A changeset is added, or none is needed (see `.changeset/README.md`)

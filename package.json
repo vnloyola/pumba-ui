@@ -17,10 +17,14 @@
     "storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook storybook",
     "build-storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook build-storybook",
     "format": "biome format --write .",
-    "add:component": "pnpm --filter @pumba-ui/ui add:component"
+    "add:component": "pnpm --filter @pumba-ui/ui add:component",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
+    "@changesets/cli": "catalog:",
     "stylelint": "catalog:",
     "stylelint-config-standard": "catalog:",
     "typescript": "catalog:"

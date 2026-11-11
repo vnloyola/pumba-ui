@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@4.0.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [["@pumba-ui/tokens", "@pumba-ui/ui"]],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "dev",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@pumba-ui/storybook"]
+}
