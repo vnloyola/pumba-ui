@@ -8,6 +8,13 @@ pnpm storybook         # dev server on http://localhost:6006
 pnpm build-storybook   # static site in apps/storybook/storybook-static
 ```
 
+```bash
+pnpm test:visual       # from the root: compare every story with its reference screenshot
+```
+
+`test:visual` needs `pnpm build-storybook` first. How the references work, and how to update
+them, is in section 17 of `docs/api-conventions.md`.
+
 Both root scripts build `@pumba-ui/tokens` and `@pumba-ui/ui` first, because Storybook consumes
 them from their `dist/` like any other app would, so it exercises the real package exports.
 

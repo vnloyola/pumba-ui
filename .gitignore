@@ -9,3 +9,7 @@ coverage
 .claude/settings.local.json
 .claude/worktrees
 .claude/launch.json
+test-results
+playwright-report
+apps/storybook/visual/**/*-darwin.png
+apps/storybook/visual/**/*-win32.png

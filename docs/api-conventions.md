@@ -705,8 +705,48 @@ browser through the Storybook Vitest addon, and any axe violation fails it
 are checked. Run `pnpm --filter @pumba-ui/storybook exec playwright install chromium`
 once to get the browser.
 
+### Visual regression
+
+`pnpm build-storybook` followed by `pnpm test:visual` opens every story of the built Storybook in
+Chromium with Playwright and compares a screenshot of it with a reference image. A story is
+captured in light and dark by setting the `theme` global; the `...Dark` stories (section 18) are
+captured once, because they already force their own theme. The window is fixed at 900 by 700,
+animations are disabled and the browser asks for reduced motion, so a screenshot depends only on
+the component. A change to a component or a token that alters how a story looks fails the run and
+the diff is in `apps/storybook/playwright-report`.
+
+The reference images live in `apps/storybook/visual/stories.visual.ts-snapshots/`, split by theme,
+and are rendered on Linux only: fonts and antialiasing differ on macOS, so a local run is for
+debugging, writes `*-darwin.png` files that git ignores, and is not what CI compares against.
+
+The jobs that drive a browser (`Test`, `Visual` and the baselines generation) run inside the
+official Playwright image, `mcr.microsoft.com/playwright:v<version>-noble`, which already holds
+the browser, its system libraries and its fonts. Installing them with `apt` on every run failed
+whenever the runner could not reach Ubuntu's mirror, and the fonts of that install were the ones
+the first references were drawn with. The version in the image tag must be the exact version of
+`playwright` and `@playwright/test` pinned in `pnpm-workspace.yaml`, so upgrading Playwright means
+changing those two pins and the tag in `ci.yml` and `update-visual-baselines.yml` together, and
+regenerating the references with the label below. Every job also has a `timeout-minutes`, so a
+hung network step fails in minutes instead of holding the PR.
+
+To update the references after an intended visual change, add the `update-visual-baselines` label
+to the PR. The "Update visual baselines" workflow regenerates every reference on Linux, commits
+them to the PR branch and removes the label, even when it fails, so the label can be added again.
+The job that builds and runs the PR's code has read-only permissions and keeps no credentials; a
+second job, which runs none of that code, only copies the generated `.png` files after checking
+them and commits them on top of the exact commit they were generated from; if the branch moved in
+the meantime the push is rejected, and the label is still removed so it can be added again. GitHub
+creates the CI run for the commit it pushes but holds it as "action required", because a bot made
+the push: open the PR's checks and approve the run, or re-run it, before merging. A regeneration can
+also change a few pixels of
+stories that measure fractional widths, such as the Tabs indicator, by less than the comparison
+tolerance; those images change in the diff without a visible difference. Review the new images in
+the PR diff before merging: a
+reference that changed is a visual change that someone accepted.
+
 **Why:** the same five checks for every component keep the contract of sections 3 to 5 from
-depending on someone remembering to test it.
+depending on someone remembering to test it, and a screenshot catches what none of them can see:
+a token or a stylesheet that makes something look different without breaking anything.
 
 ## 18. Stories
 
