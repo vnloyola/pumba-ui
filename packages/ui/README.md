@@ -114,8 +114,8 @@ pnpm --filter @pumba-ui/ui check:package   # publint and arethetypeswrong
 Three tools, one job each:
 
 - **Vite** builds `src/` into readable ESM with one output file per source module
-  (`preserveModules`, `minify: false`; the consumer's bundler minifies). `react`, `react-dom`,
-  `lucide-react` and `@base-ui/react` stay external, so the consumer installs each once.
+  (`preserveModules`, `minify: false`; the consumer's bundler minifies). `react`, `react-dom`
+  and `@base-ui/react` stay external, so the consumer installs each once.
   `emptyOutDir` is off because `dist/` also holds the types and CSS. Each component file
   (`button.tsx`, `card.tsx`…) starts with `"use client"`, because the components call hooks
   (`useRender`, `useRef`). The `index.ts` files do not: they build the compound objects
@@ -123,7 +123,8 @@ Three tools, one job each:
   `Card.Root` gets a client reference instead of `undefined`. A single bundle with one
   `"use client"` banner cannot do that: the server only sees the `Card` object as an opaque
   reference and cannot read its parts.
-- **`tsc`** emits the declarations (`tsconfig.build.json`, which excludes tests and stories).
+- **`tsc`** emits the declarations (`tsconfig.build.json`, which excludes tests, stories and
+  `icons.ts`).
   Relative imports in `src` carry the `.js` extension so the emitted types resolve under Node's
   ESM rules.
 - **`scripts/build-css.mjs`** inlines the CSS `@import`s with `postcss-import`, resolving
@@ -137,7 +138,10 @@ Three tools, one job each:
 ### Conventions
 
 - `src/icons.ts` is the only file that imports `lucide-react`. Components import icons from it,
-  so the icon library can change without touching them.
+  so the icon library can change without touching them. While only stories and tests use icons,
+  `icons.ts` is left out of `dist/` and `lucide-react` is a `devDependency`; the first component
+  that renders an icon moves `lucide-react` back to `dependencies`, adds it to Vite's `external`
+  list and removes `icons.ts` from the `tsconfig.build.json` excludes.
 - Each component's CSS is added to `src/styles/styles.css` with
   `@import url("../<name>/<name>.css") layer(pumba.components);`.
 - `reset.css` is optional and separate from `styles.css`. Tailwind users skip it.

@@ -50,8 +50,7 @@
   "dependencies": {
     "@base-ui/react": "catalog:",
     "@fontsource-variable/figtree": "catalog:",
-    "@fontsource-variable/jetbrains-mono": "catalog:",
-    "lucide-react": "catalog:"
+    "@fontsource-variable/jetbrains-mono": "catalog:"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
@@ -63,6 +62,7 @@
     "@types/react-dom": "catalog:",
     "axe-core": "catalog:",
     "jsdom": "catalog:",
+    "lucide-react": "catalog:",
     "postcss": "catalog:",
     "postcss-import": "catalog:",
     "publint": "catalog:",
