@@ -1,8 +1,79 @@
 {
   "name": "@pumba-ui/ui",
   "version": "0.0.0",
-  "private": true,
   "description": "Accessible React components for the Pumba design system.",
   "license": "MIT",
-  "type": "module"
+  "homepage": "https://github.com/vnloyola/pumba-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vnloyola/pumba-ui.git",
+    "directory": "packages/ui"
+  },
+  "bugs": {
+    "url": "https://github.com/vnloyola/pumba-ui/issues"
+  },
+  "keywords": [
+    "react",
+    "design-system",
+    "components",
+    "accessible",
+    "base-ui",
+    "css-layers",
+    "dark-mode"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./reset.css": "./dist/reset.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs",
+    "typecheck": "tsc --noEmit",
+    "check:package": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./reset.css",
+    "test": "vitest run",
+    "add:component": "node scripts/add-component.mjs"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@base-ui/react": "catalog:",
+    "@fontsource-variable/figtree": "catalog:",
+    "@fontsource-variable/jetbrains-mono": "catalog:",
+    "lucide-react": "catalog:"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "catalog:",
+    "@pumba-ui/tokens": "workspace:*",
+    "@storybook/react-vite": "catalog:",
+    "@testing-library/dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "axe-core": "catalog:",
+    "jsdom": "catalog:",
+    "postcss": "catalog:",
+    "postcss-import": "catalog:",
+    "publint": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "storybook": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }

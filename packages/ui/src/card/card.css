@@ -1,0 +1,22 @@
+.pumba-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pumba-space-stack);
+  padding: var(--pumba-space-inset);
+  border: 1px solid var(--pumba-color-border);
+  border-radius: var(--pumba-radius-surface);
+  background: var(--pumba-color-surface);
+  box-shadow: var(--pumba-shadow-raised);
+  color: var(--pumba-color-text);
+  font-family: var(--pumba-text-body-font-family);
+  font-size: var(--pumba-text-body-font-size);
+  font-weight: var(--pumba-text-body-font-weight);
+  line-height: var(--pumba-text-body-line-height);
+  letter-spacing: var(--pumba-text-body-letter-spacing);
+}
+
+.pumba-card-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--pumba-space-gap);
+}

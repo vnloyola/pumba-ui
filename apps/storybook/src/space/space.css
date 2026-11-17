@@ -1,0 +1,12 @@
+.tokens-row {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  align-items: center;
+  gap: var(--pumba-space-4);
+}
+
+.tokens-bar {
+  height: var(--pumba-space-4);
+  background: var(--pumba-color-accent);
+  border-radius: var(--pumba-radius-pill);
+}

@@ -1,0 +1,53 @@
+.badge-story-canvas {
+  display: flex;
+  justify-content: center;
+  padding: var(--pumba-space-8) var(--pumba-space-6);
+}
+
+.badge-story-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pumba-space-3);
+}
+
+.badge-story-narrow {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.badge-story-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pumba-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.badge-story-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pumba-space-gap);
+}
+
+.badge-story-title {
+  margin: 0;
+  font-size: var(--pumba-text-label-font-size);
+  font-weight: 600;
+}
+
+.badge-story-text {
+  margin: 0;
+  color: var(--pumba-color-text-secondary);
+}
+
+.badge-story-dark {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: var(--pumba-space-8) var(--pumba-space-6);
+  background: var(--pumba-color-background);
+  color: var(--pumba-color-text);
+}

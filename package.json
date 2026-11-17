@@ -10,13 +10,27 @@
     "build": "pnpm -r --if-present build",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
+    "test:visual": "pnpm --filter @pumba-ui/storybook test:visual",
+    "check:package": "pnpm -r --if-present check:package",
     "lint": "pnpm lint:js && pnpm lint:css",
     "lint:js": "biome check .",
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
-    "format": "biome format --write ."
+    "storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook storybook",
+    "build-storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook build-storybook",
+    "format": "biome format --write .",
+    "add:component": "pnpm --filter @pumba-ui/ui add:component",
+    "lint:title": "commitlint",
+    "release": "semantic-release"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@semantic-release/commit-analyzer": "catalog:",
+    "@semantic-release/exec": "catalog:",
+    "@semantic-release/github": "catalog:",
+    "@semantic-release/release-notes-generator": "catalog:",
+    "semantic-release": "catalog:",
     "stylelint": "catalog:",
     "stylelint-config-standard": "catalog:",
     "typescript": "catalog:"

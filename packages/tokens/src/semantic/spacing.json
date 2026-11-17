@@ -1,0 +1,86 @@
+{
+  "space": {
+    "$description": "The spacing scale (same steps as the primitives) plus values by use.",
+    "0": {
+      "$type": "dimension",
+      "$value": "{primitive.space.0}"
+    },
+    "px": {
+      "$type": "dimension",
+      "$value": "{primitive.space.px}"
+    },
+    "1": {
+      "$type": "dimension",
+      "$value": "{primitive.space.1}"
+    },
+    "2": {
+      "$type": "dimension",
+      "$value": "{primitive.space.2}"
+    },
+    "3": {
+      "$type": "dimension",
+      "$value": "{primitive.space.3}"
+    },
+    "4": {
+      "$type": "dimension",
+      "$value": "{primitive.space.4}"
+    },
+    "5": {
+      "$type": "dimension",
+      "$value": "{primitive.space.5}"
+    },
+    "6": {
+      "$type": "dimension",
+      "$value": "{primitive.space.6}"
+    },
+    "8": {
+      "$type": "dimension",
+      "$value": "{primitive.space.8}"
+    },
+    "10": {
+      "$type": "dimension",
+      "$value": "{primitive.space.10}"
+    },
+    "12": {
+      "$type": "dimension",
+      "$value": "{primitive.space.12}"
+    },
+    "16": {
+      "$type": "dimension",
+      "$value": "{primitive.space.16}"
+    },
+    "20": {
+      "$type": "dimension",
+      "$value": "{primitive.space.20}"
+    },
+    "24": {
+      "$type": "dimension",
+      "$value": "{primitive.space.24}"
+    },
+    "control-x": {
+      "$type": "dimension",
+      "$value": "{primitive.space.4}",
+      "$description": "Horizontal padding of a control."
+    },
+    "control-y": {
+      "$type": "dimension",
+      "$value": "{primitive.space.2}",
+      "$description": "Vertical padding of a control."
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{primitive.space.2}",
+      "$description": "Gap between related inline items, such as an icon and its label."
+    },
+    "stack": {
+      "$type": "dimension",
+      "$value": "{primitive.space.4}",
+      "$description": "Gap between stacked blocks."
+    },
+    "inset": {
+      "$type": "dimension",
+      "$value": "{primitive.space.4}",
+      "$description": "Padding inside a surface."
+    }
+  }
+}

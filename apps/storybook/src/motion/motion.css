@@ -1,0 +1,40 @@
+.tokens-motion {
+  display: grid;
+  gap: var(--pumba-space-4);
+}
+
+.tokens-motion-track {
+  position: relative;
+  height: 2rem;
+  background: var(--pumba-color-surface);
+  border: 1px solid var(--pumba-color-border);
+  border-radius: var(--pumba-radius-pill);
+}
+
+.tokens-motion-dot {
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: var(--pumba-color-accent);
+  border-radius: var(--pumba-radius-pill);
+  transition-property: left;
+  transition-duration: var(--duration);
+  transition-timing-function: var(--easing);
+}
+
+.tokens-motion[data-moved] .tokens-motion-dot {
+  left: calc(100% - 1.5rem);
+}
+
+.tokens-motion-button {
+  justify-self: start;
+  padding: var(--pumba-space-control-y) var(--pumba-space-control-x);
+  border: 1px solid var(--pumba-color-border-strong);
+  border-radius: var(--pumba-radius-control);
+  background: var(--pumba-color-surface);
+  color: var(--pumba-color-text);
+  font: inherit;
+  cursor: pointer;
+}

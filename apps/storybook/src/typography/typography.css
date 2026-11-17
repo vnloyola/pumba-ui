@@ -1,0 +1,6 @@
+.tokens-text {
+  display: grid;
+  gap: var(--pumba-space-1);
+  padding-block: var(--pumba-space-3);
+  border-top: 1px solid var(--pumba-color-border);
+}
