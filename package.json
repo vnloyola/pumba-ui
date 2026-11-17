@@ -18,17 +18,19 @@
     "storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook storybook",
     "build-storybook": "pnpm --filter \"@pumba-ui/storybook^...\" build && pnpm --filter @pumba-ui/storybook build-storybook",
     "format": "biome format --write .",
-    "lint:title": "commitlint",
     "add:component": "pnpm --filter @pumba-ui/ui add:component",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "lint:title": "commitlint",
+    "release": "semantic-release"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
-    "@changesets/cli": "catalog:",
     "@commitlint/cli": "catalog:",
     "@commitlint/config-conventional": "catalog:",
+    "@semantic-release/commit-analyzer": "catalog:",
+    "@semantic-release/exec": "catalog:",
+    "@semantic-release/github": "catalog:",
+    "@semantic-release/release-notes-generator": "catalog:",
+    "semantic-release": "catalog:",
     "stylelint": "catalog:",
     "stylelint-config-standard": "catalog:",
     "typescript": "catalog:"

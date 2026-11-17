@@ -81,6 +81,13 @@ before deciding, then record it in that file. Quick reminders:
   `feat(tokens)!: rename a token`, or a `BREAKING CHANGE:` footer.
 - The squash merge uses the PR title as the commit message on `dev`, so CI validates the title
   (`commitlint.config.mjs`). `pnpm lint:title` checks one by hand.
+- Releases are automatic. Merging `dev -> main` runs `.github/workflows/release.yml`, where
+  semantic-release (`release.config.mjs`) reads the commits since the last tag, publishes
+  `@pumba-ui/tokens` and `@pumba-ui/ui` with one shared version, and creates the tag and the
+  GitHub release. Only `feat`, `fix`, `perf` and `revert` publish; `chore`, `docs`, `ci` and
+  the like do not. While the version is 0.x, `feat` and breaking changes bump minor and `fix`
+  bumps patch. Nothing is committed back to `main`; the version exists only in the published
+  packages and the git tag.
 - Open PRs with `/open-pr <card id or none>`. The body follows `.github/pull_request_template.md`
   and states only what was actually run.
 
