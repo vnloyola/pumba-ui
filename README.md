@@ -17,6 +17,9 @@ Releases are automatic and follow the commit messages.
 
 Both packages share one version. While it is 0.x, `feat` and breaking changes (`!` or a
 `BREAKING CHANGE:` footer) bump minor and `fix` bumps patch. A merge with only `chore`, `docs`,
-`ci` and similar types publishes nothing.
+`ci` and similar types publishes nothing. Older commits typed `feature` count as `feat`.
+
+semantic-release starts at 1.0.0 when there is no previous tag, so before the first release the
+workflow tags the root commit as `v0.0.0` and the first published version is `0.1.0`.
 
 To see what a release would do, run `pnpm exec semantic-release --dry-run --no-ci` from `main`.

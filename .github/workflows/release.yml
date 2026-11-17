@@ -31,6 +31,12 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm install --global npm@^11.5.1
       - run: pnpm install --frozen-lockfile
+      - name: Tag the 0.x baseline before the first release
+        run: |
+          if [ -z "$(git tag --list 'v*')" ]; then
+            git tag v0.0.0 "$(git rev-list --max-parents=0 HEAD)"
+            git push origin v0.0.0
+          fi
       - run: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
