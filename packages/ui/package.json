@@ -49,6 +49,8 @@
   },
   "dependencies": {
     "@base-ui/react": "catalog:",
+    "@fontsource-variable/figtree": "catalog:",
+    "@fontsource-variable/jetbrains-mono": "catalog:",
     "lucide-react": "catalog:"
   },
   "devDependencies": {

@@ -11,9 +11,8 @@ mkdirSync("dist", { recursive: true });
 
 for (const name of ["styles", "reset"]) {
   const from = `src/styles/${name}.css`;
-  const { css } = await postcss([postcssImport({ resolve: resolveImport })]).process(
-    readFileSync(from, "utf8"),
-    { from },
-  );
+  const { css } = await postcss([
+    postcssImport({ resolve: resolveImport, filter: (id) => !id.startsWith("@fontsource") }),
+  ]).process(readFileSync(from, "utf8"), { from });
   writeFileSync(`dist/${name}.css`, css);
 }

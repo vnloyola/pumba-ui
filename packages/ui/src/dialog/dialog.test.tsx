@@ -3,7 +3,7 @@ import axe from "axe-core";
 import { createRef, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Button } from "../button/index.js";
-import { Dialog } from "./dialog.js";
+import { Dialog } from "./index.js";
 
 const demo = (props: Partial<React.ComponentProps<typeof Dialog.Root>> = {}) => (
   <Dialog.Root {...props}>

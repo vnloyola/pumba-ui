@@ -1,3 +1,5 @@
+"use client";
+
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type { ComponentProps, ReactElement } from "react";
 
@@ -51,9 +53,4 @@ function TabsPanel({ className, ...rest }: TabsPanelProps) {
   return <BaseTabs.Panel className={join("pumba-tabs-panel", className)} {...rest} />;
 }
 
-export const Tabs = {
-  Root: TabsRoot,
-  List: TabsList,
-  Tab: TabsTab,
-  Panel: TabsPanel,
-};
+export { TabsList, TabsPanel, TabsRoot, TabsTab };

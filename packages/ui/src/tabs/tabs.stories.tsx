@@ -6,7 +6,7 @@ import { Button } from "../button/index.js";
 import { Card } from "../card/index.js";
 import { DollarIcon, TrendingUpIcon, UsersIcon } from "../icons.js";
 import { Input } from "../input/index.js";
-import { Tabs } from "./tabs.js";
+import { Tabs } from "./index.js";
 
 const meta = {
   title: "Components/Tabs",

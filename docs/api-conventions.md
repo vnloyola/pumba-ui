@@ -171,6 +171,23 @@ Base UI types are never exposed in Pumba's public API.
 and keeping Base UI types out of the API lets us change the headless layer without a
 breaking change.
 
+### Server Components
+
+Every component file (`button.tsx`, `card.tsx`…) starts with `"use client"`, because the
+components call hooks. A compound component's file exports each part as a function
+(`CardRoot`, `CardHeader`…) and its `index.ts`, which has no directive, builds the public
+object (`Card = { Root: CardRoot, … }`). The library is built one output file per module, so
+the directives survive. The parts are not exported from `src/index.ts`; the public API is still
+`Card.Root`.
+
+**Why:** a Server Component that imports from a `"use client"` module gets one client
+reference per export and cannot read properties of it. With the object inside the client
+module, `Card.Root` was `undefined` on the server and Next.js failed with "Element type is
+invalid". With the object outside, each part is its own client reference, so `Card.Root`,
+`Dialog.Root` and `Tabs.Root` render from a Server Component without a wrapper. Exporting the
+parts as `CardRoot` and so on was rejected because it would give every compound two public
+names.
+
 ### Card
 
 Card is compound: `Card.Root`, `Card.Header`, `Card.Content` and `Card.Footer`. Every part is a
@@ -445,6 +462,16 @@ framework-agnostic from the start makes that extraction cheap.
 **Caveat:** sharing the CSS only works if every adapter emits the same `data-*` attributes.
 Headless libraries name their state attributes differently, so an adapter would have to map
 them to Pumba's attributes.
+
+### Fonts
+
+`styles.css` imports `@fontsource-variable/figtree` and `@fontsource-variable/jetbrains-mono`,
+which are dependencies of `@pumba-ui/ui`. `scripts/build-css.mjs` leaves those two imports
+unresolved so the consumer's bundler resolves the font files from the package.
+
+**Why:** the typography tokens name Figtree and JetBrains Mono. Without the fonts installed,
+a consumer silently falls back to `system-ui`, which the first install outside the monorepo
+showed: only Storybook was loading them.
 
 ## 13. CSS layers and Tailwind
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import type { ComponentProps, ReactElement } from "react";
@@ -32,9 +34,4 @@ function CardFooter(props: CardProps) {
   return usePart("pumba-card-footer", props);
 }
 
-export const Card = {
-  Root: CardRoot,
-  Header: CardHeader,
-  Content: CardContent,
-  Footer: CardFooter,
-};
+export { CardContent, CardFooter, CardHeader, CardRoot };
