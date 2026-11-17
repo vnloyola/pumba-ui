@@ -71,3 +71,37 @@
   width: 100%;
   max-width: 34rem;
 }
+
+.tabs-story-heading {
+  margin: 0;
+  font-size: var(--pumba-text-subheading-font-size);
+  font-weight: var(--pumba-text-subheading-font-weight);
+  line-height: var(--pumba-text-subheading-line-height);
+  letter-spacing: var(--pumba-text-subheading-letter-spacing);
+}
+
+.tabs-story-caption {
+  margin: 0;
+  color: var(--pumba-color-success-text);
+  font-size: var(--pumba-text-caption-font-size);
+}
+
+.tabs-story-narrow {
+  max-width: 24rem;
+  margin-inline: auto;
+}
+
+.tabs-story-full {
+  display: flex;
+  align-self: stretch;
+}
+
+.tabs-story-full > .pumba-tabs-tab {
+  flex: 1;
+}
+
+.tabs-story-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pumba-space-2);
+}
