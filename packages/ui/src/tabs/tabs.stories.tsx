@@ -2,6 +2,7 @@ import "./tabs.stories.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useId, useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
+import { Badge } from "../badge/index.js";
 import { Button } from "../button/index.js";
 import { Card } from "../card/index.js";
 import { DollarIcon, TrendingUpIcon, UsersIcon } from "../icons.js";
@@ -62,9 +63,19 @@ function SettingsPanels() {
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="billing">
-        <p className="tabs-story-text">
-          You are on the Team plan, billed monthly. Your next invoice is on the 1st.
-        </p>
+        <div className="tabs-story-stack">
+          <div className="tabs-story-row">
+            <h3 className="tabs-story-title">Team plan</h3>
+            <Badge size="sm" variant="success">
+              Active
+            </Badge>
+          </div>
+          <p className="tabs-story-text">$12 per seat, billed monthly. Next invoice on Dec 1.</p>
+          <div className="tabs-story-row">
+            <Button variant="secondary">Change plan</Button>
+            <Button variant="ghost">Download invoices</Button>
+          </div>
+        </div>
       </Tabs.Panel>
     </>
   );
@@ -72,13 +83,93 @@ function SettingsPanels() {
 
 export const Default: Story = {
   render: (args) => (
+    <Card.Root>
+      <Card.Header>
+        <h2 className="tabs-story-heading">Settings</h2>
+        <p className="tabs-story-text">Manage your profile, security and plan.</p>
+      </Card.Header>
+      <Tabs.Root {...args}>
+        <Tabs.List aria-label="Settings">
+          <Tabs.Tab value="account">Account</Tabs.Tab>
+          <Tabs.Tab value="password">Password</Tabs.Tab>
+          <Tabs.Tab value="billing">Billing</Tabs.Tab>
+        </Tabs.List>
+        <SettingsPanels />
+      </Tabs.Root>
+    </Card.Root>
+  ),
+};
+
+export const FullWidth: Story = {
+  args: { defaultValue: "sign-in" },
+  render: (args) => (
+    <Card.Root className="tabs-story-narrow">
+      <Tabs.Root {...args}>
+        <Tabs.List aria-label="Access" className="tabs-story-full">
+          <Tabs.Tab value="sign-in">Sign in</Tabs.Tab>
+          <Tabs.Tab value="sign-up">Create account</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="sign-in">
+          <form className="tabs-story-stack" onSubmit={(event) => event.preventDefault()}>
+            <Field label="Email" type="email" autoComplete="email" />
+            <Field label="Password" type="password" autoComplete="current-password" />
+            <Button type="submit">Sign in</Button>
+          </form>
+        </Tabs.Panel>
+        <Tabs.Panel value="sign-up">
+          <form className="tabs-story-stack" onSubmit={(event) => event.preventDefault()}>
+            <Field label="Full name" autoComplete="name" />
+            <Field label="Email" type="email" autoComplete="email" />
+            <Field label="Password" type="password" autoComplete="new-password" />
+            <Button type="submit">Create account</Button>
+          </form>
+        </Tabs.Panel>
+      </Tabs.Root>
+    </Card.Root>
+  ),
+};
+
+const metrics = [
+  { label: "Revenue", value: "$48,200", change: "+12.5%" },
+  { label: "Customers", value: "1,284", change: "+4.1%" },
+  { label: "Avg. order", value: "$37.50", change: "+2.3%" },
+] as const;
+
+export const WithIcons: Story = {
+  args: { defaultValue: "overview" },
+  render: (args) => (
     <Tabs.Root {...args}>
-      <Tabs.List aria-label="Settings">
-        <Tabs.Tab value="account">Account</Tabs.Tab>
-        <Tabs.Tab value="password">Password</Tabs.Tab>
-        <Tabs.Tab value="billing">Billing</Tabs.Tab>
+      <Tabs.List aria-label="Dashboard">
+        <Tabs.Tab value="overview" className="tabs-story-tab">
+          <TrendingUpIcon aria-hidden="true" size={16} strokeWidth={1.75} />
+          Overview
+        </Tabs.Tab>
+        <Tabs.Tab value="customers" className="tabs-story-tab">
+          <UsersIcon aria-hidden="true" size={16} strokeWidth={1.75} />
+          Customers
+        </Tabs.Tab>
+        <Tabs.Tab value="billing" className="tabs-story-tab">
+          <DollarIcon aria-hidden="true" size={16} strokeWidth={1.75} />
+          Billing
+        </Tabs.Tab>
       </Tabs.List>
-      <SettingsPanels />
+      <Tabs.Panel value="overview">
+        <div className="tabs-story-grid">
+          {metrics.map(({ label, value, change }) => (
+            <Card.Root key={label}>
+              <p className="tabs-story-text">{label}</p>
+              <p className="tabs-story-value">{value}</p>
+              <p className="tabs-story-caption">{change} vs last month</p>
+            </Card.Root>
+          ))}
+        </div>
+      </Tabs.Panel>
+      <Tabs.Panel value="customers">
+        <p className="tabs-story-text">1,284 customers, 86 of them new this month.</p>
+      </Tabs.Panel>
+      <Tabs.Panel value="billing">
+        <p className="tabs-story-text">No invoices are due.</p>
+      </Tabs.Panel>
     </Tabs.Root>
   ),
 };
@@ -94,6 +185,29 @@ export const WithDisabledTab: Story = {
         <Tabs.Tab value="billing">Billing</Tabs.Tab>
       </Tabs.List>
       <SettingsPanels />
+    </Tabs.Root>
+  ),
+};
+
+export const ForcedStates: Story = {
+  render: (args) => (
+    <Tabs.Root {...args}>
+      <Tabs.List aria-label="Tab states">
+        <Tabs.Tab value="account">Selected</Tabs.Tab>
+        <Tabs.Tab value="password" data-hovered>
+          Hovered
+        </Tabs.Tab>
+        <Tabs.Tab value="billing" data-focus-visible>
+          Focus visible
+        </Tabs.Tab>
+        <Tabs.Tab value="alerts" disabled>
+          Disabled
+        </Tabs.Tab>
+      </Tabs.List>
+      <Tabs.Panel value="account">Selected panel</Tabs.Panel>
+      <Tabs.Panel value="password">Hovered panel</Tabs.Panel>
+      <Tabs.Panel value="billing">Focus panel</Tabs.Panel>
+      <Tabs.Panel value="alerts">Disabled panel</Tabs.Panel>
     </Tabs.Root>
   ),
 };
@@ -120,66 +234,6 @@ export const Controlled: Story = {
       </div>
     );
   },
-};
-
-const metrics = [
-  { label: "Revenue", value: "$48,200", icon: DollarIcon },
-  { label: "Customers", value: "1,284", icon: UsersIcon },
-  { label: "Growth", value: "+12.5%", icon: TrendingUpIcon },
-] as const;
-
-export const WithIcons: Story = {
-  args: { defaultValue: "overview" },
-  render: (args) => (
-    <Tabs.Root {...args}>
-      <Tabs.List aria-label="Dashboard">
-        <Tabs.Tab value="overview">Overview</Tabs.Tab>
-        <Tabs.Tab value="reports">Reports</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="overview">
-        <div className="tabs-story-grid">
-          {metrics.map(({ label, value, icon: Icon }) => (
-            <Card.Root key={label}>
-              <Card.Header>
-                <p className="tabs-story-text">
-                  <Icon aria-hidden="true" size={16} /> {label}
-                </p>
-              </Card.Header>
-              <Card.Content>
-                <p className="tabs-story-value">{value}</p>
-              </Card.Content>
-            </Card.Root>
-          ))}
-        </div>
-      </Tabs.Panel>
-      <Tabs.Panel value="reports">
-        <p className="tabs-story-text">No reports have been generated yet.</p>
-      </Tabs.Panel>
-    </Tabs.Root>
-  ),
-};
-
-export const ForcedStates: Story = {
-  render: (args) => (
-    <Tabs.Root {...args}>
-      <Tabs.List aria-label="Tab states">
-        <Tabs.Tab value="account">Selected</Tabs.Tab>
-        <Tabs.Tab value="password" data-hovered>
-          Hovered
-        </Tabs.Tab>
-        <Tabs.Tab value="billing" data-focus-visible>
-          Focus visible
-        </Tabs.Tab>
-        <Tabs.Tab value="alerts" disabled>
-          Disabled
-        </Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="account">Selected panel</Tabs.Panel>
-      <Tabs.Panel value="password">Hovered panel</Tabs.Panel>
-      <Tabs.Panel value="billing">Focus panel</Tabs.Panel>
-      <Tabs.Panel value="alerts">Disabled panel</Tabs.Panel>
-    </Tabs.Root>
-  ),
 };
 
 export const KeyboardNavigation: Story = {
@@ -222,6 +276,15 @@ export const DefaultDark: Story = {
   render: (args, context) => (
     <div className="tabs-story-dark" data-theme="dark">
       <div>{Default.render?.(args, context)}</div>
+    </div>
+  ),
+};
+
+export const FullWidthDark: Story = {
+  args: { defaultValue: "sign-in" },
+  render: (args, context) => (
+    <div className="tabs-story-dark" data-theme="dark">
+      <div>{FullWidth.render?.(args, context)}</div>
     </div>
   ),
 };

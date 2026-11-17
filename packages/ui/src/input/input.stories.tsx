@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ComponentProps, useId } from "react";
 import { Button } from "../button/index.js";
 import { Card } from "../card/index.js";
-import { WarningIcon } from "../icons.js";
+import { ArrowRightIcon, SearchIcon, WarningIcon } from "../icons.js";
 import { Input } from "./input.js";
 
 type LabeledInputProps = ComponentProps<typeof Input> & {
@@ -99,20 +99,32 @@ export const ReadOnly: Story = {
   render: () => <LabeledInput label="Invoice number" defaultValue="INV-2024-0042" readOnly />,
 };
 
-export const Hovered: Story = {
-  render: (args) => <Input {...args} data-hovered />,
-};
-
-export const FocusVisible: Story = {
-  render: (args) => <Input {...args} data-focus-visible />,
-};
-
 export const WithButton: Story = {
   render: (args) => (
     <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
       <Input {...args} type="email" aria-label="Email for the newsletter" />
       <Button type="submit">Subscribe</Button>
     </form>
+  ),
+};
+
+export const WithIconButton: Story = {
+  render: (args) => (
+    <div className="input-story-stack">
+      <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
+        <Input {...args} type="search" aria-label="Search components" placeholder="Search" />
+        <Button type="submit" iconOnly aria-label="Search">
+          <SearchIcon aria-hidden="true" />
+        </Button>
+      </form>
+      <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
+        <Input {...args} type="email" aria-label="Email for the newsletter" />
+        <Button type="submit">
+          Subscribe
+          <ArrowRightIcon aria-hidden="true" />
+        </Button>
+      </form>
+    </div>
   ),
 };
 
@@ -147,6 +159,14 @@ export const InAForm: Story = {
   ),
 };
 
+export const Hovered: Story = {
+  render: (args) => <Input {...args} data-hovered />,
+};
+
+export const FocusVisible: Story = {
+  render: (args) => <Input {...args} data-focus-visible />,
+};
+
 export const ForcedStates: Story = {
   render: (args) => (
     <div className="input-story-grid">
@@ -173,6 +193,14 @@ export const InAFormDark: Story = {
   render: (args, context) => (
     <div className="input-story-dark" data-theme="dark">
       <div className="input-story-narrow">{InAForm.render?.(args, context)}</div>
+    </div>
+  ),
+};
+
+export const WithIconButtonDark: Story = {
+  render: (args, context) => (
+    <div className="input-story-dark" data-theme="dark">
+      <div className="input-story-narrow">{WithIconButton.render?.(args, context)}</div>
     </div>
   ),
 };

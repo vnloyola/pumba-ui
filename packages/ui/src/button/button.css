@@ -47,7 +47,7 @@
 
 .pumba-button[data-variant="secondary"]:active,
 .pumba-button[data-variant="secondary"][data-pressed] {
-  background: var(--pumba-color-surface-raised);
+  background: var(--pumba-color-accent-subtle-pressed);
 }
 
 .pumba-button[data-variant="ghost"] {
@@ -62,7 +62,22 @@
 
 .pumba-button[data-variant="ghost"]:active,
 .pumba-button[data-variant="ghost"][data-pressed] {
-  background: var(--pumba-color-surface-raised);
+  background: var(--pumba-color-accent-subtle-pressed);
+}
+
+.pumba-button[data-variant="destructive"] {
+  background: var(--pumba-color-error);
+  color: var(--pumba-color-error-contrast);
+}
+
+.pumba-button[data-variant="destructive"]:hover,
+.pumba-button[data-variant="destructive"][data-hovered] {
+  background: var(--pumba-color-error-hover);
+}
+
+.pumba-button[data-variant="destructive"]:active,
+.pumba-button[data-variant="destructive"][data-pressed] {
+  background: var(--pumba-color-error-pressed);
 }
 
 .pumba-button[data-size="sm"] {

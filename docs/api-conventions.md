@@ -58,6 +58,18 @@ button shows only the spinner.
 **Why:** it is the same shape as plain HTML and needs no props, so there is nothing new to
 learn or to keep in the contract.
 
+### Button variants
+
+`variant` is `primary`, `secondary`, `ghost` or `destructive`. `destructive` is for an action
+that deletes or cannot be undone, such as confirming a deletion in a `Dialog`. It is filled with
+`error`, and its label uses `error-contrast`. `-text` already means colored text in the state
+tokens (`error-text` is red text on the page), so the text on top of an error fill needs its own
+name. `secondary` and `ghost` use `accent-subtle` under the pointer and `accent-subtle-pressed`
+while pressed, so pressing always reads stronger than hovering.
+
+**Why:** a destructive action needs to look different from the main action before it is clicked.
+Other emphasis levels (elevated, underlined, pill-shaped) wait until a consumer needs them.
+
 ### Input
 
 `Input` is a native `<input>`: `value` and `defaultValue` work as they do natively, so it is
@@ -195,6 +207,10 @@ Card is compound: `Card.Root`, `Card.Header`, `Card.Content` and `Card.Footer`. 
 (`surface`, `border`, `radius-surface`, `shadow-raised`), the `space-inset` padding and the
 `space-stack` gap between parts; `Card.Footer` lays out its children in a row. Card has no
 `variant` or `size` because nothing needs one yet.
+
+A card rendered as a link (`render={<a href="..." />}`) drops the underline, shows
+`border-strong` under the pointer and the `focus` ring on keyboard focus. The whole card is the
+link, so it holds no other interactive element.
 
 The parts are plain `div`s and not `<header>` or `<footer>`: outside a sectioning element those
 tags become landmarks, so a dashboard with many cards would announce a banner and a footer per
@@ -629,7 +645,7 @@ touching any component.
 
 | Group | Names |
 | --- | --- |
-| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `scrim`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-text`, `focus`, and `success`, `error`, `warning` each with `-subtle` and `-text` |
+| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `scrim`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-subtle-pressed`, `accent-text`, `focus`, `success`, `error`, `warning` each with `-subtle` and `-text`, and `error-hover`, `error-pressed`, `error-contrast` |
 | Space | The scale `space-0` to `space-24`, plus `space-control-x`, `space-control-y`, `space-gap`, `space-stack`, `space-inset` |
 | Radius | `radius-control`, `radius-surface`, `radius-pill` |
 | Shadow | `shadow-raised`, `shadow-overlay` |
@@ -795,6 +811,12 @@ follow one shape for every component. `Button` and `Card` are the reference.
 - **State stories.** One story per interaction state forced with its attribute (`Hovered`,
   `Pressed`, `FocusVisible`), plus a `ForcedStates` story that shows every state of every
   variant, so states can be reviewed without a mouse.
+- **Order.** Stories are exported in the order the sidebar shows them: `Default`, then the
+  variants, sizes and icons, then the component's own states (`Disabled`, `Loading`, `Invalid`),
+  then examples in context (`InACard`, `InAForm`, `AsLink`), then the forced interaction states
+  (`Hovered`, `Pressed`, `FocusVisible`, `ForcedStates`), then behavior stories (`Controlled`,
+  `KeyboardNavigation`), and the `...Dark` stories last. The preview's `storySort` puts
+  `Foundations` before `Components`.
 - **Dark theme.** A `...Dark` story wraps the content in an element with `data-theme="dark"`,
   its own `background` and `color`, and renders the light story inside it. Do not use
   `globals: { theme: "dark" }`: on the Docs page every story shares one document, so the last one

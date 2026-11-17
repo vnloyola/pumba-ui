@@ -5,7 +5,7 @@ import { useRender } from "@base-ui/react/use-render";
 import type { ComponentProps, ReactElement } from "react";
 
 export type ButtonProps = ComponentProps<"button"> & {
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "ghost" | "destructive";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
   iconOnly?: boolean;

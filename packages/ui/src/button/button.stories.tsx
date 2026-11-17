@@ -15,9 +15,9 @@ import { Button } from "./button.js";
 const meta = {
   title: "Components/Button",
   component: Button,
-  args: { children: "Button" },
+  args: { children: "Save changes" },
   argTypes: {
-    variant: { control: "inline-radio", options: ["primary", "secondary", "ghost"] },
+    variant: { control: "inline-radio", options: ["primary", "secondary", "ghost", "destructive"] },
     size: { control: "inline-radio", options: ["sm", "md", "lg"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
@@ -36,7 +36,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const variants = ["primary", "secondary", "ghost"] as const;
+const variants = ["primary", "secondary", "ghost", "destructive"] as const;
 
 export const Default: Story = {};
 
@@ -44,13 +44,16 @@ export const Variants: Story = {
   render: (args) => (
     <div className="button-story-row">
       <Button {...args} variant="primary">
-        Primary
+        Save changes
       </Button>
       <Button {...args} variant="secondary">
-        Secondary
+        Export
       </Button>
       <Button {...args} variant="ghost">
-        Ghost
+        Cancel
+      </Button>
+      <Button {...args} variant="destructive">
+        Delete
       </Button>
     </div>
   ),
@@ -200,18 +203,18 @@ export const ForcedStates: Story = {
   ),
 };
 
-export const ForcedStatesDark: Story = {
-  render: (args, context) => (
-    <div className="button-story-dark" data-theme="dark">
-      {ForcedStates.render?.(args, context)}
-    </div>
-  ),
-};
-
 export const SizesDark: Story = {
   render: (args, context) => (
     <div className="button-story-dark" data-theme="dark">
       {Sizes.render?.(args, context)}
+    </div>
+  ),
+};
+
+export const ForcedStatesDark: Story = {
+  render: (args, context) => (
+    <div className="button-story-dark" data-theme="dark">
+      {ForcedStates.render?.(args, context)}
     </div>
   ),
 };
