@@ -14,7 +14,7 @@ export default defineConfig({
     emptyOutDir: false,
     minify: false,
     rollupOptions: {
-      output: { banner: '"use client";' },
+      output: { preserveModules: true, preserveModulesRoot: "src", entryFileNames: "[name].js" },
       external: [
         /^react($|\/)/,
         /^react-dom($|\/)/,

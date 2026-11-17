@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { createRef, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { Tabs } from "./tabs.js";
+import { Tabs } from "./index.js";
 
 const basic = (props: Partial<React.ComponentProps<typeof Tabs.Root>> = {}) => (
   <Tabs.Root defaultValue="account" {...props}>

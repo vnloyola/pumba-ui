@@ -20,8 +20,6 @@ Import the styles once, then use the components:
 ```
 
 ```tsx
-"use client";
-
 import { Button, Card } from "@pumba-ui/ui";
 
 export function Welcome() {
@@ -36,10 +34,9 @@ export function Welcome() {
 }
 ```
 
-The package ships the `"use client"` directive. Compound components such as `Card` must be
-rendered through a Client Component, as in the example above. When using them from a Server
-Component (for example, in Next.js), import and render that Client Component (`Welcome`)
-instead of accessing `Card.Root` directly.
+Every component, and every part of a compound component such as `Card.Root`, can be rendered
+straight from a React Server Component (for example, a Next.js page). Each component file ships
+its own `"use client"` directive, so you do not need a wrapper.
 
 ## Components
 
@@ -58,6 +55,10 @@ Import the stylesheet once, in your app's entry CSS or JS:
 
 It contains the tokens (`--pumba-*`), a minimal base and every component's styles. The reset is
 **not** included.
+
+It also loads the Figtree and JetBrains Mono variable fonts, which `@pumba-ui/ui` installs as
+dependencies (`@fontsource-variable/*`). Your bundler copies the font files; the browser only
+downloads the subsets (`unicode-range`) the page uses.
 
 ### Layers
 
@@ -112,17 +113,24 @@ pnpm --filter @pumba-ui/ui check:package   # publint and arethetypeswrong
 
 Three tools, one job each:
 
-- **Vite** bundles `src/index.ts` into one readable ESM file (`minify: false`; the consumer's
-  bundler minifies). `react`, `react-dom`, `lucide-react` and `@base-ui/react` stay external, so
-  the consumer installs each once. `emptyOutDir` is off because `dist/` also holds the types and
-  CSS. The bundle starts with a `"use client";` banner, because the components call hooks
-  (`useRender`, `useRef`) and an app using React Server Components, such as Next.js, would fail
-  to import them from a server file otherwise. Base UI's own files carry the same directive.
+- **Vite** builds `src/` into readable ESM with one output file per source module
+  (`preserveModules`, `minify: false`; the consumer's bundler minifies). `react`, `react-dom`,
+  `lucide-react` and `@base-ui/react` stay external, so the consumer installs each once.
+  `emptyOutDir` is off because `dist/` also holds the types and CSS. Each component file
+  (`button.tsx`, `card.tsx`…) starts with `"use client"`, because the components call hooks
+  (`useRender`, `useRef`). The `index.ts` files do not: they build the compound objects
+  (`Card = { Root: CardRoot, … }`) outside the client module, so a Server Component that reads
+  `Card.Root` gets a client reference instead of `undefined`. A single bundle with one
+  `"use client"` banner cannot do that: the server only sees the `Card` object as an opaque
+  reference and cannot read its parts.
 - **`tsc`** emits the declarations (`tsconfig.build.json`, which excludes tests and stories).
   Relative imports in `src` carry the `.js` extension so the emitted types resolve under Node's
   ESM rules.
 - **`scripts/build-css.mjs`** inlines the CSS `@import`s with `postcss-import`, resolving
   `@pumba-ui/tokens/tokens.css` through the package's `exports` map the way a bundler would.
+  The `@fontsource-variable/*` imports are left as they are: their CSS points at the font files
+  with relative URLs, which only resolve from the package's own folder, so the consumer's
+  bundler resolves them.
   The CSS is otherwise left as written, so the layer order statement stays at the top of
   `styles.css` and the files stay readable and unminified.
 

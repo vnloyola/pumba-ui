@@ -5,7 +5,7 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import { Button } from "../button/index.js";
 import { CloseIcon } from "../icons.js";
 import { Input } from "../input/index.js";
-import { Dialog } from "./dialog.js";
+import { Dialog } from "./index.js";
 
 const meta = {
   title: "Components/Dialog",

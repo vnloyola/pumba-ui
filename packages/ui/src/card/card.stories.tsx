@@ -14,7 +14,7 @@ import {
   TrendingUpIcon,
   UsersIcon,
 } from "../icons.js";
-import { Card } from "./card.js";
+import { Card } from "./index.js";
 
 const meta = {
   title: "Components/Card",

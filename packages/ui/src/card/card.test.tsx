@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { createRef } from "react";
 import { describe, expect, it } from "vitest";
-import { Card } from "./card.js";
+import { Card } from "./index.js";
 
 const parts = [
   ["Root", Card.Root, "pumba-card"],

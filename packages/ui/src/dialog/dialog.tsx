@@ -1,3 +1,5 @@
+"use client";
+
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import {
   type ComponentProps,
@@ -110,11 +112,4 @@ function DialogClose({ className, children, render, ...rest }: DialogCloseProps)
   );
 }
 
-export const Dialog = {
-  Root: DialogRoot,
-  Trigger: DialogTrigger,
-  Content: DialogContent,
-  Title: DialogTitle,
-  Description: DialogDescription,
-  Close: DialogClose,
-};
+export { DialogClose, DialogContent, DialogDescription, DialogRoot, DialogTitle, DialogTrigger };
