@@ -832,3 +832,29 @@ follow one shape for every component. `Button` and `Card` are the reference.
 
 **Why:** the same shape means a reader finds a component's variants, states and examples in the
 same place every time, and a new story is copied from an existing one instead of invented.
+
+## 19. Guides for consumers and agents
+
+This document is for whoever builds Pumba. Whoever uses it gets two shorter guides that link here
+instead of repeating it:
+
+- `packages/ui/USAGE.md` ships inside `@pumba-ui/ui` (`files` in its `package.json`), so an agent
+  in any project finds it in `node_modules/@pumba-ui/ui/USAGE.md`. It holds only what the type
+  declarations do not say: setup, theming, the props every component shares, how compound parts
+  fit together, the accessibility the app provides and how portals stack. Props and token names are
+  not listed by hand; the guide points at the `.d.ts` files, which are generated.
+- `packages/ui/skills/pumba-design/SKILL.md` is a skill with the design rules an agent tends to
+  break, each with a **Good** and an **Avoid** example. It complements `USAGE.md` and does not
+  repeat it. It also ships in the package (`skills` in `files`), and a project registers it with
+  a `.claude/skills/pumba-design/SKILL.md` that only points at the copy in `node_modules`, as
+  `USAGE.md` shows.
+
+A change to the public API updates whichever of the two it affects in the same PR. Both are
+published, so a change to either alone uses a type that releases (`fix(ui): …`).
+
+**Why:** this document explains decisions to maintainers and is too long to load as context for
+every page an agent builds. A guide shipped with the package always matches the installed version,
+and a skill keeps the design rules out of the guide. The skill ships in the package for the same
+reason: a copy installed from the repository stays frozen while the package moves on, so its rules
+could name a variant the installed version does not have (`destructive` was missing from 0.1.0).
+Claude Code only finds skills in `.claude/skills/`, so the project keeps a pointer there.

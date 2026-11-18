@@ -43,7 +43,8 @@ the `update-visual-baselines` label to refresh the reference images (section 17 
 ## Components
 
 Follow `docs/api-conventions.md`; do not restate it here. When a decision is missing there, ask
-before deciding, then record it in that file. Quick reminders:
+before deciding, then record it in that file. Build a new component with
+`/new-component <Name> [card id]`. Quick reminders:
 
 - Props are flat and extend the native element's props. `className` is appended, never replaced.
 - Variants are string unions reflected as `data-variant` and `data-size`; the default value is
@@ -81,6 +82,10 @@ before deciding, then record it in that file. Quick reminders:
   `feat(tokens)!: rename a token`, or a `BREAKING CHANGE:` footer.
 - The squash merge uses the PR title as the commit message on `dev`, so CI validates the title
   (`commitlint.config.mjs`). `pnpm lint:title` checks one by hand.
+- A PR into `dev` that changes what `tokens` or `ui` publish (their `src` outside tests and
+  stories, `packages/ui/USAGE.md` or `packages/ui/skills`) needs a type that releases (`feat`,
+  `fix`, `perf`, `revert` or `!`); CI fails otherwise (`scripts/check-release-type.mjs`). A change
+  that should not reach npm gets the `no-release` label.
 - Releases are automatic. Merging `dev -> main` runs `.github/workflows/release.yml`, where
   semantic-release (`release.config.mjs`) reads the commits since the last tag, publishes
   `@pumba-ui/tokens` and `@pumba-ui/ui` with one shared version, and creates the tag and the
@@ -103,6 +108,10 @@ before deciding, then record it in that file. Quick reminders:
 - Say plainly what was and was not verified; do not describe untested things as done.
 
 ## Do not
+
+`pnpm lint` fails on a `lucide-react` import outside `icons.ts`, a primitive token in
+`packages/ui/src` CSS and a relative import without `.js`; `pnpm check:package` fails on a Base
+UI type in the emitted `.d.ts`. The rest are checked in review.
 
 - Expose Base UI types in a public signature.
 - Import `lucide-react` anywhere except `packages/ui/src/icons.ts`.

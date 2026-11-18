@@ -45,6 +45,12 @@ element they render, append your `className` to their own, and take a `render` p
 the element they render. The rules every component follows are in
 [`docs/api-conventions.md`](https://github.com/vnloyola/pumba-ui/blob/main/docs/api-conventions.md).
 
+[`USAGE.md`](./USAGE.md), shipped in the package, is the short guide for building an app with
+Pumba: setup, theming, the props every component shares, compound components, the accessibility
+the app provides and how dialogs stack. It is written so an agent can read it from
+`node_modules/@pumba-ui/ui/USAGE.md`. The design rules that go with it ship as a skill in
+`skills/pumba-design/SKILL.md`; `USAGE.md` shows how to register it in a project.
+
 ## Styles
 
 Import the stylesheet once, in your app's entry CSS or JS:

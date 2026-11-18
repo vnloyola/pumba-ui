@@ -31,7 +31,9 @@
     "./reset.css": "./dist/reset.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "USAGE.md",
+    "skills"
   ],
   "sideEffects": [
     "**/*.css"
@@ -39,7 +41,7 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs",
     "typecheck": "tsc --noEmit",
-    "check:package": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./reset.css",
+    "check:package": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./reset.css && node scripts/check-public-types.mjs",
     "test": "vitest run",
     "add:component": "node scripts/add-component.mjs"
   },

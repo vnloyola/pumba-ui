@@ -3,7 +3,7 @@ name: PR title
 on:
   pull_request:
     branches: [dev, main]
-    types: [opened, edited, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   contents: read
@@ -24,3 +24,18 @@ jobs:
       - run: printf '%s' "$PR_TITLE" | pnpm exec commitlint
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
+
+  release:
+    name: Release type
+    if: github.base_ref == 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: node scripts/check-release-type.mjs "origin/$BASE_REF"
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          SKIP: ${{ contains(github.event.pull_request.labels.*.name, 'no-release') }}

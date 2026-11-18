@@ -33,6 +33,8 @@ Open a pull request for the current branch. Card: $ARGUMENTS
    `docs`, `chore`, `refactor`, `test`, `ci`, `build`, `perf`, `style` and `revert`; the scope is
    optional. An accessibility change is `fix(a11y)` or `feat(a11y)`, and a change that breaks the
    public API adds `!` after the type. Lowercase description, imperative, no card id in the
-   title. CI rejects a title that does not follow this (`commitlint.config.mjs`).
+   title. CI rejects a title that does not follow this (`commitlint.config.mjs`). If the diff
+   changes what `tokens` or `ui` publish, the type must release (`feat`, `fix`, `perf`, `revert`
+   or `!`); otherwise ask whether to add the `no-release` label (`scripts/check-release-type.mjs`).
 5. Show the title and body to the user and wait for a clear yes.
 6. Run `gh pr create --base dev --title "<title>" --body "<body>"` and print the PR URL.

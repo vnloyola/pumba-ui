@@ -21,7 +21,31 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "lucide-react": "Import icons from packages/ui/src/icons.ts, the only module that may import lucide-react."
+            },
+            "patterns": [
+              {
+                "group": ["lucide-react/**"],
+                "message": "Import icons from packages/ui/src/icons.ts, the only module that may import lucide-react."
+              }
+            ]
+          }
+        }
+      },
+      "correctness": {
+        "useImportExtensions": {
+          "level": "error",
+          "options": {
+            "forceJsExtensions": true
+          }
+        }
+      }
     }
   },
   "assist": {
@@ -35,5 +59,27 @@
     "linter": {
       "enabled": false
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**", "!packages/ui/src/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useImportExtensions": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/ui/src/icons.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": "off"
+          }
+        }
+      }
+    }
+  ]
 }
