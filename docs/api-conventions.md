@@ -51,6 +51,9 @@ their own classes without losing the base styles.
 Icons are regular children, and their order decides the side:
 `<Button><CheckIcon />Save</Button>` puts the icon before the label, and the reverse puts it
 after. Icons come from `packages/ui/src/icons.ts` and should carry `aria-hidden="true"`.
+No component renders an icon of its own yet, so `icons.ts` serves stories and tests only:
+`lucide-react` is a development dependency and `icons.ts` is not shipped. When a component
+needs an icon, `lucide-react` returns to `dependencies` and `icons.ts` to the build.
 `iconOnly` makes the button square; its icon is the only child and the consumer must provide
 an `aria-label`. While `loading`, the spinner is added before the content, and an `iconOnly`
 button shows only the spinner.

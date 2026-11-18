@@ -15,12 +15,7 @@ export default defineConfig({
     minify: false,
     rollupOptions: {
       output: { preserveModules: true, preserveModulesRoot: "src", entryFileNames: "[name].js" },
-      external: [
-        /^react($|\/)/,
-        /^react-dom($|\/)/,
-        /^lucide-react($|\/)/,
-        /^@base-ui\/react($|\/)/,
-      ],
+      external: [/^react($|\/)/, /^react-dom($|\/)/, /^@base-ui\/react($|\/)/],
     },
   },
 });
