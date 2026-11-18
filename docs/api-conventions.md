@@ -208,8 +208,9 @@ names.
 Card is compound: `Card.Root`, `Card.Header`, `Card.Content` and `Card.Footer`. Every part is a
 `div` that accepts `render` and extends the native props. `Card.Root` carries the surface
 (`surface`, `border`, `radius-surface`, `shadow-raised`), the `space-inset` padding and the
-`space-stack` gap between parts; `Card.Footer` lays out its children in a row. Card has no
-`variant` or `size` because nothing needs one yet.
+`space-stack` gap between parts; `Card.Content` stacks its own children with the same gap, and
+`Card.Footer` lays out its children in a row. Card has no `variant` or `size` because nothing needs
+one yet.
 
 A card rendered as a link (`render={<a href="..." />}`) drops the underline, shows
 `border-strong` under the pointer and the `focus` ring on keyboard focus. The whole card is the
@@ -220,8 +221,9 @@ tags become landmarks, so a dashboard with many cards would announce a banner an
 card. A consumer who wants a landmark uses `render`.
 
 **Why:** headers and footers repeat in every dashboard card, so the parts keep spacing and
-alignment in one place instead of in each consumer. The generator only creates the root, so the
-parts are written by hand in the same file.
+alignment in one place instead of in each consumer. `Card.Content` got its column after an agent
+building a form left two fields touching inside it: every consumer would otherwise write the same
+wrapper. The generator only creates the root, so the parts are written by hand in the same file.
 
 ### Tabs
 
