@@ -15,6 +15,22 @@
   letter-spacing: var(--pumba-text-body-letter-spacing);
 }
 
+.pumba-card:any-link {
+  text-decoration: none;
+  transition: border-color var(--pumba-motion-duration-feedback) var(--pumba-motion-easing-standard);
+}
+
+.pumba-card:any-link:hover,
+.pumba-card:any-link[data-hovered] {
+  border-color: var(--pumba-color-border-strong);
+}
+
+.pumba-card:any-link:focus-visible,
+.pumba-card:any-link[data-focus-visible] {
+  outline: 2px solid var(--pumba-color-focus);
+  outline-offset: 2px;
+}
+
 .pumba-card-footer {
   display: flex;
   align-items: center;

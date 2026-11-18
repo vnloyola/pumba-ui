@@ -2,7 +2,7 @@
   "radius": {
     "control": {
       "$type": "dimension",
-      "$value": "{primitive.radius.lg}",
+      "$value": "{primitive.radius.md}",
       "$description": "Buttons, inputs and other controls."
     },
     "surface": {

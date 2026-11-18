@@ -51,12 +51,27 @@ their own classes without losing the base styles.
 Icons are regular children, and their order decides the side:
 `<Button><CheckIcon />Save</Button>` puts the icon before the label, and the reverse puts it
 after. Icons come from `packages/ui/src/icons.ts` and should carry `aria-hidden="true"`.
+No component renders an icon of its own yet, so `icons.ts` serves stories and tests only:
+`lucide-react` is a development dependency and `icons.ts` is not shipped. When a component
+needs an icon, `lucide-react` returns to `dependencies` and `icons.ts` to the build.
 `iconOnly` makes the button square; its icon is the only child and the consumer must provide
 an `aria-label`. While `loading`, the spinner is added before the content, and an `iconOnly`
 button shows only the spinner.
 
 **Why:** it is the same shape as plain HTML and needs no props, so there is nothing new to
 learn or to keep in the contract.
+
+### Button variants
+
+`variant` is `primary`, `secondary`, `ghost` or `destructive`. `destructive` is for an action
+that deletes or cannot be undone, such as confirming a deletion in a `Dialog`. It is filled with
+`error`, and its label uses `error-contrast`. `-text` already means colored text in the state
+tokens (`error-text` is red text on the page), so the text on top of an error fill needs its own
+name. `secondary` and `ghost` use `accent-subtle` under the pointer and `accent-subtle-pressed`
+while pressed, so pressing always reads stronger than hovering.
+
+**Why:** a destructive action needs to look different from the main action before it is clicked.
+Other emphasis levels (elevated, underlined, pill-shaped) wait until a consumer needs them.
 
 ### Input
 
@@ -195,6 +210,10 @@ Card is compound: `Card.Root`, `Card.Header`, `Card.Content` and `Card.Footer`. 
 (`surface`, `border`, `radius-surface`, `shadow-raised`), the `space-inset` padding and the
 `space-stack` gap between parts; `Card.Footer` lays out its children in a row. Card has no
 `variant` or `size` because nothing needs one yet.
+
+A card rendered as a link (`render={<a href="..." />}`) drops the underline, shows
+`border-strong` under the pointer and the `focus` ring on keyboard focus. The whole card is the
+link, so it holds no other interactive element.
 
 The parts are plain `div`s and not `<header>` or `<footer>`: outside a sectioning element those
 tags become landmarks, so a dashboard with many cards would announce a banner and a footer per
@@ -629,7 +648,7 @@ touching any component.
 
 | Group | Names |
 | --- | --- |
-| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `scrim`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-text`, `focus`, and `success`, `error`, `warning` each with `-subtle` and `-text` |
+| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `scrim`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-subtle-pressed`, `accent-text`, `focus`, `success`, `error`, `warning` each with `-subtle` and `-text`, and `error-hover`, `error-pressed`, `error-contrast` |
 | Space | The scale `space-0` to `space-24`, plus `space-control-x`, `space-control-y`, `space-gap`, `space-stack`, `space-inset` |
 | Radius | `radius-control`, `radius-surface`, `radius-pill` |
 | Shadow | `shadow-raised`, `shadow-overlay` |
@@ -795,6 +814,12 @@ follow one shape for every component. `Button` and `Card` are the reference.
 - **State stories.** One story per interaction state forced with its attribute (`Hovered`,
   `Pressed`, `FocusVisible`), plus a `ForcedStates` story that shows every state of every
   variant, so states can be reviewed without a mouse.
+- **Order.** Stories are exported in the order the sidebar shows them: `Default`, then the
+  variants, sizes and icons, then the component's own states (`Disabled`, `Loading`, `Invalid`),
+  then examples in context (`InACard`, `InAForm`, `AsLink`), then the forced interaction states
+  (`Hovered`, `Pressed`, `FocusVisible`, `ForcedStates`), then behavior stories (`Controlled`,
+  `KeyboardNavigation`), and the `...Dark` stories last. The preview's `storySort` puts
+  `Foundations` before `Components`.
 - **Dark theme.** A `...Dark` story wraps the content in an element with `data-theme="dark"`,
   its own `background` and `color`, and renders the light story inside it. Do not use
   `globals: { theme: "dark" }`: on the Docs page every story shares one document, so the last one
@@ -810,3 +835,29 @@ follow one shape for every component. `Button` and `Card` are the reference.
 
 **Why:** the same shape means a reader finds a component's variants, states and examples in the
 same place every time, and a new story is copied from an existing one instead of invented.
+
+## 19. Guides for consumers and agents
+
+This document is for whoever builds Pumba. Whoever uses it gets two shorter guides that link here
+instead of repeating it:
+
+- `packages/ui/USAGE.md` ships inside `@pumba-ui/ui` (`files` in its `package.json`), so an agent
+  in any project finds it in `node_modules/@pumba-ui/ui/USAGE.md`. It holds only what the type
+  declarations do not say: setup, theming, the props every component shares, how compound parts
+  fit together, the accessibility the app provides and how portals stack. Props and token names are
+  not listed by hand; the guide points at the `.d.ts` files, which are generated.
+- `packages/ui/skills/pumba-design/SKILL.md` is a skill with the design rules an agent tends to
+  break, each with a **Good** and an **Avoid** example. It complements `USAGE.md` and does not
+  repeat it. It also ships in the package (`skills` in `files`), and a project registers it with
+  a `.claude/skills/pumba-design/SKILL.md` that only points at the copy in `node_modules`, as
+  `USAGE.md` shows.
+
+A change to the public API updates whichever of the two it affects in the same PR. Both are
+published, so a change to either alone uses a type that releases (`fix(ui): …`).
+
+**Why:** this document explains decisions to maintainers and is too long to load as context for
+every page an agent builds. A guide shipped with the package always matches the installed version,
+and a skill keeps the design rules out of the guide. The skill ships in the package for the same
+reason: a copy installed from the repository stays frozen while the package moves on, so its rules
+could name a variant the installed version does not have (`destructive` was missing from 0.1.0).
+Claude Code only finds skills in `.claude/skills/`, so the project keeps a pointer there.

@@ -47,6 +47,7 @@ const preview: Preview = {
   },
   parameters: {
     backgrounds: { disable: true },
+    options: { storySort: { order: ["Foundations", "Components"] } },
     layout: "fullscreen",
     a11y: { test: "error" },
   },

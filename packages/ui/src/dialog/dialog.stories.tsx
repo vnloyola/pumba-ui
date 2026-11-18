@@ -38,7 +38,7 @@ function ConfirmDelete({ container }: { container?: HTMLElement | null }) {
           <Button variant="secondary">Cancel</Button>
         </Dialog.Close>
         <Dialog.Close>
-          <Button>Delete project</Button>
+          <Button variant="destructive">Delete project</Button>
         </Dialog.Close>
       </div>
     </Dialog.Content>
@@ -49,7 +49,7 @@ export const Default: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
       <Dialog.Trigger>
-        <Button>Delete project</Button>
+        <Button variant="destructive">Delete project</Button>
       </Dialog.Trigger>
       <ConfirmDelete />
     </Dialog.Root>
@@ -62,26 +62,11 @@ export const OpenByDefault: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
       <Dialog.Trigger>
-        <Button>Delete project</Button>
+        <Button variant="destructive">Delete project</Button>
       </Dialog.Trigger>
       <ConfirmDelete />
     </Dialog.Root>
   ),
-};
-
-export const Controlled: Story = {
-  render: () => {
-    const [open, setOpen] = useState(false);
-    return (
-      <div className="dialog-story-row">
-        <Button onClick={() => setOpen(true)}>Open from outside</Button>
-        <p className="dialog-story-text">The dialog is {open ? "open" : "closed"}.</p>
-        <Dialog.Root open={open} onOpenChange={setOpen}>
-          <ConfirmDelete />
-        </Dialog.Root>
-      </div>
-    );
-  },
 };
 
 function InviteForm() {
@@ -169,17 +154,15 @@ export const LongContent: Story = {
   ),
 };
 
-export const OpenDark: Story = {
-  parameters: openInFrame,
+export const Controlled: Story = {
   render: () => {
-    const [container, setContainer] = useState<HTMLElement | null>(null);
+    const [open, setOpen] = useState(false);
     return (
-      <div className="dialog-story-dark" data-theme="dark" ref={setContainer}>
-        <Dialog.Root defaultOpen>
-          <Dialog.Trigger>
-            <Button>Delete project</Button>
-          </Dialog.Trigger>
-          <ConfirmDelete container={container} />
+      <div className="dialog-story-row">
+        <Button onClick={() => setOpen(true)}>Open from outside</Button>
+        <p className="dialog-story-text">The dialog is {open ? "open" : "closed"}.</p>
+        <Dialog.Root open={open} onOpenChange={setOpen}>
+          <ConfirmDelete />
         </Dialog.Root>
       </div>
     );
@@ -212,7 +195,7 @@ export const KeyboardNavigation: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
       <Dialog.Trigger>
-        <Button>Delete project</Button>
+        <Button variant="destructive">Delete project</Button>
       </Dialog.Trigger>
       <ConfirmDelete />
     </Dialog.Root>
@@ -235,5 +218,22 @@ export const KeyboardNavigation: Story = {
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(within(document.body).queryByRole("dialog")).toBeNull());
     await expect(trigger).toHaveFocus();
+  },
+};
+
+export const OpenDark: Story = {
+  parameters: openInFrame,
+  render: () => {
+    const [container, setContainer] = useState<HTMLElement | null>(null);
+    return (
+      <div className="dialog-story-dark" data-theme="dark" ref={setContainer}>
+        <Dialog.Root defaultOpen>
+          <Dialog.Trigger>
+            <Button variant="destructive">Delete project</Button>
+          </Dialog.Trigger>
+          <ConfirmDelete container={container} />
+        </Dialog.Root>
+      </div>
+    );
   },
 };

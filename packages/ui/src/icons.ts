@@ -1,4 +1,5 @@
 export {
+  ArrowRight as ArrowRightIcon,
   ArrowUpRight as ArrowUpRightIcon,
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
@@ -6,6 +7,7 @@ export {
   DollarSign as DollarIcon,
   Heart as HeartIcon,
   MapPin as MapPinIcon,
+  Search as SearchIcon,
   Share2 as ShareIcon,
   ShoppingCart as CartIcon,
   Sparkles as SparklesIcon,
