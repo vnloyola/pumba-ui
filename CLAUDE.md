@@ -83,9 +83,9 @@ before deciding, then record it in that file. Build a new component with
 - The squash merge uses the PR title as the commit message on `dev`, so CI validates the title
   (`commitlint.config.mjs`). `pnpm lint:title` checks one by hand.
 - A PR into `dev` that changes what `tokens` or `ui` publish (their `src` outside tests and
-  stories, or `packages/ui/USAGE.md`) needs a type that releases (`feat`, `fix`, `perf`,
-  `revert` or `!`); CI fails otherwise (`scripts/check-release-type.mjs`). A change that should
-  not reach npm gets the `no-release` label.
+  stories, `packages/ui/USAGE.md` or `packages/ui/skills`) needs a type that releases (`feat`,
+  `fix`, `perf`, `revert` or `!`); CI fails otherwise (`scripts/check-release-type.mjs`). A change
+  that should not reach npm gets the `no-release` label.
 - Releases are automatic. Merging `dev -> main` runs `.github/workflows/release.yml`, where
   semantic-release (`release.config.mjs`) reads the commits since the last tag, publishes
   `@pumba-ui/tokens` and `@pumba-ui/ui` with one shared version, and creates the tag and the

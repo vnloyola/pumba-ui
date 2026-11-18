@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 const [base = "origin/dev"] = process.argv.slice(2);
 const { PR_TITLE: title = "", SKIP: skip } = process.env;
 
-const published = /^packages\/(tokens|ui)\/(src\/|USAGE\.md$)/;
+const published = /^packages\/(tokens|ui)\/(src\/|skills\/|USAGE\.md$)/;
 const notPublished = /\.(test|stories)\.[a-z]+$/;
 const releasing = /^((feat|fix|perf|revert)(\([^)]*\))?!?|[a-z]+(\([^)]*\))?!):/;
 

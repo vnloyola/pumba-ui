@@ -34,7 +34,7 @@ read the sections named below instead of relying on memory, and do not copy them
    its **Why**.
 2. If the consumer needs to know something the types do not say (composition, accessibility it
    provides, stacking), update `packages/ui/USAGE.md`. If it brings a design rule an agent would
-   get wrong, add it to `skills/pumba-design/SKILL.md` with Good and Avoid.
+   get wrong, add it to `packages/ui/skills/pumba-design/SKILL.md` with Good and Avoid.
 3. Run `pnpm lint && pnpm build && pnpm typecheck && pnpm test` and
    `pnpm --filter @pumba-ui/ui check:package`. New stories change the visual baselines: the PR
    needs the `update-visual-baselines` label.

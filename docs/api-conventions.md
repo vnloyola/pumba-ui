@@ -843,13 +843,18 @@ instead of repeating it:
   declarations do not say: setup, theming, the props every component shares, how compound parts
   fit together, the accessibility the app provides and how portals stack. Props and token names are
   not listed by hand; the guide points at the `.d.ts` files, which are generated.
-- `skills/pumba-design/SKILL.md` is an installable skill with the design rules an agent tends to
+- `packages/ui/skills/pumba-design/SKILL.md` is a skill with the design rules an agent tends to
   break, each with a **Good** and an **Avoid** example. It complements `USAGE.md` and does not
-  repeat it.
+  repeat it. It also ships in the package (`skills` in `files`), and a project registers it with
+  a `.claude/skills/pumba-design/SKILL.md` that only points at the copy in `node_modules`, as
+  `USAGE.md` shows.
 
-A change to the public API updates whichever of the two it affects in the same PR. `USAGE.md` is
-published, so a change to it alone uses a type that releases (`fix(ui): …`).
+A change to the public API updates whichever of the two it affects in the same PR. Both are
+published, so a change to either alone uses a type that releases (`fix(ui): …`).
 
 **Why:** this document explains decisions to maintainers and is too long to load as context for
 every page an agent builds. A guide shipped with the package always matches the installed version,
-and a skill keeps the design rules out of the guide.
+and a skill keeps the design rules out of the guide. The skill ships in the package for the same
+reason: a copy installed from the repository stays frozen while the package moves on, so its rules
+could name a variant the installed version does not have (`destructive` was missing from 0.1.0).
+Claude Code only finds skills in `.claude/skills/`, so the project keeps a pointer there.

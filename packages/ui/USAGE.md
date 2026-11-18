@@ -6,10 +6,19 @@ say. For the props of each component, read the type declarations shipped in this
 `@pumba-ui/tokens/dist/index.d.ts` (`TokenName`). The full contract is
 [`docs/api-conventions.md`](https://github.com/vnloyola/pumba-ui/blob/main/docs/api-conventions.md).
 
-The design rules (which variant, token, spacing or elevation to pick) are in the `pumba-design`
-skill. Install it with `npx skills add vnloyola/pumba-ui@pumba-design`, or copy
-[`skills/pumba-design`](https://github.com/vnloyola/pumba-ui/tree/main/skills/pumba-design) into
-the project's `.claude/skills/`.
+The design rules (which variant, token, spacing or elevation to pick) are in
+`skills/pumba-design/SKILL.md`, next to this file, and match the installed version. To register
+them as a skill, add `.claude/skills/pumba-design/SKILL.md` to the project with only a pointer, so
+it never goes stale:
+
+```markdown
+---
+name: pumba-design
+description: Design rules for building UI with @pumba-ui/ui. Use when creating or reviewing pages, layouts or components that use Pumba.
+---
+
+Read `node_modules/@pumba-ui/ui/skills/pumba-design/SKILL.md` and follow it.
+```
 
 ## Setup
 
