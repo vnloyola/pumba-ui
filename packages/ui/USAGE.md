@@ -132,8 +132,9 @@ ships `"use client"`.
 </Dialog.Root>
 ```
 
-- `Card.Root` stacks its parts with `--pumba-space-stack`, and `Card.Footer` lays out its
-  children in a row with `--pumba-space-gap`, so buttons go straight in the footer. `Card.Header`
+- `Card.Root` stacks its parts with `--pumba-space-stack`, `Card.Content` stacks its children
+  with the same gap, and `Card.Footer` lays out its children in a row with `--pumba-space-gap`, so
+  fields go straight in the content and buttons straight in the footer. `Card.Header`
   has no type style: put your own heading in it. To make the card a form, render the root as one
   (`render={<form />}`) instead of wrapping the parts, so the spacing between parts stays.
 - `Tabs.Tab` and `Tabs.Panel` pair by the same string `value`. `Tabs.Root` takes `defaultValue`,
