@@ -3,7 +3,7 @@
   width: 100%;
   min-width: 0;
   padding: var(--pumba-space-control-y) var(--pumba-space-control-x);
-  border: 1px solid var(--pumba-color-border-strong);
+  border: 1px solid var(--pumba-color-field-border);
   border-radius: var(--pumba-radius-control);
   background: var(--pumba-color-field);
   color: var(--pumba-color-text);

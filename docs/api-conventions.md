@@ -81,7 +81,7 @@ controlled or uncontrolled by the consumer. Its `size` is `sm`, `md` or `lg`, re
 type so every component keeps one meaning for `size`. Control widths come from CSS.
 
 A text field uses the `field` fill (`field-hover` under the pointer) and a one-pixel
-`border-strong` outline that meets 3:1 against the page and card surface in both themes.
+`field-border` outline that meets 3:1 against the page, card and raised surfaces in both themes.
 Read-only fields keep the border and have no fill. Disabled fields retain the default fill
 and have no visible border unless invalid. A field still needs a visible label.
 
@@ -653,7 +653,7 @@ touching any component.
 
 | Group | Names |
 | --- | --- |
-| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `scrim`, `field`, `field-hover`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-subtle-pressed`, `accent-text`, `focus`, `success`, `error`, `warning` each with `-subtle` and `-text`, and `error-hover`, `error-pressed`, `error-contrast` |
+| Color | `background`, `surface`, `surface-raised`, `text`, `text-secondary`, `text-disabled`, `border`, `border-strong`, `scrim`, `field`, `field-hover`, `field-border`, `accent`, `accent-hover`, `accent-pressed`, `accent-subtle`, `accent-subtle-pressed`, `accent-text`, `focus`, `success`, `error`, `warning` each with `-subtle` and `-text`, and `error-hover`, `error-pressed`, `error-contrast` |
 | Space | The scale `space-0` to `space-24`, plus `space-control-x`, `space-control-y`, `space-gap`, `space-stack`, `space-inset` |
 | Radius | `radius-control`, `radius-surface`, `radius-pill` |
 | Shadow | `shadow-raised`, `shadow-overlay` |

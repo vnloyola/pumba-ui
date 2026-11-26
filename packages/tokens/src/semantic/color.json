@@ -122,6 +122,17 @@
       },
       "$description": "Fill of a text field under the pointer."
     },
+    "field-border": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.500}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.500}",
+          "dark": "{primitive.color.neutral.475}"
+        }
+      },
+      "$description": "Text field boundary on page, card and raised surfaces."
+    },
     "accent": {
       "$type": "color",
       "$value": "{primitive.color.brand.700}",
