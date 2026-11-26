@@ -9,6 +9,7 @@
       "!**/coverage",
       "!**/test-results",
       "!**/playwright-report",
+      "!.claude/worktrees",
       "!pnpm-lock.yaml"
     ]
   },
@@ -27,12 +28,17 @@
           "level": "error",
           "options": {
             "paths": {
-              "lucide-react": "Import icons from packages/ui/src/icons.ts, the only module that may import lucide-react."
+              "@radix-ui/react-icons": "Import icons from packages/ui/src/icons.ts, the only module that may import @radix-ui/react-icons.",
+              "lucide-react": "Import icons from packages/ui/src/icons.ts, the only module that may import the icon package."
             },
             "patterns": [
               {
+                "group": ["@radix-ui/react-icons/**"],
+                "message": "Import icons from packages/ui/src/icons.ts, the only module that may import @radix-ui/react-icons."
+              },
+              {
                 "group": ["lucide-react/**"],
-                "message": "Import icons from packages/ui/src/icons.ts, the only module that may import lucide-react."
+                "message": "Import icons from packages/ui/src/icons.ts, the only module that may import the icon package."
               }
             ]
           }

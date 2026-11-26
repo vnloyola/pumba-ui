@@ -16,8 +16,8 @@
 
 .pumba-badge > svg {
   flex-shrink: 0;
-  width: 1.25em;
-  height: 1.25em;
+  width: 1em;
+  height: 1em;
 }
 
 .pumba-badge[data-variant="neutral"] {
