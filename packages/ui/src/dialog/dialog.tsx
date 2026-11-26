@@ -40,6 +40,22 @@ type DialogCloseProps = ButtonPartProps;
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+function isVisible(element: HTMLElement) {
+  if (element.checkVisibility) return element.checkVisibility({ visibilityProperty: true });
+
+  const view = element.ownerDocument.defaultView;
+  if (!view) return false;
+
+  const { visibility } = view.getComputedStyle(element);
+  if (visibility === "hidden" || visibility === "collapse") return false;
+
+  for (let node: HTMLElement | null = element; node; node = node.parentElement) {
+    const { display, contentVisibility } = view.getComputedStyle(node);
+    if (display === "none" || contentVisibility === "hidden") return false;
+  }
+  return true;
+}
+
 const elementFromChild = (
   children: ReactNode,
   render: Render<"button"> | undefined,
@@ -110,11 +126,15 @@ function DialogContent({
         className={join("pumba-dialog", className)}
         ref={popupRef}
         render={renderElement ? cloneElement(renderElement, undefined, bodyElement) : render}
-        initialFocus={() => {
+        initialFocus={(interactionType) => {
+          if (interactionType === "touch") return popup.current;
           const scrollArea = body.current;
           if (!scrollArea) return popup.current;
           const scrollBounds = scrollArea.getBoundingClientRect();
           for (const target of scrollArea.querySelectorAll<HTMLElement>(FOCUSABLE)) {
+            if (target.matches(":disabled") || target.closest("[inert]") || !isVisible(target)) {
+              continue;
+            }
             const { height, top, bottom } = target.getBoundingClientRect();
             if (height > 0 && (top < scrollBounds.top || bottom > scrollBounds.bottom)) {
               scrollArea.focus({ preventScroll: true });
