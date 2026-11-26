@@ -30,6 +30,26 @@ for (const { id } of stories) {
   }
 }
 
+test.describe("forced colors", () => {
+  test.use({ forcedColors: "active" });
+
+  test("selected tab keeps a distinct fill after focus leaves the tab list", async ({ page }) => {
+    await openStory(page, "components-tabs--default", "light");
+    const account = page.getByRole("tab", { name: "Account" });
+    const password = page.getByRole("tab", { name: "Password" });
+    const panel = page.getByRole("tabpanel", { name: "Password" });
+
+    await account.focus();
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("Enter");
+    await expect(password).toHaveAttribute("aria-selected", "true");
+    await page.keyboard.press("Tab");
+    await expect(panel).toBeFocused();
+    const inactiveFill = await account.evaluate((tab) => getComputedStyle(tab).backgroundColor);
+    await expect(password).not.toHaveCSS("background-color", inactiveFill);
+  });
+});
+
 test.describe("320px story layouts", () => {
   test.use({ viewport: { width: 320, height: 700 } });
 
