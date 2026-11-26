@@ -181,10 +181,18 @@ describe("Tabs", () => {
 
   it.each([
     ["inherited RTL", "rtl", undefined, "ArrowLeft", "ArrowRight"],
+    ["an uppercase RTL attribute", "RTL", undefined, "ArrowLeft", "ArrowRight"],
+    ["an inherited automatic RTL direction", "auto", undefined, "ArrowLeft", "ArrowRight"],
+    ["inherited RTL with an empty dir", "rtl", "", "ArrowLeft", "ArrowRight"],
     ["an LTR override", "rtl", "ltr", "ArrowRight", "ArrowLeft"],
     ["default LTR", undefined, undefined, "ArrowRight", "ArrowLeft"],
   ])("follows %s for horizontal arrow keys", async (_, ancestorDir, dir, forward, backward) => {
-    render(<div dir={ancestorDir}>{basic({ dir })}</div>);
+    render(
+      <div dir={ancestorDir}>
+        {ancestorDir === "auto" ? "שלום" : null}
+        {basic({ dir })}
+      </div>,
+    );
     const account = tab("Account");
     const password = tab("Password");
     act(() => account.focus());

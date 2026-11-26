@@ -58,8 +58,8 @@ function TabsList({ className, children, ref, ...rest }: TabsListProps) {
   const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
 
   useLayoutEffect(() => {
-    const nextDirection =
-      listRef.current?.closest("[dir]")?.getAttribute("dir") === "rtl" ? "rtl" : "ltr";
+    const list = listRef.current;
+    const nextDirection = list && getComputedStyle(list).direction === "rtl" ? "rtl" : "ltr";
     if (nextDirection !== direction) setDirection(nextDirection);
   });
 
