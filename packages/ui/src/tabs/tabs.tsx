@@ -5,7 +5,7 @@ import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import {
   type ComponentProps,
   type ReactElement,
-  useCallback,
+  type Ref,
   useLayoutEffect,
   useRef,
   useState,
@@ -32,6 +32,15 @@ type TabsPanelProps = ComponentProps<"div"> & { value: string; render?: Render<"
 
 const join = (own: string, className?: string) => (className ? `${own} ${className}` : own);
 
+const setRefs =
+  <T,>(...refs: Array<Ref<T> | undefined>) =>
+  (node: T | null) => {
+    for (const ref of refs) {
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    }
+  };
+
 function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
   return (
     <BaseTabs.Root
@@ -47,23 +56,6 @@ function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
 function TabsList({ className, children, ref, ...rest }: TabsListProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
-  const setListRef = useCallback(
-    (element: HTMLDivElement | null) => {
-      listRef.current = element;
-      if (typeof ref === "function") {
-        const cleanup = ref(element);
-        if (cleanup) {
-          return () => {
-            listRef.current = null;
-            cleanup();
-          };
-        }
-      } else if (ref) {
-        ref.current = element;
-      }
-    },
-    [ref],
-  );
 
   useLayoutEffect(() => {
     const nextDirection = listRef.current?.matches(":dir(rtl)") ? "rtl" : "ltr";
@@ -74,7 +66,7 @@ function TabsList({ className, children, ref, ...rest }: TabsListProps) {
     <DirectionProvider direction={direction}>
       <BaseTabs.List
         className={join("pumba-tabs-list", className)}
-        ref={setListRef}
+        ref={setRefs(listRef, ref)}
         {...rest}
         data-pumba-dir={direction === "rtl" ? direction : undefined}
       >
