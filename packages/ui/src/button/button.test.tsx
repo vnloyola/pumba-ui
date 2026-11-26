@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { createEvent, fireEvent, render, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { createRef } from "react";
 import { userEvent } from "storybook/test";
@@ -58,6 +58,21 @@ describe("Button", () => {
     expect(link.getAttribute("data-variant")).toBe("primary");
     expect(link.getAttribute("data-size")).toBe("md");
     expect(node).toBe(link);
+  });
+
+  it("does not navigate or call onClick while loading with render={<a />}", () => {
+    const onClick = vi.fn();
+    render(
+      <Button loading onClick={onClick} render={<a href="#docs" />}>
+        Docs
+      </Button>,
+    );
+    const link = screen.getByRole("link", { name: "Docs" });
+    const click = createEvent.click(link);
+    fireEvent(link, click);
+
+    expect(onClick).not.toHaveBeenCalled();
+    expect(click.defaultPrevented).toBe(true);
   });
 
   it("calls onClick", () => {
