@@ -171,7 +171,7 @@ describe("Dialog", () => {
     await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Name")));
   });
 
-  it("focuses the dialog instead of an action below the scrollable content", async () => {
+  it("focuses the scrollable dialog body instead of an offscreen action", async () => {
     render(
       <Dialog.Root>
         <Dialog.Trigger>Read the terms</Dialog.Trigger>
@@ -194,7 +194,7 @@ describe("Dialog", () => {
     if (!body) throw new Error("Dialog body not found");
     body.getBoundingClientRect = () => new DOMRect(0, 0, 300, 400);
 
-    await waitFor(() => expect(document.activeElement).toBe(dialog));
+    await waitFor(() => expect(document.activeElement).toBe(body));
   });
 
   it("is uncontrolled with defaultOpen and closes with Dialog.Close", async () => {
