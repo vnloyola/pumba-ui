@@ -41,10 +41,10 @@ function Field({ label, ...props }: { label: string } & React.ComponentProps<typ
   );
 }
 
-function SettingsPanels() {
+function SettingsPanels({ keepAccountMounted }: { keepAccountMounted?: boolean }) {
   return (
     <>
-      <Tabs.Panel value="account">
+      <Tabs.Panel value="account" keepMounted={keepAccountMounted}>
         <div className="tabs-story-stack">
           <Field label="Full name" defaultValue="Ana Torres" autoComplete="name" />
           <Field label="Email" type="email" defaultValue="ana@example.com" autoComplete="email" />
@@ -94,7 +94,7 @@ export const Default: Story = {
           <Tabs.Tab value="password">Password</Tabs.Tab>
           <Tabs.Tab value="billing">Billing</Tabs.Tab>
         </Tabs.List>
-        <SettingsPanels />
+        <SettingsPanels keepAccountMounted />
       </Tabs.Root>
     </Card.Root>
   ),
@@ -187,6 +187,7 @@ export const Overflow: Story = {
     await expect(list.getBoundingClientRect().right).toBeLessThanOrEqual(
       root.getBoundingClientRect().right,
     );
+    await canvasElement.ownerDocument.fonts.ready;
     await userEvent.tab();
     await userEvent.keyboard("{End}");
     await expect(billing).toHaveFocus();

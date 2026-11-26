@@ -170,6 +170,38 @@ describe("Tabs", () => {
     expect(tab("Password").getAttribute("aria-selected")).toBe("true");
   });
 
+  it.each([undefined, false, true])(
+    "preserves edits only when keepMounted is true (%s)",
+    (keepMounted) => {
+      render(
+        <Tabs.Root defaultValue="account">
+          <Tabs.List aria-label="Settings">
+            <Tabs.Tab value="account">Account</Tabs.Tab>
+            <Tabs.Tab value="password">Password</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="account" keepMounted={keepMounted}>
+            <input aria-label="Full name" defaultValue="Ana Torres" />
+          </Tabs.Panel>
+          <Tabs.Panel value="password">Password panel</Tabs.Panel>
+        </Tabs.Root>,
+      );
+
+      const input = screen.getByRole<HTMLInputElement>("textbox", { name: "Full name" });
+      fireEvent.change(input, { target: { value: "Ana Silva" } });
+      fireEvent.click(tab("Password"));
+
+      expect(screen.getByRole("tabpanel")).toHaveProperty("textContent", "Password panel");
+      expect(screen.queryByRole("textbox", { name: "Full name" })).toBeNull();
+      expect(input.isConnected).toBe(keepMounted === true);
+
+      fireEvent.click(tab("Account"));
+      expect(screen.getByRole("textbox", { name: "Full name" })).toHaveProperty(
+        "value",
+        keepMounted ? "Ana Silva" : "Ana Torres",
+      );
+    },
+  );
+
   it("does not select a disabled tab", () => {
     const onValueChange = vi.fn();
     render(basic({ onValueChange }));
