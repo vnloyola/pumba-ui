@@ -171,6 +171,32 @@ describe("Dialog", () => {
     await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Name")));
   });
 
+  it("focuses the dialog instead of an action below the scrollable content", async () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>Read the terms</Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Terms of service</Dialog.Title>
+          <p>Read these terms before continuing.</p>
+          <Dialog.Close
+            ref={(element) => {
+              if (element) element.getBoundingClientRect = () => new DOMRect(0, 500, 100, 32);
+            }}
+          >
+            I agree
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Read the terms" }));
+    const dialog = screen.getByRole("dialog");
+    const body = dialog.querySelector<HTMLElement>(".pumba-dialog-body");
+    if (!body) throw new Error("Dialog body not found");
+    body.getBoundingClientRect = () => new DOMRect(0, 0, 300, 400);
+
+    await waitFor(() => expect(document.activeElement).toBe(dialog));
+  });
+
   it("is uncontrolled with defaultOpen and closes with Dialog.Close", async () => {
     render(demo({ defaultOpen: true }));
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
