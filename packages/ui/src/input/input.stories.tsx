@@ -194,7 +194,12 @@ export const InAForm: Story = {
     } finally {
       listeners.abort();
       await userEvent.clear(email);
-      email.blur();
+      const originalTabIndex = canvasElement.getAttribute("tabindex");
+      canvasElement.tabIndex = -1;
+      canvasElement.focus({ preventScroll: true });
+      canvasElement.blur();
+      if (originalTabIndex === null) canvasElement.removeAttribute("tabindex");
+      else canvasElement.setAttribute("tabindex", originalTabIndex);
     }
   },
 };
