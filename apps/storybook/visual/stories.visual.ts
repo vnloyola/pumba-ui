@@ -41,10 +41,16 @@ test.describe("forced colors", () => {
 
     const filledStyle = await filled.evaluate((input) => {
       const style = getComputedStyle(input);
-      return { borderWidth: style.borderTopWidth, borderColor: style.borderTopColor };
+      return {
+        borderWidth: style.borderTopWidth,
+        borderColor: style.borderTopColor,
+        color: style.color,
+      };
     });
     await expect(disabled).not.toHaveCSS("border-top-color", filledStyle.borderColor);
     await expect(invalid).not.toHaveCSS("border-top-width", filledStyle.borderWidth);
+    await disabled.hover();
+    await expect(disabled).not.toHaveCSS("color", filledStyle.color);
   });
 });
 

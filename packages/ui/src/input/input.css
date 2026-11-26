@@ -69,7 +69,8 @@
     border-width: 2px;
   }
 
-  .pumba-input[data-disabled] {
+  .pumba-input[data-disabled],
+  .pumba-input[data-disabled]:hover {
     border-color: GrayText;
     color: GrayText;
   }
