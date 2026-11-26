@@ -63,3 +63,18 @@
   border-color: var(--pumba-color-error);
   box-shadow: inset 0 0 0 1px var(--pumba-color-error);
 }
+
+@media (forced-colors: active) {
+  .pumba-input[data-invalid] {
+    border-width: 2px;
+  }
+
+  .pumba-input[data-disabled] {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
+  .pumba-input[data-disabled]::placeholder {
+    color: GrayText;
+  }
+}

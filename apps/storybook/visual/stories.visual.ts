@@ -30,6 +30,24 @@ for (const { id } of stories) {
   }
 }
 
+test.describe("forced colors", () => {
+  test.use({ forcedColors: "active" });
+
+  test("invalid and disabled Inputs remain distinct from filled Inputs", async ({ page }) => {
+    await openStory(page, "components-input--forced-states", "light");
+    const filled = page.getByRole("textbox", { name: "Filled" });
+    const invalid = page.getByRole("textbox", { name: "Invalid" });
+    const disabled = page.getByRole("textbox", { name: "Disabled" });
+
+    const filledStyle = await filled.evaluate((input) => {
+      const style = getComputedStyle(input);
+      return { borderWidth: style.borderTopWidth, borderColor: style.borderTopColor };
+    });
+    await expect(disabled).not.toHaveCSS("border-top-color", filledStyle.borderColor);
+    await expect(invalid).not.toHaveCSS("border-top-width", filledStyle.borderWidth);
+  });
+});
+
 function boundaryContrast(input: Locator, backdrop: string) {
   return input.evaluate((field, backdrop) => {
     const surface = field.closest(backdrop);
