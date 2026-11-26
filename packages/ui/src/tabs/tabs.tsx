@@ -1,7 +1,15 @@
 "use client";
 
+import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
-import type { ComponentProps, ReactElement } from "react";
+import {
+  type ComponentProps,
+  type ReactElement,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 type Render<Tag extends "div" | "button"> =
   | ReactElement
@@ -36,12 +44,44 @@ function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
   );
 }
 
-function TabsList({ className, children, ...rest }: TabsListProps) {
+function TabsList({ className, children, ref, ...rest }: TabsListProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+  const setListRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      listRef.current = element;
+      if (typeof ref === "function") {
+        const cleanup = ref(element);
+        if (cleanup) {
+          return () => {
+            listRef.current = null;
+            cleanup();
+          };
+        }
+      } else if (ref) {
+        ref.current = element;
+      }
+    },
+    [ref],
+  );
+
+  useLayoutEffect(() => {
+    const nextDirection = listRef.current?.matches(":dir(rtl)") ? "rtl" : "ltr";
+    if (nextDirection !== direction) setDirection(nextDirection);
+  });
+
   return (
-    <BaseTabs.List className={join("pumba-tabs-list", className)} {...rest}>
-      {children}
-      <BaseTabs.Indicator className="pumba-tabs-indicator" />
-    </BaseTabs.List>
+    <DirectionProvider direction={direction}>
+      <BaseTabs.List
+        className={join("pumba-tabs-list", className)}
+        ref={setListRef}
+        {...rest}
+        data-pumba-dir={direction === "rtl" ? direction : undefined}
+      >
+        {children}
+        <BaseTabs.Indicator className="pumba-tabs-indicator" />
+      </BaseTabs.List>
+    </DirectionProvider>
   );
 }
 

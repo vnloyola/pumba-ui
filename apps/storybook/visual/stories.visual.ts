@@ -30,6 +30,38 @@ for (const { id } of stories) {
   }
 }
 
+test("RTL Tabs show fades only on edges with overflow", async ({ page }) => {
+  await openStory(page, "components-tabs--right-to-left", "light");
+  const list = page.getByRole("tablist", { name: "Dashboard" });
+  const edge = (side: "before" | "after") =>
+    list.evaluate((element, side) => {
+      const { left, right, opacity, backgroundImage } = getComputedStyle(element, `::${side}`);
+      return { left, right, opacity, backgroundImage };
+    }, side);
+
+  await expect
+    .poll(() => edge("after"))
+    .toMatchObject({
+      left: expect.not.stringMatching(/^auto$/),
+      right: "auto",
+      opacity: "1",
+      backgroundImage: expect.stringContaining("to right"),
+    });
+  await expect.poll(() => edge("before")).toMatchObject({ opacity: "0" });
+  await list.evaluate((element) => {
+    element.scrollLeft = -element.scrollWidth;
+  });
+  await expect
+    .poll(() => edge("before"))
+    .toMatchObject({
+      left: "auto",
+      right: expect.not.stringMatching(/^auto$/),
+      opacity: "1",
+      backgroundImage: expect.stringContaining("to left"),
+    });
+  await expect.poll(() => edge("after")).toMatchObject({ opacity: "0" });
+});
+
 test.describe("forced colors", () => {
   test.use({ forcedColors: "active" });
 

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { createRef, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -177,6 +177,29 @@ describe("Tabs", () => {
     expect(tab("Alerts").hasAttribute("data-disabled")).toBe(true);
     expect(onValueChange).not.toHaveBeenCalled();
     expect(tab("Account").getAttribute("aria-selected")).toBe("true");
+  });
+
+  it.each([
+    ["inherited RTL", "rtl", undefined, "ArrowLeft", "ArrowRight"],
+    ["an LTR override", "rtl", "ltr", "ArrowRight", "ArrowLeft"],
+    ["default LTR", undefined, undefined, "ArrowRight", "ArrowLeft"],
+  ])("follows %s for horizontal arrow keys", async (_, ancestorDir, dir, forward, backward) => {
+    render(<div dir={ancestorDir}>{basic({ dir })}</div>);
+    const account = tab("Account");
+    const password = tab("Password");
+    act(() => account.focus());
+    await act(async () => {
+      fireEvent.keyDown(account, { key: forward });
+    });
+    expect(document.activeElement?.textContent).toBe("Password");
+    await act(async () => {
+      fireEvent.keyDown(password, { key: backward });
+    });
+    expect(document.activeElement?.textContent).toBe("Account");
+    await act(async () => {
+      fireEvent.keyDown(account, { key: backward });
+    });
+    expect(document.activeElement?.textContent).toBe("Billing");
   });
 
   it("has no accessibility violations", async () => {
