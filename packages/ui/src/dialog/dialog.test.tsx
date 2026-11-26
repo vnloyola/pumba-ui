@@ -244,6 +244,87 @@ describe("Dialog", () => {
     const dialog = screen.getByRole("dialog");
     expect(dialog.tagName).toBe("SECTION");
     expect(dialog.classList.contains("pumba-dialog")).toBe(true);
+    const body = dialog.querySelector(".pumba-dialog-body");
+    expect(body).not.toBeNull();
+    expect(body?.contains(screen.getByText("Title"))).toBe(true);
+  });
+
+  it("keeps the scrollable dialog body when render carries its own children", async () => {
+    const sectionRef = createRef<HTMLElement>();
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content
+          render={
+            <section ref={sectionRef} className="custom-dialog" data-kind="terms">
+              <Dialog.Title>Terms of service</Dialog.Title>
+              <p>Clause 1</p>
+              <Dialog.Close>I agree</Dialog.Close>
+            </section>
+          }
+        />
+      </Dialog.Root>,
+    );
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.tagName).toBe("SECTION");
+    expect(dialog.classList.contains("pumba-dialog")).toBe(true);
+    expect(dialog.classList.contains("custom-dialog")).toBe(true);
+    expect(dialog.getAttribute("data-kind")).toBe("terms");
+    expect(sectionRef.current).toBe(dialog);
+
+    const body = dialog.querySelector<HTMLElement>(".pumba-dialog-body");
+    expect(body).not.toBeNull();
+    expect(body?.tabIndex).toBe(-1);
+    expect(body?.contains(screen.getByText("Terms of service"))).toBe(true);
+    expect(body?.contains(screen.getByText("Clause 1"))).toBe(true);
+    expect(body?.contains(screen.getByRole("button", { name: "I agree" }))).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "I agree" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
+
+  it("focuses the scrollable dialog body for offscreen actions when render carries children", async () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>Read the terms</Dialog.Trigger>
+        <Dialog.Content
+          render={
+            <section>
+              <Dialog.Title>Terms of service</Dialog.Title>
+              <p>Read these terms before continuing.</p>
+              <Dialog.Close
+                ref={(element) => {
+                  if (element) element.getBoundingClientRect = () => new DOMRect(0, 500, 100, 32);
+                }}
+              >
+                I agree
+              </Dialog.Close>
+            </section>
+          }
+        />
+      </Dialog.Root>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Read the terms" }));
+    const dialog = screen.getByRole("dialog");
+    const body = dialog.querySelector<HTMLElement>(".pumba-dialog-body");
+    if (!body) throw new Error("Dialog body not found");
+    body.getBoundingClientRect = () => new DOMRect(0, 0, 300, 400);
+
+    await waitFor(() => expect(document.activeElement).toBe(body));
+  });
+
+  it("keeps the scrollable dialog body with a render function", () => {
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content render={(props) => <section {...props} />}>
+          <Dialog.Title>Title</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.tagName).toBe("SECTION");
+    const body = dialog.querySelector(".pumba-dialog-body");
+    expect(body).not.toBeNull();
+    expect(body?.contains(screen.getByText("Title"))).toBe(true);
   });
 
   it("moves the initial focus to the first visible control, skipping hidden inputs", async () => {

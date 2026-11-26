@@ -3,6 +3,7 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import {
   type ComponentProps,
+  cloneElement,
   Fragment,
   isValidElement,
   type ReactElement,
@@ -83,7 +84,14 @@ function DialogTrigger({ className, children, render, ...rest }: DialogTriggerPr
   );
 }
 
-function DialogContent({ className, container, children, ref, ...rest }: DialogContentProps) {
+function DialogContent({
+  className,
+  container,
+  children,
+  ref,
+  render,
+  ...rest
+}: DialogContentProps) {
   const popup = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const popupRef = useCallback(
@@ -103,12 +111,21 @@ function DialogContent({ className, container, children, ref, ...rest }: DialogC
     },
     [ref],
   );
+  const renderElement = isValidElement<{ children?: ReactNode }>(render) ? render : null;
+  const bodyElement = (
+    <div className="pumba-dialog-body" ref={body} tabIndex={-1}>
+      {renderElement && renderElement.props.children !== undefined
+        ? renderElement.props.children
+        : children}
+    </div>
+  );
   return (
     <BaseDialog.Portal container={container}>
       <BaseDialog.Backdrop className="pumba-dialog-backdrop" />
       <BaseDialog.Popup
         className={join("pumba-dialog", className)}
         ref={popupRef}
+        render={renderElement ? cloneElement(renderElement, undefined, bodyElement) : render}
         initialFocus={(interactionType) => {
           if (interactionType === "touch") return popup.current;
           const scrollArea = body.current;
@@ -130,9 +147,7 @@ function DialogContent({ className, container, children, ref, ...rest }: DialogC
         }}
         {...rest}
       >
-        <div className="pumba-dialog-body" ref={body} tabIndex={-1}>
-          {children}
-        </div>
+        {bodyElement}
       </BaseDialog.Popup>
     </BaseDialog.Portal>
   );
