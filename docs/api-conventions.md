@@ -233,6 +233,11 @@ A tab is identified by a string `value`, shared by its `Tabs.Tab` and its `Tabs.
 uncontrolled with `defaultValue` and controlled with `value` plus `onValueChange(value)`; the
 callback only runs for a real tab, so its argument is always a string.
 
+`Tabs.Panel` unmounts while inactive by default. Set `keepMounted` on a panel (for example,
+`<Tabs.Panel value="account" keepMounted>`) to keep it mounted but hidden while another tab
+is active. This preserves child state, including uncontrolled form edits, when returning
+to the panel. A panel with `keepMounted` also mounts before its first selection.
+
 The look is a segmented control: the list is a track filled with `field`, and the selected tab
 is marked by a raised pill (`surface-raised` and `shadow-raised`) that slides to the new tab with
 `motion-duration-transition` and `motion-easing-standard`, and does not move under
