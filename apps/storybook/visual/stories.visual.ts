@@ -82,18 +82,30 @@ test.describe("forced colors", () => {
     const story = "components-button--as-link";
     const link = page.getByRole("link", { name: "Read the docs" });
     await openStory(page, story, "light");
-    const enabled = await link.evaluate((element) => {
-      const { color, borderTopColor } = getComputedStyle(element);
-      return { color, borderTopColor };
+    const grayText = await page.evaluate(() => {
+      const probe = document.createElement("span");
+      probe.style.color = "GrayText";
+      document.body.append(probe);
+      const { color } = getComputedStyle(probe);
+      probe.remove();
+      return color;
     });
+    await expect(link).not.toHaveCSS("color", grayText);
+    await expect(link).not.toHaveCSS("border-top-color", grayText);
 
     await openStory(page, story, "light", "disabled:true");
     await expect(link).toBeDisabled();
-    await expect(link).not.toHaveCSS("color", enabled.color);
-    await expect(link).not.toHaveCSS("border-top-color", enabled.borderTopColor);
+    const expectDisabledPaint = async () => {
+      await expect(link).toHaveCSS("color", grayText);
+      await expect(link).toHaveCSS("border-top-color", grayText);
+    };
+    await expectDisabledPaint();
     await link.hover();
-    await expect(link).not.toHaveCSS("color", enabled.color);
-    await expect(link).not.toHaveCSS("border-top-color", enabled.borderTopColor);
+    await expectDisabledPaint();
+    await page.mouse.down();
+    expect(await link.evaluate((element) => element.matches(":active"))).toBe(true);
+    await expectDisabledPaint();
+    await page.mouse.up();
   });
 
   test("loading Buttons keep a visible gap in the spinner", async ({ page }) => {
