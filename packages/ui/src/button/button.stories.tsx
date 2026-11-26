@@ -1,5 +1,6 @@
 import "./button.stories.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "storybook/test";
 import { Card } from "../card/index.js";
 import {
   ArrowUpRightIcon,
@@ -108,6 +109,34 @@ export const IconOnly: Story = {
       </Button>
     </div>
   ),
+};
+
+export const IconOnlyLoading: Story = {
+  render: (args) => (
+    <div className="button-story-grid">
+      {(["sm", "md", "lg"] as const).map((size) => (
+        <div key={size} className="button-story-row">
+          <Button {...args} size={size} iconOnly aria-label={`Save to favorites, ${size}`}>
+            <HeartIcon aria-hidden="true" />
+          </Button>
+          <Button {...args} size={size} iconOnly loading aria-label={`Saving, ${size}`}>
+            <HeartIcon aria-hidden="true" />
+          </Button>
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    for (const size of ["sm", "md", "lg"]) {
+      const idle = canvas.getByRole("button", { name: `Save to favorites, ${size}` });
+      const loading = canvas.getByRole("button", { name: `Saving, ${size}` });
+      const idleBox = idle.getBoundingClientRect();
+      const loadingBox = loading.getBoundingClientRect();
+      await expect(loadingBox.width).toBe(idleBox.width);
+      await expect(loadingBox.height).toBe(idleBox.height);
+    }
+  },
 };
 
 export const Disabled: Story = {
