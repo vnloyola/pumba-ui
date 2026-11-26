@@ -86,9 +86,11 @@ Read-only fields keep the border and have no fill. Disabled fields retain the de
 and have no visible border unless invalid. A field still needs a visible label.
 
 `invalid` writes `aria-invalid="true"` and `data-invalid`, and gives the field an error-colored
-border of double width, so the state is not carried by color alone. The error message is the
-consumer's: a visible text associated with `aria-describedby`, and ideally an icon. `disabled`
-and `readOnly` also write `data-disabled` and `data-readonly`. The consumer provides the label
+border of double width, so the state is not carried by color alone. When `invalid` is true, it
+takes precedence over any `aria-invalid` prop passed to `Input`. When `invalid` is false or
+omitted, `aria-invalid` passes through unchanged. The error message is the consumer's: a
+visible text associated with `aria-describedby`, and ideally an icon. `disabled` and
+`readOnly` also write `data-disabled` and `data-readonly`. The consumer provides the label
 (`<label htmlFor>` or `aria-label`); a `Field` component that wires label, hint and error
 together is not built yet.
 
