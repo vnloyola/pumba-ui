@@ -79,6 +79,25 @@ test.describe("forced colors", () => {
     const inactiveFill = await account.evaluate((tab) => getComputedStyle(tab).backgroundColor);
     await expect(password).not.toHaveCSS("background-color", inactiveFill);
   });
+
+  for (const theme of ["light", "dark"]) {
+    test(`color swatches keep their token colors (${theme})`, async ({ page }) => {
+      const readSwatches = () =>
+        page
+          .locator(".tokens-swatch-color")
+          .evaluateAll((swatches) =>
+            swatches.map((swatch) => getComputedStyle(swatch).backgroundColor),
+          );
+
+      await page.emulateMedia({ forcedColors: "none" });
+      await openStory(page, "foundations-tokens--colors", theme);
+      const authored = await readSwatches();
+      await expect(page.locator(".tokens-swatch-color")).not.toHaveCount(0);
+
+      await page.emulateMedia({ forcedColors: "active" });
+      expect(await readSwatches()).toEqual(authored);
+    });
+  }
 });
 
 function boundaryContrast(input: Locator, backdrop: string) {
