@@ -76,6 +76,23 @@ test("overflow tabs bring Billing fully into view with a slow font load", async 
 test.describe("forced colors", () => {
   test.use({ forcedColors: "active" });
 
+  test("loading Buttons keep a visible gap in the spinner", async ({ page }) => {
+    await openStory(page, "components-button--loading", "light");
+    const buttons = page.getByRole("button", { name: "Saving" });
+    await expect(buttons).toHaveCount(4);
+    for (const button of await buttons.all()) {
+      const spinner = await button.evaluate((element) => {
+        const style = getComputedStyle(element, "::before");
+        return {
+          arc: style.borderBlockStartColor,
+          gap: style.borderInlineEndColor,
+        };
+      });
+      expect(spinner.arc).not.toBe("rgba(0, 0, 0, 0)");
+      expect(spinner.gap).toBe("rgba(0, 0, 0, 0)");
+    }
+  });
+
   test("invalid and disabled Inputs remain distinct from filled Inputs", async ({ page }) => {
     await openStory(page, "components-input--forced-states", "light");
     const filled = page.getByRole("textbox", { name: "Filled" });
