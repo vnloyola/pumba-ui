@@ -192,8 +192,8 @@ export const ForcedStates: Story = {
 
 export const AsLink: Story = {
   render: (args) => (
-    <Button {...args} variant="secondary" render={<a href="#pull-request" />}>
-      Open pull request
+    <Button {...args} variant="secondary" render={<a href="#docs" />}>
+      Read the docs
       <ArrowUpRightIcon aria-hidden="true" />
     </Button>
   ),

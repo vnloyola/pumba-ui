@@ -141,7 +141,12 @@ export const WithIconButton: Story = {
         </Button>
       </form>
       <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
-        <Input {...args} type="url" aria-label="Repository URL" placeholder="github.com/acme/web" />
+        <Input
+          {...args}
+          type="url"
+          aria-label="Repository URL"
+          placeholder="https://github.com/acme/web"
+        />
         <Button type="submit">
           Connect
           <ArrowRightIcon aria-hidden="true" />

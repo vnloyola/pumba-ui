@@ -139,12 +139,12 @@ export const InAGrid: Story = {
 };
 
 const links = [
-  { title: "Connect a repo", text: "Give Devin access to your codebase." },
+  { title: "Getting started", text: "Connect a repo and run a first session." },
   { title: "Invite your team", text: "Share sessions and reviews." },
   { title: "Set up integrations", text: "Slack, Linear and CI hooks." },
 ];
 
-export const Interactive: Story = {
+export const LinkStates: Story = {
   render: (args) => (
     <div className="card-story-grid">
       {links.map(({ title, text }, index) => (
