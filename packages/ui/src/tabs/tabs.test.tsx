@@ -80,6 +80,36 @@ describe("Tabs", () => {
     expect(panel.current).toBe(screen.getByRole("tabpanel"));
   });
 
+  it.each(["cleanup", "null"])(
+    "keeps a stable list callback ref attached until unmount and detaches with %s",
+    (detach) => {
+      const events: string[] = [];
+      const listRef = vi.fn((node: HTMLDivElement | null) => {
+        events.push(node ? "attach" : "null");
+        if (node && detach === "cleanup") {
+          return () => {
+            events.push("cleanup");
+          };
+        }
+      });
+      const tabsWithLabel = (label: string) => (
+        <Tabs.Root defaultValue="a">
+          <Tabs.List ref={listRef} aria-label={label}>
+            <Tabs.Tab value="a">A</Tabs.Tab>
+          </Tabs.List>
+        </Tabs.Root>
+      );
+      const { rerender, unmount } = render(tabsWithLabel("Demo"));
+      const list = screen.getByRole("tablist", { name: "Demo" });
+      expect(listRef).toHaveBeenNthCalledWith(1, list);
+      rerender(tabsWithLabel("Updated demo"));
+      expect(screen.getByRole("tablist", { name: "Updated demo" })).toBe(list);
+      events.push("before-unmount");
+      unmount();
+      expect(events).toEqual(["attach", "before-unmount", detach]);
+    },
+  );
+
   it("keeps the class and ref of the tab with render={<a />}", () => {
     let node: HTMLElement | null = null;
     render(
