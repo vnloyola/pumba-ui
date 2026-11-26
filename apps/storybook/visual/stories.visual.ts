@@ -30,8 +30,39 @@ for (const { id } of stories) {
   }
 }
 
+test("overflow tabs bring Billing fully into view with a slow font load", async ({ page }) => {
+  await page.route("**/figtree-latin-wght-normal-*.woff2", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await route.continue();
+  });
+  await openStory(page, "components-tabs--overflow", "dark");
+  const billing = page.getByRole("tab", { name: "Billing" });
+  await expect(billing).toHaveAttribute("aria-selected", "true");
+  await expect(billing).toBeInViewport({ ratio: 1 });
+});
+
 test.describe("forced colors", () => {
   test.use({ forcedColors: "active" });
+
+  test("invalid and disabled Inputs remain distinct from filled Inputs", async ({ page }) => {
+    await openStory(page, "components-input--forced-states", "light");
+    const filled = page.getByRole("textbox", { name: "Filled" });
+    const invalid = page.getByRole("textbox", { name: "Invalid" });
+    const disabled = page.getByRole("textbox", { name: "Disabled" });
+
+    const filledStyle = await filled.evaluate((input) => {
+      const style = getComputedStyle(input);
+      return {
+        borderWidth: style.borderTopWidth,
+        borderColor: style.borderTopColor,
+        color: style.color,
+      };
+    });
+    await expect(disabled).not.toHaveCSS("border-top-color", filledStyle.borderColor);
+    await expect(invalid).not.toHaveCSS("border-top-width", filledStyle.borderWidth);
+    await disabled.hover();
+    await expect(disabled).not.toHaveCSS("color", filledStyle.color);
+  });
 
   test("selected tab keeps a distinct fill after focus leaves the tab list", async ({ page }) => {
     await openStory(page, "components-tabs--default", "light");
