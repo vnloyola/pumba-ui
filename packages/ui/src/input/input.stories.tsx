@@ -109,6 +109,23 @@ export const WithButton: Story = {
   ),
 };
 
+export const DisabledFieldset: Story = {
+  render: () => (
+    <div className="input-story-stack">
+      <fieldset disabled className="input-story-stack">
+        <legend>Disabled fieldset</legend>
+        <LabeledInput label="Workspace" placeholder="Pumba" />
+        <Button>Save workspace</Button>
+      </fieldset>
+      <fieldset className="input-story-stack">
+        <legend>Individually disabled controls</legend>
+        <LabeledInput label="Workspace" placeholder="Pumba" disabled />
+        <Button disabled>Save workspace</Button>
+      </fieldset>
+    </div>
+  ),
+};
+
 export const WithIconButton: Story = {
   render: (args) => (
     <div className="input-story-stack">
