@@ -132,6 +132,16 @@
     transition: none;
   }
 
+  .pumba-tabs-tab[data-disabled],
+  .pumba-tabs-tab[data-disabled]:hover {
+    color: GrayText;
+  }
+
+  .pumba-tabs-tab[data-active][data-disabled] {
+    background-color: Canvas;
+    box-shadow: inset 0 0 0 2px Highlight;
+  }
+
   .pumba-tabs-tab:focus-visible,
   .pumba-tabs-tab[data-focus-visible] {
     outline-color: Highlight;

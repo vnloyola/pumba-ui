@@ -10,8 +10,10 @@ const { entries } = JSON.parse(readFileSync(indexFile, "utf8")) as {
 
 const stories = Object.values(entries).filter((entry) => entry.type === "story");
 
-async function openStory(page: Page, id: string, theme: string) {
-  await page.goto(`/iframe.html?id=${id}&viewMode=story&globals=theme:${theme}`);
+async function openStory(page: Page, id: string, theme: string, args?: string) {
+  const params = new URLSearchParams({ id, viewMode: "story", globals: `theme:${theme}` });
+  if (args) params.set("args", args);
+  await page.goto(`/iframe.html?${params}`);
   await page.waitForFunction(() => {
     const preview = (window as { __STORYBOOK_PREVIEW__?: { currentRender?: { phase?: string } } })
       .__STORYBOOK_PREVIEW__;
@@ -127,6 +129,42 @@ test.describe("forced colors", () => {
     await expect(panel).toBeFocused();
     const inactiveFill = await account.evaluate((tab) => getComputedStyle(tab).backgroundColor);
     await expect(password).not.toHaveCSS("background-color", inactiveFill);
+  });
+
+  test("disabled tabs keep distinct text in forced colors", async ({ page }) => {
+    await openStory(page, "components-tabs--with-disabled-tab", "light");
+    const account = page.getByRole("tab", { name: "Account" });
+    const disabled = page.getByRole("tab", { name: "Password" });
+    const enabled = page.getByRole("tab", { name: "Billing" });
+
+    await expect(disabled).toBeDisabled();
+    const enabledColor = await enabled.evaluate((tab) => getComputedStyle(tab).color);
+    await expect(disabled).not.toHaveCSS("color", enabledColor);
+    await disabled.hover();
+    await expect(disabled).not.toHaveCSS("color", enabledColor);
+
+    await account.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(disabled).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(account).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("a selected disabled tab keeps its text readable in forced colors", async ({ page }) => {
+    const story = "components-tabs--with-disabled-tab";
+    const disabled = page.getByRole("tab", { name: "Password" });
+    await openStory(page, story, "light");
+    const disabledColor = await disabled.evaluate((tab) => getComputedStyle(tab).color);
+
+    await openStory(page, story, "light", "defaultValue:password");
+    await expect(disabled).toBeDisabled();
+    await expect(disabled).toHaveAttribute("aria-selected", "true");
+    const canvasColor = await page
+      .locator("body")
+      .evaluate((body) => getComputedStyle(body).backgroundColor);
+    await expect(disabled).toHaveCSS("color", disabledColor);
+    await expect(disabled).toHaveCSS("background-color", canvasColor);
+    await expect(disabled).not.toHaveCSS("box-shadow", "none");
   });
 
   for (const theme of ["light", "dark"]) {
