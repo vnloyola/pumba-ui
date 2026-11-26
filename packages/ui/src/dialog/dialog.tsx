@@ -7,7 +7,7 @@ import {
   isValidElement,
   type ReactElement,
   type ReactNode,
-  type Ref,
+  useCallback,
   useRef,
 } from "react";
 
@@ -38,15 +38,6 @@ type DialogCloseProps = ButtonPartProps;
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-const setRefs =
-  <T,>(...refs: Array<Ref<T> | undefined>) =>
-  (node: T | null) => {
-    for (const ref of refs) {
-      if (typeof ref === "function") ref(node);
-      else if (ref) ref.current = node;
-    }
-  };
 
 const elementFromChild = (
   children: ReactNode,
@@ -82,6 +73,23 @@ function DialogContent({
 }: DialogContentProps) {
   const popup = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
+  const popupRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      popup.current = node;
+      if (typeof ref === "function") {
+        const cleanup = ref(node);
+        if (typeof cleanup === "function") {
+          return () => {
+            popup.current = null;
+            cleanup();
+          };
+        }
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref],
+  );
   const renderElement = isValidElement<{ children?: ReactNode }>(render) ? render : null;
   const bodyElement = (
     <div className="pumba-dialog-body" ref={body} tabIndex={-1}>
@@ -95,7 +103,7 @@ function DialogContent({
       <BaseDialog.Backdrop className="pumba-dialog-backdrop" />
       <BaseDialog.Popup
         className={join("pumba-dialog", className)}
-        ref={setRefs(ref, popup)}
+        ref={popupRef}
         render={renderElement ? cloneElement(renderElement, undefined, bodyElement) : render}
         initialFocus={() => {
           const scrollArea = body.current;

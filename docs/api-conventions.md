@@ -86,9 +86,11 @@ Read-only fields keep the border and have no fill. Disabled fields retain the de
 and have no visible border unless invalid. A field still needs a visible label.
 
 `invalid` writes `aria-invalid="true"` and `data-invalid`, and gives the field an error-colored
-border of double width, so the state is not carried by color alone. The error message is the
-consumer's: a visible text associated with `aria-describedby`, and ideally an icon. `disabled`
-and `readOnly` also write `data-disabled` and `data-readonly`. The consumer provides the label
+border of double width, so the state is not carried by color alone. When `invalid` is true, it
+takes precedence over any `aria-invalid` prop passed to `Input`. When `invalid` is false or
+omitted, `aria-invalid` passes through unchanged. The error message is the consumer's: a
+visible text associated with `aria-describedby`, and ideally an icon. `disabled` and
+`readOnly` also write `data-disabled` and `data-readonly`. The consumer provides the label
 (`<label htmlFor>` or `aria-label`); a `Field` component that wires label, hint and error
 together is not built yet.
 
@@ -232,6 +234,11 @@ accepts `render` and the native props of its element, and no Base UI type appear
 A tab is identified by a string `value`, shared by its `Tabs.Tab` and its `Tabs.Panel`. It is
 uncontrolled with `defaultValue` and controlled with `value` plus `onValueChange(value)`; the
 callback only runs for a real tab, so its argument is always a string.
+
+`Tabs.Panel` unmounts while inactive by default. Set `keepMounted` on a panel (for example,
+`<Tabs.Panel value="account" keepMounted>`) to keep it mounted but hidden while another tab
+is active. This preserves child state, including uncontrolled form edits, when returning
+to the panel. A panel with `keepMounted` also mounts before its first selection.
 
 The look is a segmented control: the list is a track filled with `field`, and the selected tab
 is marked by a raised pill (`surface-raised` and `shadow-raised`) that slides to the new tab with

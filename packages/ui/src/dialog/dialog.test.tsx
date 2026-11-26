@@ -80,6 +80,35 @@ describe("Dialog", () => {
     expect(close.current).toBe(screen.getByRole("button", { name: "Close" }));
   });
 
+  it("keeps a stable content callback ref attached until close and runs its cleanup", async () => {
+    const events: string[] = [];
+    const contentRef = (node: HTMLDivElement | null) => {
+      if (!node) {
+        events.push("null");
+        return;
+      }
+      events.push("attach");
+      return () => {
+        events.push("cleanup");
+      };
+    };
+    const dialogWithTitle = (title: string) => (
+      <Dialog.Root defaultOpen>
+        <Dialog.Content ref={contentRef}>
+          <Dialog.Title>{title}</Dialog.Title>
+          <Dialog.Close>Close</Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Root>
+    );
+    const { rerender } = render(dialogWithTitle("Title"));
+    const dialog = screen.getByRole("dialog");
+    rerender(dialogWithTitle("Updated title"));
+    events.push("before-close");
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(dialog.isConnected).toBe(false));
+    expect(events).toEqual(["attach", "before-close", "cleanup"]);
+  });
+
   it("renders an element nested in the trigger instead of a second button", () => {
     render(
       <Dialog.Root>
