@@ -29,7 +29,7 @@
       "$extensions": {
         "mode": {
           "light": "{primitive.color.white}",
-          "dark": "{primitive.color.neutral.800}"
+          "dark": "{primitive.color.neutral.700}"
         }
       },
       "$description": "Popovers and menus, above a surface."
