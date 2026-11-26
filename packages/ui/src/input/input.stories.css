@@ -9,9 +9,8 @@
   max-width: 22rem;
 }
 
-.input-story-narrow {
-  width: 100%;
-  max-width: 22rem;
+.input-story-grid.input-story-grid {
+  max-width: 40rem;
 }
 
 .input-story-stack {
@@ -60,24 +59,6 @@
 
 .input-story-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
   gap: var(--pumba-space-4);
-  max-width: 40rem;
-}
-
-.input-story-dark {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  max-width: none;
-  padding: var(--pumba-space-8) var(--pumba-space-6);
-  background: var(--pumba-color-background);
-  color: var(--pumba-color-text);
-}
-
-@media (width < 41rem) {
-  .input-story-dark .input-story-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
-    max-width: 100%;
-  }
 }
