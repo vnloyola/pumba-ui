@@ -141,4 +141,4 @@ const sd = new StyleDictionary({
 
 await sd.buildAllPlatforms();
 
-writeFileSync("dist/figma.json", `${JSON.stringify(buildFigmaTokens(), null, 2)}\n`);
+writeFileSync("dist/figma.json", `${JSON.stringify(buildFigmaTokens(sd.tokens), null, 2)}\n`);

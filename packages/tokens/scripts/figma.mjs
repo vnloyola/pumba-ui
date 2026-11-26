@@ -1,13 +1,9 @@
-import { readdirSync, readFileSync } from "node:fs";
 import { toHex } from "./oklch.mjs";
 
 const PRIMITIVES = "Primitives";
 const SEMANTIC = "Semantic";
 const REM_IN_PX = 16;
 const SUPPORTED_TYPES = new Set(["color", "dimension", "number", "fontWeight"]);
-
-const readFiles = (dir) =>
-  readdirSync(dir).map((file) => JSON.parse(readFileSync(`${dir}/${file}`, "utf8")));
 
 const round = (value) => Math.round(value * 1000) / 1000;
 
@@ -56,14 +52,7 @@ const convertTree = (node) =>
     }),
   );
 
-export const buildFigmaTokens = (sourceDir = "src") => {
-  const primitives = Object.assign(
-    {},
-    ...readFiles(`${sourceDir}/primitives`).map((file) => file.primitive),
-  );
-  const semantic = Object.assign({}, ...readFiles(`${sourceDir}/semantic`));
-  return {
-    [PRIMITIVES]: convertTree(primitives),
-    [SEMANTIC]: convertTree(semantic),
-  };
-};
+export const buildFigmaTokens = ({ primitive = {}, ...semantic }) => ({
+  [PRIMITIVES]: convertTree(primitive),
+  [SEMANTIC]: convertTree(semantic),
+});
