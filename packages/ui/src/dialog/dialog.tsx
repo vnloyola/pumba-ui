@@ -73,6 +73,7 @@ function DialogTrigger({ className, children, render, ...rest }: DialogTriggerPr
 
 function DialogContent({ className, container, children, ref, ...rest }: DialogContentProps) {
   const popup = useRef<HTMLDivElement>(null);
+  const body = useRef<HTMLDivElement>(null);
   return (
     <BaseDialog.Portal container={container}>
       <BaseDialog.Backdrop className="pumba-dialog-backdrop" />
@@ -80,13 +81,25 @@ function DialogContent({ className, container, children, ref, ...rest }: DialogC
         className={join("pumba-dialog", className)}
         ref={setRefs(ref, popup)}
         initialFocus={() => {
-          const target = popup.current?.querySelector<HTMLElement>(FOCUSABLE) ?? popup.current;
-          target?.focus({ preventScroll: true });
-          return document.activeElement === target ? false : null;
+          const scrollArea = body.current;
+          if (!scrollArea) return popup.current;
+          const scrollBounds = scrollArea.getBoundingClientRect();
+          for (const target of scrollArea.querySelectorAll<HTMLElement>(FOCUSABLE)) {
+            const { height, top, bottom } = target.getBoundingClientRect();
+            if (height > 0 && (top < scrollBounds.top || bottom > scrollBounds.bottom)) {
+              scrollArea.focus({ preventScroll: true });
+              return false;
+            }
+            target.focus({ preventScroll: true });
+            if (target.ownerDocument.activeElement === target) return false;
+          }
+          return popup.current;
         }}
         {...rest}
       >
-        <div className="pumba-dialog-body">{children}</div>
+        <div className="pumba-dialog-body" ref={body} tabIndex={-1}>
+          {children}
+        </div>
       </BaseDialog.Popup>
     </BaseDialog.Portal>
   );
