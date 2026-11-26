@@ -193,13 +193,10 @@ export const InAForm: Story = {
       await expect(email).toHaveValue("test@example.com");
     } finally {
       listeners.abort();
-      await userEvent.clear(email);
-      const originalTabIndex = canvasElement.getAttribute("tabindex");
+      form?.reset();
       canvasElement.tabIndex = -1;
       canvasElement.focus({ preventScroll: true });
-      canvasElement.blur();
-      if (originalTabIndex === null) canvasElement.removeAttribute("tabindex");
-      else canvasElement.setAttribute("tabindex", originalTabIndex);
+      canvasElement.removeAttribute("tabindex");
     }
   },
 };
