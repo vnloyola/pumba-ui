@@ -10,3 +10,10 @@
   background: var(--pumba-color-accent);
   border-radius: var(--pumba-radius-pill);
 }
+
+@media (width < 25rem) {
+  .tokens-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--pumba-space-1);
+  }
+}

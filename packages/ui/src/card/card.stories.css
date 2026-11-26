@@ -127,6 +127,26 @@
   color: var(--pumba-color-text);
 }
 
+.card-story-canvas,
+.card-story-dark {
+  container: card-story / inline-size;
+}
+
+@container card-story (width < 28rem) {
+  .card-story-horizontal {
+    flex-direction: column;
+  }
+
+  .card-story-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .card-story-horizontal .card-story-row {
+    flex-wrap: wrap;
+  }
+}
+
 .card-story-issue {
   gap: var(--pumba-space-3);
 }
