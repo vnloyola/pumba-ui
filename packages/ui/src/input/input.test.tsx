@@ -87,6 +87,20 @@ describe("Input", () => {
     expect(input.hasAttribute("data-invalid")).toBe(true);
   });
 
+  it("gives invalid precedence over an explicit aria-invalid", () => {
+    render(<Input aria-label="Email" invalid aria-invalid={false} />);
+    const input = screen.getByRole("textbox", { name: "Email" });
+    expect(input.getAttribute("aria-invalid")).toBe("true");
+    expect(input.hasAttribute("data-invalid")).toBe(true);
+  });
+
+  it.each([false, undefined])("preserves aria-invalid when invalid is %s", (invalid) => {
+    render(<Input aria-label="Email" invalid={invalid} aria-invalid="grammar" />);
+    const input = screen.getByRole("textbox", { name: "Email" });
+    expect(input.getAttribute("aria-invalid")).toBe("grammar");
+    expect(input.hasAttribute("data-invalid")).toBe(false);
+  });
+
   it("does not mark a valid input as invalid", () => {
     render(<Input aria-label="Email" />);
     const input = screen.getByRole("textbox", { name: "Email" });
