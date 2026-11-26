@@ -38,3 +38,10 @@
   font: inherit;
   cursor: pointer;
 }
+
+@media (forced-colors: active) {
+  .tokens-motion-dot {
+    forced-color-adjust: none;
+    background-color: Highlight;
+  }
+}

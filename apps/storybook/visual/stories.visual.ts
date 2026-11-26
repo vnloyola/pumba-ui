@@ -167,7 +167,7 @@ test.describe("forced colors", () => {
     await expect(disabled).not.toHaveCSS("box-shadow", "none");
   });
 
-  for (const theme of ["light", "dark"]) {
+  for (const theme of ["light", "dark"] as const) {
     test(`color swatches keep their token colors (${theme})`, async ({ page }) => {
       const readSwatches = () =>
         page
@@ -183,6 +183,62 @@ test.describe("forced colors", () => {
 
       await page.emulateMedia({ forcedColors: "active" });
       expect(await readSwatches()).toEqual(authored);
+    });
+
+    test(`motion demos stay visible and move in forced colors (${theme})`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: theme, forcedColors: "active" });
+      await openStory(page, "foundations-tokens--motion", theme);
+
+      const demos = page.locator(".tokens-motion");
+      await expect(demos).not.toHaveCount(0);
+
+      const colors = await demos.evaluateAll((items) =>
+        items.map((demo) => {
+          const track = demo.querySelector(".tokens-motion-track");
+          const dot = demo.querySelector(".tokens-motion-dot");
+          if (!track || !dot) throw new Error("Missing motion track or dot");
+          return {
+            track: getComputedStyle(track).backgroundColor,
+            dot: getComputedStyle(dot).backgroundColor,
+          };
+        }),
+      );
+      for (const pair of colors) {
+        expect(pair.dot).not.toBe(pair.track);
+      }
+
+      const first = demos.first();
+      const dot = first.locator(".tokens-motion-dot");
+      const beforeX = (await dot.boundingBox())?.x ?? 0;
+      await first.getByRole("button", { name: "Play" }).click();
+      await expect(first).toHaveAttribute("data-moved", "true");
+      await expect.poll(async () => (await dot.boundingBox())?.x ?? 0).toBeGreaterThan(beforeX);
+    });
+
+    test(`space bars stay visible and keep their widths in forced colors (${theme})`, async ({
+      page,
+    }) => {
+      const readWidths = () =>
+        page
+          .locator(".tokens-bar")
+          .evaluateAll((bars) => bars.map((bar) => bar.getBoundingClientRect().width));
+
+      await page.emulateMedia({ colorScheme: theme, forcedColors: "none" });
+      await openStory(page, "foundations-tokens--space", theme);
+      await expect(page.locator(".tokens-bar")).not.toHaveCount(0);
+      const normalWidths = await readWidths();
+
+      await page.emulateMedia({ colorScheme: theme, forcedColors: "active" });
+      const canvas = await page
+        .locator("body")
+        .evaluate((body) => getComputedStyle(body).backgroundColor);
+      const barColors = await page
+        .locator(".tokens-bar")
+        .evaluateAll((bars) => bars.map((bar) => getComputedStyle(bar).backgroundColor));
+      for (const color of barColors) {
+        expect(color).not.toBe(canvas);
+      }
+      expect(await readWidths()).toEqual(normalWidths);
     });
   }
 });
