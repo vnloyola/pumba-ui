@@ -109,7 +109,7 @@
           "dark": "{primitive.color.neutral.800}"
         }
       },
-      "$description": "Fill of text fields; it replaces an outline, so it must stand apart from the page and from a surface."
+      "$description": "Default fill of text fields."
     },
     "field-hover": {
       "$type": "color",
@@ -121,6 +121,17 @@
         }
       },
       "$description": "Fill of a text field under the pointer."
+    },
+    "field-border": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral.500}",
+      "$extensions": {
+        "mode": {
+          "light": "{primitive.color.neutral.500}",
+          "dark": "{primitive.color.neutral.475}"
+        }
+      },
+      "$description": "Text field boundary on page, card and raised surfaces."
     },
     "accent": {
       "$type": "color",

@@ -55,6 +55,9 @@ const pairs = [
   ["focus", "surface", UI],
   ["border-strong", "background", UI],
   ["border-strong", "surface", UI],
+  ["field-border", "background", UI],
+  ["field-border", "surface", UI],
+  ["field-border", "surface-raised", UI],
   ...["success", "error", "warning"].flatMap((state) => [
     [`${state}-text`, "background", TEXT],
     [`${state}-text`, "surface", TEXT],
