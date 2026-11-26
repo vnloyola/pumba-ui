@@ -171,6 +171,73 @@ describe("Dialog", () => {
     await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Name")));
   });
 
+  it("focuses the popup instead of a text input when opened by touch", async () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>Open form</Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Details</Dialog.Title>
+          <input aria-label="Name" />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open form" });
+    fireEvent.pointerDown(trigger, { pointerType: "touch" });
+    fireEvent.click(trigger, { detail: 1 });
+    const dialog = screen.getByRole("dialog");
+
+    await waitFor(() => expect(document.activeElement).toBe(dialog));
+  });
+
+  it("skips controls disabled by a fieldset even if they are outside the scroll bounds", async () => {
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Details</Dialog.Title>
+          <fieldset disabled>
+            <input
+              aria-label="Disabled name"
+              ref={(element) => {
+                if (element) element.getBoundingClientRect = () => new DOMRect(0, 500, 100, 32);
+              }}
+            />
+          </fieldset>
+          <input aria-label="Enabled name" />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Enabled name")));
+  });
+
+  it("does not measure or try to focus controls in a display-none ancestor", async () => {
+    const measure = vi.fn(() => new DOMRect());
+    const focus = vi.fn();
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Details</Dialog.Title>
+          <div style={{ display: "none" }}>
+            <input
+              aria-label="Hidden name"
+              ref={(element) => {
+                if (element) {
+                  element.getBoundingClientRect = measure;
+                  element.focus = focus;
+                }
+              }}
+            />
+          </div>
+          <input aria-label="Visible name" />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Visible name")));
+    expect(measure).not.toHaveBeenCalled();
+    expect(focus).not.toHaveBeenCalled();
+  });
+
   it("focuses the scrollable dialog body instead of an offscreen action", async () => {
     render(
       <Dialog.Root>
