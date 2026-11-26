@@ -75,6 +75,39 @@ describe("Button", () => {
     expect(click.defaultPrevented).toBe(true);
   });
 
+  it("exposes a disabled link to assistive technology", () => {
+    render(
+      <Button disabled render={<a href="#docs" />}>
+        Docs
+      </Button>,
+    );
+
+    expect(screen.getByRole("link", { name: "Docs" }).getAttribute("aria-disabled")).toBe("true");
+  });
+
+  it.each(["click", "Enter"])("blocks disabled link activation on %s", async (activation) => {
+    const onClick = vi.fn();
+    const onActivation = vi.fn<(event: MouseEvent) => void>();
+    render(
+      <Button disabled onClick={onClick} render={<a href="#docs" />}>
+        Docs
+      </Button>,
+    );
+    const link = screen.getByRole("link", { name: "Docs" });
+    link.addEventListener("click", onActivation);
+
+    if (activation === "click") {
+      await userEvent.click(link);
+    } else {
+      link.focus();
+      await userEvent.keyboard("{Enter}");
+    }
+
+    expect(onActivation).toHaveBeenCalledTimes(1);
+    expect(onActivation.mock.lastCall?.[0].defaultPrevented).toBe(true);
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
   it("calls onClick", () => {
     const onClick = vi.fn();
     render(<Button onClick={onClick}>Save</Button>);

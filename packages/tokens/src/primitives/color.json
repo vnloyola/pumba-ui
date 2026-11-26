@@ -31,6 +31,10 @@
           "$value": "oklch(0.71 0.006 55)",
           "$type": "color"
         },
+        "475": {
+          "$value": "oklch(0.59 0.006 55)",
+          "$type": "color"
+        },
         "500": {
           "$value": "oklch(0.56 0.006 55)",
           "$type": "color"
