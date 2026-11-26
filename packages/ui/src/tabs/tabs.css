@@ -18,10 +18,47 @@
   gap: var(--pumba-space-1);
   padding: var(--pumba-space-1);
   overflow-x: auto;
-  scroll-padding-inline: var(--pumba-space-6);
+  scroll-padding-inline: var(--pumba-space-8);
   scrollbar-width: none;
   border-radius: var(--pumba-radius-control);
   background: var(--pumba-color-field);
+  container-type: scroll-state;
+}
+
+.pumba-tabs-list::before,
+.pumba-tabs-list::after {
+  content: "";
+  position: sticky;
+  z-index: 2;
+  flex: none;
+  width: var(--pumba-space-8);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--pumba-motion-duration-feedback) var(--pumba-motion-easing-standard);
+}
+
+.pumba-tabs-list::before {
+  left: calc(-1 * var(--pumba-space-1));
+  margin-inline-end: calc(-1 * (var(--pumba-space-8) + var(--pumba-space-1)));
+  background: linear-gradient(to right, var(--pumba-color-field), transparent);
+}
+
+.pumba-tabs-list::after {
+  right: calc(-1 * var(--pumba-space-1));
+  margin-inline-start: calc(-1 * (var(--pumba-space-8) + var(--pumba-space-1)));
+  background: linear-gradient(to left, var(--pumba-color-field), transparent);
+}
+
+@container scroll-state(scrollable: left) {
+  .pumba-tabs-list::before {
+    opacity: 1;
+  }
+}
+
+@container scroll-state(scrollable: right) {
+  .pumba-tabs-list::after {
+    opacity: 1;
+  }
 }
 
 .pumba-tabs-indicator {
