@@ -32,9 +32,12 @@ export function Button(props: ButtonProps) {
     "data-loading": loading ? "" : undefined,
     "data-icon-only": iconOnly ? "" : undefined,
     "aria-busy": loading || undefined,
-    "aria-disabled": loading || undefined,
+    "aria-disabled": loading || (disabled && render != null) || undefined,
     disabled,
-    onClick: loading ? (event: MouseEvent<HTMLButtonElement>) => event.preventDefault() : onClick,
+    onClick:
+      disabled || loading
+        ? (event: MouseEvent<HTMLButtonElement>) => event.preventDefault()
+        : onClick,
   };
   return useRender({
     defaultTagName: "button",
