@@ -107,7 +107,11 @@
 }
 
 .pumba-button[data-icon-only][data-loading] > * {
-  display: none;
+  visibility: hidden;
+}
+
+.pumba-button[data-icon-only][data-loading]::before {
+  position: absolute;
 }
 
 .pumba-button:focus-visible,
