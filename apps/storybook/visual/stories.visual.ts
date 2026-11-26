@@ -30,6 +30,32 @@ for (const { id } of stories) {
   }
 }
 
+test("controls inherit disabled styles from their fieldset", async ({ page }) => {
+  await openStory(page, "components-input--disabled-fieldset", "light");
+  const inherited = page.getByRole("group", { name: "Disabled fieldset" });
+  const explicit = page.getByRole("group", { name: "Individually disabled controls" });
+  const readStyles = (control: Locator) =>
+    control.evaluate((element) => {
+      const { backgroundColor, borderTopColor, color, cursor } = getComputedStyle(element);
+      const placeholderColor =
+        element instanceof HTMLInputElement
+          ? getComputedStyle(element, "::placeholder").color
+          : null;
+      return { backgroundColor, borderTopColor, color, cursor, placeholderColor };
+    });
+
+  for (const role of ["textbox", "button"] as const) {
+    const control = inherited.getByRole(role);
+    await expect(control).toBeDisabled();
+    const disabledStyles = await readStyles(explicit.getByRole(role));
+    expect.soft(await readStyles(control), role).toEqual(disabledStyles);
+    await control.hover();
+    await expect.soft
+      .poll(() => readStyles(control), { message: `hovered ${role}` })
+      .toEqual(disabledStyles);
+  }
+});
+
 test("RTL Tabs show fades only on edges with overflow", async ({ page }) => {
   await openStory(page, "components-tabs--right-to-left", "light");
   const list = page.getByRole("tablist", { name: "Dashboard" });
