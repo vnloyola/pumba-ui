@@ -60,10 +60,14 @@ type Session = (typeof sessions)[number];
 
 function SessionCard({
   session,
+  className,
   ...props
 }: { session: Session } & ComponentProps<typeof Card.Root>) {
   return (
-    <Card.Root {...props} className="card-story-narrow card-story-session">
+    <Card.Root
+      {...props}
+      className={["card-story-narrow card-story-session", className].filter(Boolean).join(" ")}
+    >
       <Card.Header className="card-story-row">
         <span className="card-story-id">{session.id}</span>
         <Badge size="sm" variant={session.variant}>
