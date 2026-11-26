@@ -1,8 +1,16 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
+import StyleDictionary from "style-dictionary";
 import { buildFigmaTokens } from "./figma.mjs";
 
-const figma = buildFigmaTokens();
+const sd = new StyleDictionary({ source: ["src/**/*.json"] });
+await sd.hasInitialized;
+const figma = buildFigmaTokens(sd.tokens);
 
 const find = (tree, path) => path.split(".").reduce((node, key) => node?.[key], tree);
 
@@ -19,6 +27,47 @@ const allTokens = Object.values(figma).flatMap((collection) => collectTokens(col
 
 test("exports a primitives and a semantic collection", () => {
   assert.deepEqual(Object.keys(figma), ["Primitives", "Semantic"]);
+});
+
+test("keeps nested primitive and semantic tokens split across files", (t) => {
+  const cwd = mkdtempSync(join(tmpdir(), "pumba-figma-"));
+  t.after(() => rmSync(cwd, { recursive: true, force: true }));
+  mkdirSync(join(cwd, "src", "primitives"), { recursive: true });
+  mkdirSync(join(cwd, "src", "semantic"), { recursive: true });
+
+  for (const [name, value] of [
+    ["small", 1],
+    ["large", 2],
+  ]) {
+    writeFileSync(
+      join(cwd, "src", "primitives", `${name}.json`),
+      JSON.stringify({
+        primitive: { space: { inset: { [name]: { $type: "number", $value: value } } } },
+      }),
+    );
+    writeFileSync(
+      join(cwd, "src", "semantic", `${name}.json`),
+      JSON.stringify({
+        space: {
+          inset: { [name]: { $type: "number", $value: `{primitive.space.inset.${name}}` } },
+        },
+      }),
+    );
+  }
+
+  execFileSync(process.execPath, [fileURLToPath(new URL("../build.mjs", import.meta.url))], {
+    cwd,
+  });
+  const output = JSON.parse(readFileSync(join(cwd, "dist", "figma.json"), "utf8"));
+
+  assert.deepEqual(output.Primitives.space.inset, {
+    small: { $type: "number", $value: 1 },
+    large: { $type: "number", $value: 2 },
+  });
+  assert.deepEqual(output.Semantic.space.inset, {
+    small: { $type: "number", $value: "{Primitives.space.inset.small}" },
+    large: { $type: "number", $value: "{Primitives.space.inset.large}" },
+  });
 });
 
 test("converts OKLCH primitives to hex", () => {

@@ -4,6 +4,7 @@ import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import {
   type ComponentProps,
   cloneElement,
+  Fragment,
   isValidElement,
   type ReactElement,
   type ReactNode,
@@ -43,7 +44,11 @@ const elementFromChild = (
   children: ReactNode,
   render: Render<"button"> | undefined,
 ): { render: Render<"button"> | undefined; children: ReactNode } =>
-  render === undefined && isValidElement<{ children?: ReactNode }>(children)
+  render === undefined &&
+  isValidElement<Pick<ComponentProps<"button">, "aria-hidden" | "children">>(children) &&
+  children.type !== Fragment &&
+  children.props["aria-hidden"] !== true &&
+  children.props["aria-hidden"] !== "true"
     ? { render: children, children: children.props.children }
     : { render, children };
 
