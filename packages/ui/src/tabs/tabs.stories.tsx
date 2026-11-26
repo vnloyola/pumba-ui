@@ -174,6 +174,30 @@ export const WithIcons: Story = {
   ),
 };
 
+export const Overflow: Story = {
+  args: { defaultValue: "overview" },
+  render: (args, context) => (
+    <div className="tabs-story-compact">{WithIcons.render?.(args, context)}</div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const list = canvas.getByRole("tablist");
+    const billing = canvas.getByRole("tab", { name: "Billing" });
+    const root = list.parentElement as HTMLElement;
+    await expect(list.getBoundingClientRect().right).toBeLessThanOrEqual(
+      root.getBoundingClientRect().right,
+    );
+    await userEvent.tab();
+    await userEvent.keyboard("{End}");
+    await expect(billing).toHaveFocus();
+    await expect(billing.getBoundingClientRect().right).toBeLessThanOrEqual(
+      list.getBoundingClientRect().right,
+    );
+    await userEvent.keyboard("{Enter}");
+    await expect(billing).toHaveAttribute("aria-selected", "true");
+  },
+};
+
 export const WithDisabledTab: Story = {
   render: (args) => (
     <Tabs.Root {...args}>

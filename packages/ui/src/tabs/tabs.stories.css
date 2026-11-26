@@ -105,3 +105,8 @@
   align-items: center;
   gap: var(--pumba-space-2);
 }
+
+.tabs-story-compact {
+  max-width: 17rem;
+  margin-inline: auto;
+}
