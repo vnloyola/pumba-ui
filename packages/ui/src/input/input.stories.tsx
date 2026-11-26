@@ -97,7 +97,41 @@ export const States: Story = {
   ),
 };
 
-export const Composed: Story = {
+export const Disabled: Story = {
+  render: () => <LabeledInput label="Workspace" defaultValue="Pumba" disabled />,
+};
+
+export const ReadOnly: Story = {
+  render: () => <LabeledInput label="Invoice number" defaultValue="INV-2024-0042" readOnly />,
+};
+
+export const WithButton: Story = {
+  render: (args) => (
+    <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
+      <Input {...args} type="email" aria-label="Email for the newsletter" />
+      <Button type="submit">Subscribe</Button>
+    </form>
+  ),
+};
+
+export const DisabledFieldset: Story = {
+  render: () => (
+    <div className="input-story-stack">
+      <fieldset disabled className="input-story-stack">
+        <legend>Disabled fieldset</legend>
+        <LabeledInput label="Workspace" placeholder="Pumba" />
+        <Button>Save workspace</Button>
+      </fieldset>
+      <fieldset className="input-story-stack">
+        <legend>Individually disabled controls</legend>
+        <LabeledInput label="Workspace" placeholder="Pumba" disabled />
+        <Button disabled>Save workspace</Button>
+      </fieldset>
+    </div>
+  ),
+};
+
+export const WithIconButton: Story = {
   render: (args) => (
     <div className="input-story-stack">
       <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
