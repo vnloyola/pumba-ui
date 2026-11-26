@@ -106,6 +106,65 @@ describe("Dialog", () => {
     expect(done.classList.contains("pumba-button")).toBe(true);
   });
 
+  it("opens from a button with fragment content", () => {
+    const label = (
+      <>
+        <span>Open</span> <span>dialog</span>
+      </>
+    );
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger id="open-dialog">{label}</Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+    expect(trigger.tagName).toBe("BUTTON");
+    expect(trigger.id).toBe("open-dialog");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog")).not.toBeNull();
+  });
+
+  it("closes from a button with fragment content", async () => {
+    const label = (
+      <>
+        <span>Close</span> <span>dialog</span>
+      </>
+    );
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+          <Dialog.Close>{label}</Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const close = screen.getByRole("button", { name: "Close dialog" });
+    expect(close.tagName).toBe("BUTTON");
+    fireEvent.click(close);
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
+
+  it("keeps a sole aria-hidden icon inside a named trigger button", () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger aria-label="Open dialog">
+          <svg aria-hidden="true" />
+        </Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+    expect(trigger.tagName).toBe("BUTTON");
+    expect(trigger.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog")).not.toBeNull();
+  });
+
   it("closes from a nested close element", async () => {
     render(
       <Dialog.Root defaultOpen>
