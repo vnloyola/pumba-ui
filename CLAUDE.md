@@ -29,6 +29,7 @@ pnpm test
 pnpm add:component <Name>               # generates a component folder from templates
 pnpm lint:title                         # validates a commit message or PR title read from stdin
 pnpm test:visual                        # screenshots of every story; needs build-storybook first
+pnpm test:visual:docker                 # the same, inside CI's Playwright image (needs Docker)
 pnpm check:package                      # publint and arethetypeswrong
 pnpm build-storybook
 pnpm --filter @pumba-ui/ui build        # one package
