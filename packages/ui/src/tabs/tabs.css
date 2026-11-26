@@ -132,6 +132,11 @@
     transition: none;
   }
 
+  .pumba-tabs-tab[data-disabled],
+  .pumba-tabs-tab[data-disabled]:hover {
+    color: GrayText;
+  }
+
   .pumba-tabs-tab:focus-visible,
   .pumba-tabs-tab[data-focus-visible] {
     outline-color: Highlight;

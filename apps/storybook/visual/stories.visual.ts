@@ -129,6 +129,25 @@ test.describe("forced colors", () => {
     await expect(password).not.toHaveCSS("background-color", inactiveFill);
   });
 
+  test("disabled tabs keep distinct text in forced colors", async ({ page }) => {
+    await openStory(page, "components-tabs--with-disabled-tab", "light");
+    const account = page.getByRole("tab", { name: "Account" });
+    const disabled = page.getByRole("tab", { name: "Password" });
+    const enabled = page.getByRole("tab", { name: "Billing" });
+
+    await expect(disabled).toBeDisabled();
+    const enabledColor = await enabled.evaluate((tab) => getComputedStyle(tab).color);
+    await expect(disabled).not.toHaveCSS("color", enabledColor);
+    await disabled.hover();
+    await expect(disabled).not.toHaveCSS("color", enabledColor);
+
+    await account.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(disabled).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(account).toHaveAttribute("aria-selected", "true");
+  });
+
   for (const theme of ["light", "dark"]) {
     test(`color swatches keep their token colors (${theme})`, async ({ page }) => {
       const readSwatches = () =>
