@@ -41,10 +41,10 @@ function Field({ label, ...props }: { label: string } & React.ComponentProps<typ
   );
 }
 
-function SettingsPanels() {
+function SettingsPanels({ keepAccountMounted }: { keepAccountMounted?: boolean }) {
   return (
     <>
-      <Tabs.Panel value="account">
+      <Tabs.Panel value="account" keepMounted={keepAccountMounted}>
         <div className="tabs-story-stack">
           <Field label="Full name" defaultValue="Ana Torres" autoComplete="name" />
           <Field label="Email" type="email" defaultValue="ana@example.com" autoComplete="email" />
@@ -94,7 +94,7 @@ export const Default: Story = {
           <Tabs.Tab value="password">Password</Tabs.Tab>
           <Tabs.Tab value="billing">Billing</Tabs.Tab>
         </Tabs.List>
-        <SettingsPanels />
+        <SettingsPanels keepAccountMounted />
       </Tabs.Root>
     </Card.Root>
   ),
@@ -158,6 +158,7 @@ export const Overflow: Story = {
     await expect(list.getBoundingClientRect().right).toBeLessThanOrEqual(
       root.getBoundingClientRect().right,
     );
+    await canvasElement.ownerDocument.fonts.ready;
     await userEvent.tab();
     await userEvent.keyboard("{End}");
     await expect(billing).toHaveFocus();
@@ -169,7 +170,33 @@ export const Overflow: Story = {
   },
 };
 
-export const States: Story = {
+export const RightToLeft: Story = {
+  render: (args, context) => (
+    <div className="tabs-story-stack" dir="rtl">
+      {Default.render?.(args, context)}
+      <div className="tabs-story-compact">
+        {WithIcons.render?.({ ...args, defaultValue: "overview" }, context)}
+      </div>
+    </div>
+  ),
+};
+
+export const WithDisabledTab: Story = {
+  render: (args) => (
+    <Tabs.Root {...args}>
+      <Tabs.List aria-label="Settings">
+        <Tabs.Tab value="account">Account</Tabs.Tab>
+        <Tabs.Tab value="password" disabled>
+          Password
+        </Tabs.Tab>
+        <Tabs.Tab value="billing">Billing</Tabs.Tab>
+      </Tabs.List>
+      <SettingsPanels />
+    </Tabs.Root>
+  ),
+};
+
+export const ForcedStates: Story = {
   render: (args) => (
     <Tabs.Root {...args}>
       <Tabs.List aria-label="Tab states">

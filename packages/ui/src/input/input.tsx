@@ -11,14 +11,23 @@ export type InputProps = Omit<ComponentProps<"input">, "size"> & {
 };
 
 export function Input(props: InputProps) {
-  const { size = "md", invalid = false, render, ref, disabled, readOnly, ...rest } = props;
+  const {
+    size = "md",
+    invalid = false,
+    "aria-invalid": ariaInvalid,
+    render,
+    ref,
+    disabled,
+    readOnly,
+    ...rest
+  } = props;
   const own = {
     className: "pumba-input",
     "data-size": size,
     "data-invalid": invalid ? "" : undefined,
     "data-disabled": disabled ? "" : undefined,
     "data-readonly": readOnly ? "" : undefined,
-    "aria-invalid": invalid || undefined,
+    "aria-invalid": invalid ? true : ariaInvalid,
     disabled,
     readOnly,
   };

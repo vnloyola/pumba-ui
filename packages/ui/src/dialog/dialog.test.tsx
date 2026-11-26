@@ -80,6 +80,35 @@ describe("Dialog", () => {
     expect(close.current).toBe(screen.getByRole("button", { name: "Close" }));
   });
 
+  it("keeps a stable content callback ref attached until close and runs its cleanup", async () => {
+    const events: string[] = [];
+    const contentRef = (node: HTMLDivElement | null) => {
+      if (!node) {
+        events.push("null");
+        return;
+      }
+      events.push("attach");
+      return () => {
+        events.push("cleanup");
+      };
+    };
+    const dialogWithTitle = (title: string) => (
+      <Dialog.Root defaultOpen>
+        <Dialog.Content ref={contentRef}>
+          <Dialog.Title>{title}</Dialog.Title>
+          <Dialog.Close>Close</Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Root>
+    );
+    const { rerender } = render(dialogWithTitle("Title"));
+    const dialog = screen.getByRole("dialog");
+    rerender(dialogWithTitle("Updated title"));
+    events.push("before-close");
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(dialog.isConnected).toBe(false));
+    expect(events).toEqual(["attach", "before-close", "cleanup"]);
+  });
+
   it("renders an element nested in the trigger instead of a second button", () => {
     render(
       <Dialog.Root>
@@ -104,6 +133,65 @@ describe("Dialog", () => {
     expect(done.querySelector("button")).toBeNull();
     expect(done.classList.contains("pumba-dialog-close")).toBe(true);
     expect(done.classList.contains("pumba-button")).toBe(true);
+  });
+
+  it("opens from a button with fragment content", () => {
+    const label = (
+      <>
+        <span>Open</span> <span>dialog</span>
+      </>
+    );
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger id="open-dialog">{label}</Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+    expect(trigger.tagName).toBe("BUTTON");
+    expect(trigger.id).toBe("open-dialog");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog")).not.toBeNull();
+  });
+
+  it("closes from a button with fragment content", async () => {
+    const label = (
+      <>
+        <span>Close</span> <span>dialog</span>
+      </>
+    );
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+          <Dialog.Close>{label}</Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const close = screen.getByRole("button", { name: "Close dialog" });
+    expect(close.tagName).toBe("BUTTON");
+    fireEvent.click(close);
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
+
+  it("keeps a sole aria-hidden icon inside a named trigger button", () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger aria-label="Open dialog">
+          <svg aria-hidden="true" />
+        </Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Title</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+    expect(trigger.tagName).toBe("BUTTON");
+    expect(trigger.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog")).not.toBeNull();
   });
 
   it("closes from a nested close element", async () => {
@@ -156,6 +244,87 @@ describe("Dialog", () => {
     const dialog = screen.getByRole("dialog");
     expect(dialog.tagName).toBe("SECTION");
     expect(dialog.classList.contains("pumba-dialog")).toBe(true);
+    const body = dialog.querySelector(".pumba-dialog-body");
+    expect(body).not.toBeNull();
+    expect(body?.contains(screen.getByText("Title"))).toBe(true);
+  });
+
+  it("keeps the scrollable dialog body when render carries its own children", async () => {
+    const sectionRef = createRef<HTMLElement>();
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content
+          render={
+            <section ref={sectionRef} className="custom-dialog" data-kind="terms">
+              <Dialog.Title>Terms of service</Dialog.Title>
+              <p>Clause 1</p>
+              <Dialog.Close>I agree</Dialog.Close>
+            </section>
+          }
+        />
+      </Dialog.Root>,
+    );
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.tagName).toBe("SECTION");
+    expect(dialog.classList.contains("pumba-dialog")).toBe(true);
+    expect(dialog.classList.contains("custom-dialog")).toBe(true);
+    expect(dialog.getAttribute("data-kind")).toBe("terms");
+    expect(sectionRef.current).toBe(dialog);
+
+    const body = dialog.querySelector<HTMLElement>(".pumba-dialog-body");
+    expect(body).not.toBeNull();
+    expect(body?.tabIndex).toBe(-1);
+    expect(body?.contains(screen.getByText("Terms of service"))).toBe(true);
+    expect(body?.contains(screen.getByText("Clause 1"))).toBe(true);
+    expect(body?.contains(screen.getByRole("button", { name: "I agree" }))).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "I agree" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
+
+  it("focuses the scrollable dialog body for offscreen actions when render carries children", async () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>Read the terms</Dialog.Trigger>
+        <Dialog.Content
+          render={
+            <section>
+              <Dialog.Title>Terms of service</Dialog.Title>
+              <p>Read these terms before continuing.</p>
+              <Dialog.Close
+                ref={(element) => {
+                  if (element) element.getBoundingClientRect = () => new DOMRect(0, 500, 100, 32);
+                }}
+              >
+                I agree
+              </Dialog.Close>
+            </section>
+          }
+        />
+      </Dialog.Root>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Read the terms" }));
+    const dialog = screen.getByRole("dialog");
+    const body = dialog.querySelector<HTMLElement>(".pumba-dialog-body");
+    if (!body) throw new Error("Dialog body not found");
+    body.getBoundingClientRect = () => new DOMRect(0, 0, 300, 400);
+
+    await waitFor(() => expect(document.activeElement).toBe(body));
+  });
+
+  it("keeps the scrollable dialog body with a render function", () => {
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content render={(props) => <section {...props} />}>
+          <Dialog.Title>Title</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.tagName).toBe("SECTION");
+    const body = dialog.querySelector(".pumba-dialog-body");
+    expect(body).not.toBeNull();
+    expect(body?.contains(screen.getByText("Title"))).toBe(true);
   });
 
   it("moves the initial focus to the first visible control, skipping hidden inputs", async () => {
@@ -169,6 +338,73 @@ describe("Dialog", () => {
       </Dialog.Root>,
     );
     await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Name")));
+  });
+
+  it("focuses the popup instead of a text input when opened by touch", async () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>Open form</Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Details</Dialog.Title>
+          <input aria-label="Name" />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open form" });
+    fireEvent.pointerDown(trigger, { pointerType: "touch" });
+    fireEvent.click(trigger, { detail: 1 });
+    const dialog = screen.getByRole("dialog");
+
+    await waitFor(() => expect(document.activeElement).toBe(dialog));
+  });
+
+  it("skips controls disabled by a fieldset even if they are outside the scroll bounds", async () => {
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Details</Dialog.Title>
+          <fieldset disabled>
+            <input
+              aria-label="Disabled name"
+              ref={(element) => {
+                if (element) element.getBoundingClientRect = () => new DOMRect(0, 500, 100, 32);
+              }}
+            />
+          </fieldset>
+          <input aria-label="Enabled name" />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Enabled name")));
+  });
+
+  it("does not measure or try to focus controls in a display-none ancestor", async () => {
+    const measure = vi.fn(() => new DOMRect());
+    const focus = vi.fn();
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Details</Dialog.Title>
+          <div style={{ display: "none" }}>
+            <input
+              aria-label="Hidden name"
+              ref={(element) => {
+                if (element) {
+                  element.getBoundingClientRect = measure;
+                  element.focus = focus;
+                }
+              }}
+            />
+          </div>
+          <input aria-label="Visible name" />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Visible name")));
+    expect(measure).not.toHaveBeenCalled();
+    expect(focus).not.toHaveBeenCalled();
   });
 
   it("focuses the scrollable dialog body instead of an offscreen action", async () => {

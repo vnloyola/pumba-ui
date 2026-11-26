@@ -38,24 +38,32 @@
 }
 
 .pumba-tabs-list::before {
-  left: calc(-1 * var(--pumba-space-1));
+  inset-inline-start: calc(-1 * var(--pumba-space-1));
   margin-inline-end: calc(-1 * (var(--pumba-space-8) + var(--pumba-space-1)));
   background: linear-gradient(to right, var(--pumba-color-field), transparent);
 }
 
 .pumba-tabs-list::after {
-  right: calc(-1 * var(--pumba-space-1));
+  inset-inline-end: calc(-1 * var(--pumba-space-1));
   margin-inline-start: calc(-1 * (var(--pumba-space-8) + var(--pumba-space-1)));
   background: linear-gradient(to left, var(--pumba-color-field), transparent);
 }
 
-@container scroll-state(scrollable: left) {
+.pumba-tabs-list[data-pumba-dir="rtl"]::before {
+  background: linear-gradient(to left, var(--pumba-color-field), transparent);
+}
+
+.pumba-tabs-list[data-pumba-dir="rtl"]::after {
+  background: linear-gradient(to right, var(--pumba-color-field), transparent);
+}
+
+@container scroll-state(scrollable: inline-start) {
   .pumba-tabs-list::before {
     opacity: 1;
   }
 }
 
-@container scroll-state(scrollable: right) {
+@container scroll-state(scrollable: inline-end) {
   .pumba-tabs-list::after {
     opacity: 1;
   }
@@ -122,6 +130,16 @@
     background-color: Highlight;
     color: HighlightText;
     transition: none;
+  }
+
+  .pumba-tabs-tab[data-disabled],
+  .pumba-tabs-tab[data-disabled]:hover {
+    color: GrayText;
+  }
+
+  .pumba-tabs-tab[data-active][data-disabled] {
+    background-color: Canvas;
+    box-shadow: inset 0 0 0 2px Highlight;
   }
 
   .pumba-tabs-tab:focus-visible,

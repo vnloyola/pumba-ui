@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { createRef, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -80,6 +80,36 @@ describe("Tabs", () => {
     expect(panel.current).toBe(screen.getByRole("tabpanel"));
   });
 
+  it.each(["cleanup", "null"])(
+    "keeps a stable list callback ref attached until unmount and detaches with %s",
+    (detach) => {
+      const events: string[] = [];
+      const listRef = vi.fn((node: HTMLDivElement | null) => {
+        events.push(node ? "attach" : "null");
+        if (node && detach === "cleanup") {
+          return () => {
+            events.push("cleanup");
+          };
+        }
+      });
+      const tabsWithLabel = (label: string) => (
+        <Tabs.Root defaultValue="a">
+          <Tabs.List ref={listRef} aria-label={label}>
+            <Tabs.Tab value="a">A</Tabs.Tab>
+          </Tabs.List>
+        </Tabs.Root>
+      );
+      const { rerender, unmount } = render(tabsWithLabel("Demo"));
+      const list = screen.getByRole("tablist", { name: "Demo" });
+      expect(listRef).toHaveBeenNthCalledWith(1, list);
+      rerender(tabsWithLabel("Updated demo"));
+      expect(screen.getByRole("tablist", { name: "Updated demo" })).toBe(list);
+      events.push("before-unmount");
+      unmount();
+      expect(events).toEqual(["attach", "before-unmount", detach]);
+    },
+  );
+
   it("keeps the class and ref of the tab with render={<a />}", () => {
     let node: HTMLElement | null = null;
     render(
@@ -144,6 +174,28 @@ describe("Tabs", () => {
     expect(screen.getByRole("tabpanel").tagName).toBe("SECTION");
   });
 
+  it("renders the indicator alongside tabs supplied in the list's render element", () => {
+    render(
+      <Tabs.Root defaultValue="account">
+        <Tabs.List
+          render={
+            <section>
+              <Tabs.Tab value="account">Account</Tabs.Tab>
+              <Tabs.Tab value="password">Password</Tabs.Tab>
+            </section>
+          }
+        />
+        <Tabs.Panel value="account">Account panel</Tabs.Panel>
+        <Tabs.Panel value="password">Password panel</Tabs.Panel>
+      </Tabs.Root>,
+    );
+
+    const list = screen.getByRole("tablist");
+    expect(list.tagName).toBe("SECTION");
+    expect(tab("Account").getAttribute("aria-selected")).toBe("true");
+    expect(list.querySelectorAll(":scope > .pumba-tabs-indicator")).toHaveLength(1);
+  });
+
   it("is uncontrolled with defaultValue and reports changes", () => {
     const onValueChange = vi.fn();
     render(basic({ defaultValue: "password", onValueChange }));
@@ -170,6 +222,38 @@ describe("Tabs", () => {
     expect(tab("Password").getAttribute("aria-selected")).toBe("true");
   });
 
+  it.each([undefined, false, true])(
+    "preserves edits only when keepMounted is true (%s)",
+    (keepMounted) => {
+      render(
+        <Tabs.Root defaultValue="account">
+          <Tabs.List aria-label="Settings">
+            <Tabs.Tab value="account">Account</Tabs.Tab>
+            <Tabs.Tab value="password">Password</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="account" keepMounted={keepMounted}>
+            <input aria-label="Full name" defaultValue="Ana Torres" />
+          </Tabs.Panel>
+          <Tabs.Panel value="password">Password panel</Tabs.Panel>
+        </Tabs.Root>,
+      );
+
+      const input = screen.getByRole<HTMLInputElement>("textbox", { name: "Full name" });
+      fireEvent.change(input, { target: { value: "Ana Silva" } });
+      fireEvent.click(tab("Password"));
+
+      expect(screen.getByRole("tabpanel")).toHaveProperty("textContent", "Password panel");
+      expect(screen.queryByRole("textbox", { name: "Full name" })).toBeNull();
+      expect(input.isConnected).toBe(keepMounted === true);
+
+      fireEvent.click(tab("Account"));
+      expect(screen.getByRole("textbox", { name: "Full name" })).toHaveProperty(
+        "value",
+        keepMounted ? "Ana Silva" : "Ana Torres",
+      );
+    },
+  );
+
   it("does not select a disabled tab", () => {
     const onValueChange = vi.fn();
     render(basic({ onValueChange }));
@@ -177,6 +261,37 @@ describe("Tabs", () => {
     expect(tab("Alerts").hasAttribute("data-disabled")).toBe(true);
     expect(onValueChange).not.toHaveBeenCalled();
     expect(tab("Account").getAttribute("aria-selected")).toBe("true");
+  });
+
+  it.each([
+    ["inherited RTL", "rtl", undefined, "ArrowLeft", "ArrowRight"],
+    ["an uppercase RTL attribute", "RTL", undefined, "ArrowLeft", "ArrowRight"],
+    ["an inherited automatic RTL direction", "auto", undefined, "ArrowLeft", "ArrowRight"],
+    ["inherited RTL with an empty dir", "rtl", "", "ArrowLeft", "ArrowRight"],
+    ["an LTR override", "rtl", "ltr", "ArrowRight", "ArrowLeft"],
+    ["default LTR", undefined, undefined, "ArrowRight", "ArrowLeft"],
+  ])("follows %s for horizontal arrow keys", async (_, ancestorDir, dir, forward, backward) => {
+    render(
+      <div dir={ancestorDir}>
+        {ancestorDir === "auto" ? "שלום" : null}
+        {basic({ dir })}
+      </div>,
+    );
+    const account = tab("Account");
+    const password = tab("Password");
+    act(() => account.focus());
+    await act(async () => {
+      fireEvent.keyDown(account, { key: forward });
+    });
+    expect(document.activeElement?.textContent).toBe("Password");
+    await act(async () => {
+      fireEvent.keyDown(password, { key: backward });
+    });
+    expect(document.activeElement?.textContent).toBe("Account");
+    await act(async () => {
+      fireEvent.keyDown(account, { key: backward });
+    });
+    expect(document.activeElement?.textContent).toBe("Billing");
   });
 
   it("has no accessibility violations", async () => {

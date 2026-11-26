@@ -3,10 +3,12 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import {
   type ComponentProps,
+  cloneElement,
+  Fragment,
   isValidElement,
   type ReactElement,
   type ReactNode,
-  type Ref,
+  useCallback,
   useRef,
 } from "react";
 
@@ -38,20 +40,31 @@ type DialogCloseProps = ButtonPartProps;
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-const setRefs =
-  <T,>(...refs: Array<Ref<T> | undefined>) =>
-  (node: T | null) => {
-    for (const ref of refs) {
-      if (typeof ref === "function") ref(node);
-      else if (ref) ref.current = node;
-    }
-  };
+function isVisible(element: HTMLElement) {
+  if (element.checkVisibility) return element.checkVisibility({ visibilityProperty: true });
+
+  const view = element.ownerDocument.defaultView;
+  if (!view) return false;
+
+  const { visibility } = view.getComputedStyle(element);
+  if (visibility === "hidden" || visibility === "collapse") return false;
+
+  for (let node: HTMLElement | null = element; node; node = node.parentElement) {
+    const { display, contentVisibility } = view.getComputedStyle(node);
+    if (display === "none" || contentVisibility === "hidden") return false;
+  }
+  return true;
+}
 
 const elementFromChild = (
   children: ReactNode,
   render: Render<"button"> | undefined,
 ): { render: Render<"button"> | undefined; children: ReactNode } =>
-  render === undefined && isValidElement<{ children?: ReactNode }>(children)
+  render === undefined &&
+  isValidElement<Pick<ComponentProps<"button">, "aria-hidden" | "children">>(children) &&
+  children.type !== Fragment &&
+  children.props["aria-hidden"] !== true &&
+  children.props["aria-hidden"] !== "true"
     ? { render: children, children: children.props.children }
     : { render, children };
 
@@ -71,20 +84,57 @@ function DialogTrigger({ className, children, render, ...rest }: DialogTriggerPr
   );
 }
 
-function DialogContent({ className, container, children, ref, ...rest }: DialogContentProps) {
+function DialogContent({
+  className,
+  container,
+  children,
+  ref,
+  render,
+  ...rest
+}: DialogContentProps) {
   const popup = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
+  const popupRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      popup.current = node;
+      if (typeof ref === "function") {
+        const cleanup = ref(node);
+        if (typeof cleanup === "function") {
+          return () => {
+            popup.current = null;
+            cleanup();
+          };
+        }
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref],
+  );
+  const renderElement = isValidElement<{ children?: ReactNode }>(render) ? render : null;
+  const bodyElement = (
+    <div className="pumba-dialog-body" ref={body} tabIndex={-1}>
+      {renderElement && renderElement.props.children !== undefined
+        ? renderElement.props.children
+        : children}
+    </div>
+  );
   return (
     <BaseDialog.Portal container={container}>
       <BaseDialog.Backdrop className="pumba-dialog-backdrop" />
       <BaseDialog.Popup
         className={join("pumba-dialog", className)}
-        ref={setRefs(ref, popup)}
-        initialFocus={() => {
+        ref={popupRef}
+        render={renderElement ? cloneElement(renderElement, undefined, bodyElement) : render}
+        initialFocus={(interactionType) => {
+          if (interactionType === "touch") return popup.current;
           const scrollArea = body.current;
           if (!scrollArea) return popup.current;
           const scrollBounds = scrollArea.getBoundingClientRect();
           for (const target of scrollArea.querySelectorAll<HTMLElement>(FOCUSABLE)) {
+            if (target.matches(":disabled") || target.closest("[inert]") || !isVisible(target)) {
+              continue;
+            }
             const { height, top, bottom } = target.getBoundingClientRect();
             if (height > 0 && (top < scrollBounds.top || bottom > scrollBounds.bottom)) {
               scrollArea.focus({ preventScroll: true });
@@ -97,9 +147,7 @@ function DialogContent({ className, container, children, ref, ...rest }: DialogC
         }}
         {...rest}
       >
-        <div className="pumba-dialog-body" ref={body} tabIndex={-1}>
-          {children}
-        </div>
+        {bodyElement}
       </BaseDialog.Popup>
     </BaseDialog.Portal>
   );

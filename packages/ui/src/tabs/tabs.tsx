@@ -1,7 +1,18 @@
 "use client";
 
+import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
-import type { ComponentProps, ReactElement } from "react";
+import {
+  type ComponentProps,
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 type Render<Tag extends "div" | "button"> =
   | ReactElement
@@ -20,7 +31,11 @@ type TabsTabProps = ComponentProps<"button"> & {
   nativeButton?: boolean;
   render?: Render<"button">;
 };
-type TabsPanelProps = ComponentProps<"div"> & { value: string; render?: Render<"div"> };
+type TabsPanelProps = ComponentProps<"div"> & {
+  value: string;
+  keepMounted?: boolean;
+  render?: Render<"div">;
+};
 
 const join = (own: string, className?: string) => (className ? `${own} ${className}` : own);
 
@@ -36,12 +51,52 @@ function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
   );
 }
 
-function TabsList({ className, children, ...rest }: TabsListProps) {
+function TabsList({ className, children, ref, render, ...rest }: TabsListProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const mergedRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      listRef.current = node;
+      if (typeof ref === "function") {
+        const cleanup = ref(node);
+        if (typeof cleanup === "function") {
+          return () => {
+            listRef.current = null;
+            cleanup();
+          };
+        }
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref],
+  );
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const nextDirection = list && getComputedStyle(list).direction === "rtl" ? "rtl" : "ltr";
+    if (nextDirection !== direction) setDirection(nextDirection);
+  });
+
+  const indicator = <BaseTabs.Indicator className="pumba-tabs-indicator" />;
+  const listRender =
+    isValidElement<{ children?: ReactNode }>(render) && Object.hasOwn(render.props, "children")
+      ? cloneElement(render, {}, render.props.children, indicator)
+      : render;
+
   return (
-    <BaseTabs.List className={join("pumba-tabs-list", className)} {...rest}>
-      {children}
-      <BaseTabs.Indicator className="pumba-tabs-indicator" />
-    </BaseTabs.List>
+    <DirectionProvider direction={direction}>
+      <BaseTabs.List
+        className={join("pumba-tabs-list", className)}
+        ref={mergedRef}
+        render={listRender}
+        {...rest}
+        data-pumba-dir={direction === "rtl" ? direction : undefined}
+      >
+        {children}
+        {indicator}
+      </BaseTabs.List>
+    </DirectionProvider>
   );
 }
 

@@ -1,6 +1,7 @@
 import "./input.stories.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ComponentProps, useId } from "react";
+import { expect, fn, userEvent, within } from "storybook/test";
 import { Button } from "../button/index.js";
 import { Card } from "../card/index.js";
 import { ArrowRightIcon, SearchIcon, WarningIcon } from "../icons.js";
@@ -118,33 +119,74 @@ export const Composed: Story = {
 
 export const InAForm: Story = {
   render: () => (
-    <Card.Root>
+    <Card.Root render={<form onSubmit={(event) => event.preventDefault()} />}>
       <Card.Header>
         <h3 className="input-story-title">Create an environment</h3>
       </Card.Header>
-      <Card.Content>
-        <form className="input-story-stack" onSubmit={(event) => event.preventDefault()}>
-          <LabeledInput label="Full name" placeholder="Ana Torres" autoComplete="name" />
-          <LabeledInput
-            label="Email"
-            type="email"
-            placeholder="ana@example.com"
-            autoComplete="email"
-          />
-          <LabeledInput
-            label="Password"
-            type="password"
-            hint="Use at least 8 characters."
-            autoComplete="new-password"
-          />
-        </form>
+      <Card.Content className="input-story-stack">
+        <LabeledInput label="Full name" placeholder="Ana Torres" autoComplete="name" />
+        <LabeledInput
+          label="Email"
+          type="email"
+          placeholder="ana@example.com"
+          autoComplete="email"
+        />
+        <LabeledInput
+          label="Password"
+          type="password"
+          hint="Use at least 8 characters."
+          autoComplete="new-password"
+        />
       </Card.Content>
       <Card.Footer>
-        <Button>Create account</Button>
-        <Button variant="ghost">Cancel</Button>
+        <Button type="submit">Create account</Button>
+        <Button variant="ghost" type="button">
+          Cancel
+        </Button>
       </Card.Footer>
     </Card.Root>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const email = canvas.getByRole("textbox", { name: "Email" });
+    const createAccount = canvas.getByRole("button", { name: "Create account" });
+    const document = canvasElement.ownerDocument;
+    const url = document.URL;
+    const form = email.closest("form");
+    const invalid = fn();
+    const submit = fn((event: Event) => event.defaultPrevented);
+    const listeners = new AbortController();
+    email.addEventListener("invalid", invalid, { signal: listeners.signal });
+    document.addEventListener(
+      "submit",
+      (event) => {
+        if (event.target === form) submit(event);
+      },
+      { signal: listeners.signal },
+    );
+
+    try {
+      await userEvent.type(email, "not-an-email");
+      await userEvent.click(createAccount);
+      await expect(invalid).toHaveBeenCalledTimes(1);
+      await expect(email).toHaveFocus();
+      await expect(submit).not.toHaveBeenCalled();
+
+      await userEvent.clear(email);
+      await userEvent.type(email, "test@example.com");
+      await userEvent.click(createAccount);
+      await expect(submit).toHaveBeenCalledTimes(1);
+      await expect(submit).toHaveReturnedWith(true);
+      await expect(document.URL).toBe(url);
+      await expect(email).toHaveValue("test@example.com");
+    } finally {
+      listeners.abort();
+      form?.reset();
+      canvasElement.tabIndex = -1;
+      canvasElement.focus({ preventScroll: true });
+      canvasElement.removeAttribute("tabindex");
+    }
+  },
 };
 
 export const ForcedStates: Story = {
