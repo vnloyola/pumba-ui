@@ -144,6 +144,28 @@ describe("Tabs", () => {
     expect(screen.getByRole("tabpanel").tagName).toBe("SECTION");
   });
 
+  it("renders the indicator alongside tabs supplied in the list's render element", () => {
+    render(
+      <Tabs.Root defaultValue="account">
+        <Tabs.List
+          render={
+            <section>
+              <Tabs.Tab value="account">Account</Tabs.Tab>
+              <Tabs.Tab value="password">Password</Tabs.Tab>
+            </section>
+          }
+        />
+        <Tabs.Panel value="account">Account panel</Tabs.Panel>
+        <Tabs.Panel value="password">Password panel</Tabs.Panel>
+      </Tabs.Root>,
+    );
+
+    const list = screen.getByRole("tablist");
+    expect(list.tagName).toBe("SECTION");
+    expect(tab("Account").getAttribute("aria-selected")).toBe("true");
+    expect(list.querySelectorAll(":scope > .pumba-tabs-indicator")).toHaveLength(1);
+  });
+
   it("is uncontrolled with defaultValue and reports changes", () => {
     const onValueChange = vi.fn();
     render(basic({ defaultValue: "password", onValueChange }));
