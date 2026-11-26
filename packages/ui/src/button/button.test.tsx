@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { createRef } from "react";
+import { userEvent } from "storybook/test";
 import { describe, expect, it, vi } from "vitest";
 import { CheckIcon } from "../icons.js";
 import { Button } from "./button.js";
@@ -91,10 +92,40 @@ describe("Button", () => {
     fireEvent.click(button);
     button.focus();
     expect(button.getAttribute("aria-busy")).toBe("true");
+    expect(button.getAttribute("aria-disabled")).toBe("true");
     expect(button.hasAttribute("data-loading")).toBe(true);
     expect(document.activeElement).toBe(button);
     expect(onClick).not.toHaveBeenCalled();
   });
+
+  it.each(["click", "Enter"])(
+    "does not submit its form while loading on %s",
+    async (activation) => {
+      const onSubmit = vi.fn();
+      render(
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmit();
+          }}
+        >
+          <Button loading type="submit">
+            Save
+          </Button>
+        </form>,
+      );
+
+      const button = screen.getByRole("button", { name: "Save" });
+      if (activation === "click") {
+        await userEvent.click(button);
+      } else {
+        button.focus();
+        await userEvent.keyboard("{Enter}");
+      }
+
+      expect(onSubmit).not.toHaveBeenCalled();
+    },
+  );
 
   it("keeps icons placed in children in order", () => {
     render(
