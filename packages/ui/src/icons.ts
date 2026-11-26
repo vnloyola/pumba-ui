@@ -13,6 +13,7 @@ export {
   DashboardIcon,
   ExclamationTriangleIcon as WarningIcon,
   Half2Icon,
+  HeartIcon,
   LapTimerIcon,
   MagicWandIcon,
   MagnifyingGlassIcon as SearchIcon,
