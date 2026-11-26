@@ -78,6 +78,24 @@ test("overflow tabs bring Billing fully into view with a slow font load", async 
 test.describe("forced colors", () => {
   test.use({ forcedColors: "active" });
 
+  test("disabled link Buttons keep distinct text and borders", async ({ page }) => {
+    const story = "components-button--as-link";
+    const link = page.getByRole("link", { name: "Read the docs" });
+    await openStory(page, story, "light");
+    const enabled = await link.evaluate((element) => {
+      const { color, borderTopColor } = getComputedStyle(element);
+      return { color, borderTopColor };
+    });
+
+    await openStory(page, story, "light", "disabled:true");
+    await expect(link).toBeDisabled();
+    await expect(link).not.toHaveCSS("color", enabled.color);
+    await expect(link).not.toHaveCSS("border-top-color", enabled.borderTopColor);
+    await link.hover();
+    await expect(link).not.toHaveCSS("color", enabled.color);
+    await expect(link).not.toHaveCSS("border-top-color", enabled.borderTopColor);
+  });
+
   test("loading Buttons keep a visible gap in the spinner", async ({ page }) => {
     await openStory(page, "components-button--loading", "light");
     const buttons = page.getByRole("button", { name: "Saving" });
