@@ -144,6 +144,13 @@
 }
 
 @media (forced-colors: active) {
+  a.pumba-button[data-disabled],
+  a.pumba-button[data-disabled]:hover,
+  a.pumba-button[data-disabled]:active {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
   .pumba-button[data-loading]::before {
     forced-color-adjust: none;
     color: ButtonText;
