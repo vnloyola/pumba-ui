@@ -30,6 +30,17 @@ for (const { id } of stories) {
   }
 }
 
+test("overflow tabs bring Billing fully into view with a slow font load", async ({ page }) => {
+  await page.route("**/figtree-latin-wght-normal-*.woff2", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await route.continue();
+  });
+  await openStory(page, "components-tabs--overflow", "dark");
+  const billing = page.getByRole("tab", { name: "Billing" });
+  await expect(billing).toHaveAttribute("aria-selected", "true");
+  await expect(billing).toBeInViewport({ ratio: 1 });
+});
+
 test.describe("forced colors", () => {
   test.use({ forcedColors: "active" });
 

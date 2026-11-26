@@ -187,6 +187,7 @@ export const Overflow: Story = {
     await expect(list.getBoundingClientRect().right).toBeLessThanOrEqual(
       root.getBoundingClientRect().right,
     );
+    await canvasElement.ownerDocument.fonts.ready;
     await userEvent.tab();
     await userEvent.keyboard("{End}");
     await expect(billing).toHaveFocus();
