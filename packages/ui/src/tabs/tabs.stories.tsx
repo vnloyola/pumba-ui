@@ -199,6 +199,17 @@ export const Overflow: Story = {
   },
 };
 
+export const RightToLeft: Story = {
+  render: (args, context) => (
+    <div className="tabs-story-stack" dir="rtl">
+      {Default.render?.(args, context)}
+      <div className="tabs-story-compact">
+        {WithIcons.render?.({ ...args, defaultValue: "overview" }, context)}
+      </div>
+    </div>
+  ),
+};
+
 export const WithDisabledTab: Story = {
   render: (args) => (
     <Tabs.Root {...args}>

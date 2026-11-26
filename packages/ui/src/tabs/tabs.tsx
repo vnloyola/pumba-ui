@@ -1,7 +1,15 @@
 "use client";
 
+import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
-import type { ComponentProps, ReactElement } from "react";
+import {
+  type ComponentProps,
+  type ReactElement,
+  type Ref,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 type Render<Tag extends "div" | "button"> =
   | ReactElement
@@ -28,6 +36,15 @@ type TabsPanelProps = ComponentProps<"div"> & {
 
 const join = (own: string, className?: string) => (className ? `${own} ${className}` : own);
 
+const setRefs =
+  <T,>(...refs: Array<Ref<T> | undefined>) =>
+  (node: T | null) => {
+    for (const ref of refs) {
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    }
+  };
+
 function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
   return (
     <BaseTabs.Root
@@ -40,12 +57,28 @@ function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
   );
 }
 
-function TabsList({ className, children, ...rest }: TabsListProps) {
+function TabsList({ className, children, ref, ...rest }: TabsListProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const nextDirection = list && getComputedStyle(list).direction === "rtl" ? "rtl" : "ltr";
+    if (nextDirection !== direction) setDirection(nextDirection);
+  });
+
   return (
-    <BaseTabs.List className={join("pumba-tabs-list", className)} {...rest}>
-      {children}
-      <BaseTabs.Indicator className="pumba-tabs-indicator" />
-    </BaseTabs.List>
+    <DirectionProvider direction={direction}>
+      <BaseTabs.List
+        className={join("pumba-tabs-list", className)}
+        ref={setRefs(listRef, ref)}
+        {...rest}
+        data-pumba-dir={direction === "rtl" ? direction : undefined}
+      >
+        {children}
+        <BaseTabs.Indicator className="pumba-tabs-indicator" />
+      </BaseTabs.List>
+    </DirectionProvider>
   );
 }
 
