@@ -6,7 +6,7 @@ import {
   isValidElement,
   type ReactElement,
   type ReactNode,
-  type Ref,
+  useCallback,
   useRef,
 } from "react";
 
@@ -54,15 +54,6 @@ function isVisible(element: HTMLElement) {
   return true;
 }
 
-const setRefs =
-  <T,>(...refs: Array<Ref<T> | undefined>) =>
-  (node: T | null) => {
-    for (const ref of refs) {
-      if (typeof ref === "function") ref(node);
-      else if (ref) ref.current = node;
-    }
-  };
-
 const elementFromChild = (
   children: ReactNode,
   render: Render<"button"> | undefined,
@@ -90,12 +81,29 @@ function DialogTrigger({ className, children, render, ...rest }: DialogTriggerPr
 function DialogContent({ className, container, children, ref, ...rest }: DialogContentProps) {
   const popup = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
+  const popupRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      popup.current = node;
+      if (typeof ref === "function") {
+        const cleanup = ref(node);
+        if (typeof cleanup === "function") {
+          return () => {
+            popup.current = null;
+            cleanup();
+          };
+        }
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref],
+  );
   return (
     <BaseDialog.Portal container={container}>
       <BaseDialog.Backdrop className="pumba-dialog-backdrop" />
       <BaseDialog.Popup
         className={join("pumba-dialog", className)}
-        ref={setRefs(ref, popup)}
+        ref={popupRef}
         initialFocus={(interactionType) => {
           if (interactionType === "touch") return popup.current;
           const scrollArea = body.current;

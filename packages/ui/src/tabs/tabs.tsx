@@ -20,7 +20,11 @@ type TabsTabProps = ComponentProps<"button"> & {
   nativeButton?: boolean;
   render?: Render<"button">;
 };
-type TabsPanelProps = ComponentProps<"div"> & { value: string; render?: Render<"div"> };
+type TabsPanelProps = ComponentProps<"div"> & {
+  value: string;
+  keepMounted?: boolean;
+  render?: Render<"div">;
+};
 
 const join = (own: string, className?: string) => (className ? `${own} ${className}` : own);
 
