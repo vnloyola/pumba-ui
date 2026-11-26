@@ -115,6 +115,26 @@
   cursor: not-allowed;
 }
 
+@media (forced-colors: active) {
+  .pumba-tabs-tab[data-active],
+  .pumba-tabs-tab[data-active]:hover {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+    transition: none;
+  }
+
+  .pumba-tabs-tab:focus-visible,
+  .pumba-tabs-tab[data-focus-visible] {
+    outline-color: Highlight;
+    outline-offset: 1px;
+  }
+
+  .pumba-tabs-tab:not([data-disabled]):is(:hover, [data-hovered]) {
+    text-decoration: underline;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pumba-tabs-indicator {
     transition: none;
