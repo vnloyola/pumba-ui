@@ -767,8 +767,14 @@ the component. A change to a component or a token that alters how a story looks 
 the diff is in `apps/storybook/playwright-report`.
 
 The reference images live in `apps/storybook/visual/stories.visual.ts-snapshots/`, split by theme,
-and are rendered on Linux only: fonts and antialiasing differ on macOS, so a local run is for
-debugging, writes `*-darwin.png` files that git ignores, and is not what CI compares against.
+and are rendered inside the Playwright image described below. Fonts and antialiasing differ
+outside it: on macOS a local run writes `*-darwin.png` files that git ignores, and on a Linux host
+the text of the dark Foundations pages, light glyphs on a dark background, differs from the
+references by more than the tolerance, so `pnpm test:visual` fails there on an unchanged branch.
+`pnpm test:visual:docker` runs the same suite inside that image, with the checkout mounted, and
+gives CI's result; it needs Docker and a Linux install of the dependencies, because it uses the
+checkout's `node_modules`. Arguments are passed on to Playwright, as in
+`pnpm test:visual:docker -g foundations`.
 
 The jobs that drive a browser (`Test`, `Visual` and the baselines generation) run inside the
 official Playwright image, `mcr.microsoft.com/playwright:v<version>-noble`, which already holds
@@ -776,7 +782,8 @@ the browser, its system libraries and its fonts. Installing them with `apt` on e
 whenever the runner could not reach Ubuntu's mirror, and the fonts of that install were the ones
 the first references were drawn with. The version in the image tag must be the exact version of
 `playwright` and `@playwright/test` pinned in `pnpm-workspace.yaml`, so upgrading Playwright means
-changing those two pins and the tag in `ci.yml` and `update-visual-baselines.yml` together, and
+changing those two pins and the tag in `ci.yml`, `update-visual-baselines.yml` and the
+`test:visual:docker` script of `apps/storybook/package.json` together, and
 regenerating the references with the label below. Every job also has a `timeout-minutes`, so a
 hung network step fails in minutes instead of holding the PR.
 
