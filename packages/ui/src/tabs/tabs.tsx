@@ -8,7 +8,7 @@ import {
   isValidElement,
   type ReactElement,
   type ReactNode,
-  type Ref,
+  useCallback,
   useLayoutEffect,
   useRef,
   useState,
@@ -39,15 +39,6 @@ type TabsPanelProps = ComponentProps<"div"> & {
 
 const join = (own: string, className?: string) => (className ? `${own} ${className}` : own);
 
-const setRefs =
-  <T,>(...refs: Array<Ref<T> | undefined>) =>
-  (node: T | null) => {
-    for (const ref of refs) {
-      if (typeof ref === "function") ref(node);
-      else if (ref) ref.current = node;
-    }
-  };
-
 function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
   return (
     <BaseTabs.Root
@@ -62,6 +53,23 @@ function TabsRoot({ className, onValueChange, ...rest }: TabsProps) {
 
 function TabsList({ className, children, ref, render, ...rest }: TabsListProps) {
   const listRef = useRef<HTMLDivElement>(null);
+  const mergedRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      listRef.current = node;
+      if (typeof ref === "function") {
+        const cleanup = ref(node);
+        if (typeof cleanup === "function") {
+          return () => {
+            listRef.current = null;
+            cleanup();
+          };
+        }
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref],
+  );
   const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
 
   useLayoutEffect(() => {
@@ -80,7 +88,7 @@ function TabsList({ className, children, ref, render, ...rest }: TabsListProps) 
     <DirectionProvider direction={direction}>
       <BaseTabs.List
         className={join("pumba-tabs-list", className)}
-        ref={setRefs(listRef, ref)}
+        ref={mergedRef}
         render={listRender}
         {...rest}
         data-pumba-dir={direction === "rtl" ? direction : undefined}
