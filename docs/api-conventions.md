@@ -80,10 +80,10 @@ controlled or uncontrolled by the consumer. Its `size` is `sm`, `md` or `lg`, re
 `data-size`, and it **replaces** the native numeric `size` attribute, which is left out of the
 type so every component keeps one meaning for `size`. Control widths come from CSS.
 
-A text field is filled, not outlined: its background is `field` (`field-hover` under the pointer)
-and its border is transparent until the state needs one (read-only, invalid). The fill must stand
-apart from both the page and a surface, which the contrast test checks only for text; the fill
-against its surroundings is a visual choice, so a field always needs a visible label.
+A text field uses the `field` fill (`field-hover` under the pointer) and a one-pixel
+`border-strong` outline that meets 3:1 against the page and card surface in both themes.
+Read-only fields keep the border and have no fill. Disabled fields retain the default fill
+and have no visible border unless invalid. A field still needs a visible label.
 
 `invalid` writes `aria-invalid="true"` and `data-invalid`, and gives the field an error-colored
 border of double width, so the state is not carried by color alone. The error message is the

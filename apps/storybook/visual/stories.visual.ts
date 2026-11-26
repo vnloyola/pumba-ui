@@ -30,6 +30,49 @@ for (const { id } of stories) {
   }
 }
 
+for (const theme of ["light", "dark"]) {
+  test(`empty Input boundary on a card (${theme})`, async ({ page }) => {
+    await openStory(page, "components-input--in-a-form", theme);
+    const input = page.getByLabel("Full name");
+    await expect(input).toHaveValue("");
+
+    const boundaryContrast = () =>
+      input.evaluate((field) => {
+        const card = field.closest(".pumba-card");
+        const context = document.createElement("canvas").getContext("2d");
+        if (!card || !context) throw new Error("Missing card or canvas context");
+
+        const sample = () => {
+          const [r = 0, g = 0, b = 0] = Array.from(context.getImageData(0, 0, 1, 1).data, (byte) => {
+            const channel = byte / 255;
+            return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        };
+        const paint = (color: string) => {
+          context.fillStyle = color;
+          context.fillRect(0, 0, 1, 1);
+        };
+
+        paint(getComputedStyle(card).backgroundColor);
+        const surface = sample();
+        const style = getComputedStyle(field);
+        paint(style.backgroundColor);
+        paint(style.borderTopColor);
+        const boundary = sample();
+        return (Math.max(surface, boundary) + 0.05) / (Math.min(surface, boundary) + 0.05);
+      });
+
+    expect(await boundaryContrast()).toBeGreaterThanOrEqual(3);
+    await input.hover();
+    expect(await boundaryContrast()).toBeGreaterThanOrEqual(3);
+    await page.keyboard.press("Tab");
+    await expect(input).toBeFocused();
+    await expect(input).toHaveCSS("outline-style", "solid");
+    expect(await boundaryContrast()).toBeGreaterThanOrEqual(3);
+  });
+}
+
 test.describe("320px story layouts", () => {
   test.use({ viewport: { width: 320, height: 700 } });
 

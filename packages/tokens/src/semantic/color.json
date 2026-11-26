@@ -109,7 +109,7 @@
           "dark": "{primitive.color.neutral.800}"
         }
       },
-      "$description": "Fill of text fields; it replaces an outline, so it must stand apart from the page and from a surface."
+      "$description": "Default fill of text fields."
     },
     "field-hover": {
       "$type": "color",

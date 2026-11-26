@@ -3,7 +3,7 @@
   width: 100%;
   min-width: 0;
   padding: var(--pumba-space-control-y) var(--pumba-space-control-x);
-  border: 1px solid transparent;
+  border: 1px solid var(--pumba-color-border-strong);
   border-radius: var(--pumba-radius-control);
   background: var(--pumba-color-field);
   color: var(--pumba-color-text);
@@ -41,13 +41,11 @@
 
 .pumba-input[data-readonly],
 .pumba-input[data-readonly]:hover {
-  border-color: var(--pumba-color-border);
   background: transparent;
 }
 
-.pumba-input[data-invalid] {
-  border-color: var(--pumba-color-error);
-  box-shadow: inset 0 0 0 1px var(--pumba-color-error);
+.pumba-input[data-disabled] {
+  border-color: transparent;
 }
 
 .pumba-input[data-disabled],
@@ -59,4 +57,9 @@
 
 .pumba-input[data-disabled]::placeholder {
   color: var(--pumba-color-text-disabled);
+}
+
+.pumba-input[data-invalid] {
+  border-color: var(--pumba-color-error);
+  box-shadow: inset 0 0 0 1px var(--pumba-color-error);
 }
