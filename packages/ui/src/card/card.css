@@ -31,6 +31,14 @@
   outline-offset: 2px;
 }
 
+@media (forced-colors: active) {
+  .pumba-card:any-link:hover,
+  .pumba-card:any-link[data-hovered] {
+    border-style: dashed;
+    border-color: LinkText;
+  }
+}
+
 .pumba-card-content {
   display: flex;
   flex-direction: column;

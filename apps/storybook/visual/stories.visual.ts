@@ -151,6 +151,36 @@ test.describe("forced colors", () => {
     }
   });
 
+  test("linked Cards keep a distinct hover border without changing the focus ring", async ({
+    page,
+  }) => {
+    await openStory(page, "components-card--link-states", "light");
+    const card = page.getByRole("link", { name: /^Getting started/ });
+
+    await expect(card).toHaveCSS("border-top-style", "solid");
+    await expect(card).toHaveCSS("outline-style", "none");
+    await card.hover();
+    await expect(card).toHaveCSS("border-top-style", "dashed");
+    await expect(card).toHaveCSS("outline-style", "none");
+
+    await page.mouse.move(0, 0);
+    await expect(card).toHaveCSS("border-top-style", "solid");
+    await page.keyboard.press("Tab");
+    await expect(card).toBeFocused();
+    await expect(card).toHaveCSS("outline-style", "solid");
+    await expect(card).toHaveCSS("outline-width", "2px");
+    await expect(card).toHaveCSS("outline-offset", "2px");
+    const focusColor = await card.evaluate((element) => getComputedStyle(element).outlineColor);
+
+    await card.hover();
+    await expect(card).toHaveCSS("border-top-style", "dashed");
+    await expect(card).toBeFocused();
+    await expect(card).toHaveCSS("outline-style", "solid");
+    await expect(card).toHaveCSS("outline-width", "2px");
+    await expect(card).toHaveCSS("outline-offset", "2px");
+    await expect(card).toHaveCSS("outline-color", focusColor);
+  });
+
   test("invalid and disabled Inputs remain distinct from filled Inputs", async ({ page }) => {
     await openStory(page, "components-input--forced-states", "light");
     const filled = page.getByRole("textbox", { name: "Filled" });
