@@ -14,8 +14,12 @@
   position: relative;
   display: inline-flex;
   align-self: flex-start;
+  max-width: 100%;
   gap: var(--pumba-space-1);
   padding: var(--pumba-space-1);
+  overflow-x: auto;
+  scroll-padding-inline: var(--pumba-space-6);
+  scrollbar-width: none;
   border-radius: var(--pumba-radius-control);
   background: var(--pumba-color-field);
 }
@@ -37,6 +41,7 @@
 .pumba-tabs-tab {
   position: relative;
   z-index: 1;
+  flex-shrink: 0;
   padding: var(--pumba-space-1) var(--pumba-space-4);
   border: 0;
   border-radius: calc(var(--pumba-radius-control) - var(--pumba-space-1));
@@ -47,6 +52,7 @@
   font-weight: var(--pumba-text-label-font-weight);
   line-height: var(--pumba-text-label-line-height);
   letter-spacing: var(--pumba-text-label-letter-spacing);
+  white-space: nowrap;
   cursor: pointer;
   transition: color var(--pumba-motion-duration-feedback) var(--pumba-motion-easing-standard);
 }

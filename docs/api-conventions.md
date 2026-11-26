@@ -240,6 +240,9 @@ is marked by a raised pill (`surface-raised` and `shadow-raised`) that slides to
 it is not a public part. Its radius is the list radius minus its padding, so it follows the
 track's corner like the radii in section 16. The selected tab only changes its text color
 (`data-active`). Hover and focus-visible also come as `data-hovered` and `data-focus-visible`.
+The list never grows wider than its container: when the tabs do not fit, it scrolls sideways
+with its scrollbar hidden, tabs keep their width and stay on one line, and moving focus to a tab
+scrolls it into view.
 
 A `Tabs.Tab` that renders something other than a `<button>` must pass `nativeButton={false}`, like
 the other Base UI buttons; rendering a `<button>` or a Pumba `Button` needs nothing.
