@@ -2,7 +2,7 @@
 
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import type { ComponentProps, ReactElement } from "react";
+import type { ComponentProps, MouseEvent, ReactElement } from "react";
 
 export type ButtonProps = ComponentProps<"button"> & {
   variant?: "primary" | "secondary" | "ghost" | "destructive";
@@ -32,8 +32,9 @@ export function Button(props: ButtonProps) {
     "data-loading": loading ? "" : undefined,
     "data-icon-only": iconOnly ? "" : undefined,
     "aria-busy": loading || undefined,
+    "aria-disabled": loading || undefined,
     disabled,
-    onClick: loading ? undefined : onClick,
+    onClick: loading ? (event: MouseEvent<HTMLButtonElement>) => event.preventDefault() : onClick,
   };
   return useRender({
     defaultTagName: "button",
