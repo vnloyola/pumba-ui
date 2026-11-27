@@ -281,9 +281,9 @@ test.describe("forced colors", () => {
       for (const demo of await demos.all()) {
         const dot = demo.locator(".tokens-motion-dot");
         const box = await dot.boundingBox();
-        expect(box).not.toBeNull();
-        expect(box?.width ?? 0).toBeGreaterThan(0);
-        expect(box?.height ?? 0).toBeGreaterThan(0);
+        if (!box) throw new Error("Missing motion dot bounding box");
+        expect(box.width).toBeGreaterThan(0);
+        expect(box.height).toBeGreaterThan(0);
         expect(
           await compositedContrast(dot, [".tokens-page", ".tokens-motion-track"]),
         ).toBeGreaterThanOrEqual(3);
@@ -292,12 +292,12 @@ test.describe("forced colors", () => {
       const first = demos.first();
       const dot = first.locator(".tokens-motion-dot");
       const beforeBox = await dot.boundingBox();
-      expect(beforeBox).not.toBeNull();
+      if (!beforeBox) throw new Error("Missing motion dot bounding box");
       await first.getByRole("button", { name: "Play" }).click();
       await expect(first).toHaveAttribute("data-moved", "true");
       await expect
         .poll(async () => (await dot.boundingBox())?.x ?? -1)
-        .toBeGreaterThan(beforeBox?.x ?? 0);
+        .toBeGreaterThan(beforeBox.x);
       expect(
         await compositedContrast(dot, [".tokens-page", ".tokens-motion-track"]),
       ).toBeGreaterThanOrEqual(3);
@@ -327,18 +327,22 @@ test.describe("forced colors", () => {
       expect(forcedRows.map(({ width }) => width)).toEqual(normalRows.map(({ width }) => width));
 
       const zeroRow = forcedRows.find(({ label }) => label === "--pumba-space-0");
+      expect(zeroRow).toBeDefined();
       expect(zeroRow?.width).toBe(0);
 
       const rows = page.locator(".tokens-row");
+      let nonzeroCount = 0;
       for (let i = 0; i < forcedRows.length; i++) {
         const row = forcedRows[i];
         if (!row || row.label === "--pumba-space-0") continue;
+        nonzeroCount += 1;
         expect(row.width).toBeGreaterThan(0);
         expect(row.height).toBeGreaterThan(0);
         expect(
           await compositedContrast(rows.nth(i).locator(".tokens-bar"), [".tokens-page"]),
         ).toBeGreaterThanOrEqual(3);
       }
+      expect(nonzeroCount).toBeGreaterThan(0);
     });
   }
 });
@@ -362,6 +366,7 @@ function compositedContrast(element: Locator, backdrops: string[]) {
       context.globalAlpha = 1;
     };
 
+    paint(getComputedStyle(document.documentElement).backgroundColor);
     paint(getComputedStyle(document.body).backgroundColor);
     for (const selector of selectors) {
       const ancestor = node.closest(selector);
