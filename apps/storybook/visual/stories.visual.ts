@@ -192,56 +192,106 @@ test.describe("forced colors", () => {
       const demos = page.locator(".tokens-motion");
       await expect(demos).not.toHaveCount(0);
 
-      const colors = await demos.evaluateAll((items) =>
-        items.map((demo) => {
-          const track = demo.querySelector(".tokens-motion-track");
-          const dot = demo.querySelector(".tokens-motion-dot");
-          if (!track || !dot) throw new Error("Missing motion track or dot");
-          return {
-            track: getComputedStyle(track).backgroundColor,
-            dot: getComputedStyle(dot).backgroundColor,
-          };
-        }),
-      );
-      for (const pair of colors) {
-        expect(pair.dot).not.toBe(pair.track);
+      for (const demo of await demos.all()) {
+        const dot = demo.locator(".tokens-motion-dot");
+        const box = await dot.boundingBox();
+        expect(box).not.toBeNull();
+        expect(box?.width ?? 0).toBeGreaterThan(0);
+        expect(box?.height ?? 0).toBeGreaterThan(0);
+        expect(
+          await compositedContrast(dot, [".tokens-page", ".tokens-motion-track"]),
+        ).toBeGreaterThanOrEqual(3);
       }
 
       const first = demos.first();
       const dot = first.locator(".tokens-motion-dot");
-      const beforeX = (await dot.boundingBox())?.x ?? 0;
+      const beforeBox = await dot.boundingBox();
+      expect(beforeBox).not.toBeNull();
       await first.getByRole("button", { name: "Play" }).click();
       await expect(first).toHaveAttribute("data-moved", "true");
-      await expect.poll(async () => (await dot.boundingBox())?.x ?? 0).toBeGreaterThan(beforeX);
+      await expect
+        .poll(async () => (await dot.boundingBox())?.x ?? -1)
+        .toBeGreaterThan(beforeBox?.x ?? 0);
+      expect(
+        await compositedContrast(dot, [".tokens-page", ".tokens-motion-track"]),
+      ).toBeGreaterThanOrEqual(3);
     });
 
     test(`space bars stay visible and keep their widths in forced colors (${theme})`, async ({
       page,
     }) => {
-      const readWidths = () =>
-        page
-          .locator(".tokens-bar")
-          .evaluateAll((bars) => bars.map((bar) => bar.getBoundingClientRect().width));
+      const readRows = () =>
+        page.locator(".tokens-row").evaluateAll((rows) =>
+          rows.map((row) => {
+            const label = row.querySelector("code")?.textContent?.trim() ?? "";
+            const bar = row.querySelector(".tokens-bar");
+            if (!bar) throw new Error(`Missing space bar for ${label}`);
+            const rect = bar.getBoundingClientRect();
+            return { label, width: rect.width, height: rect.height };
+          }),
+        );
 
       await page.emulateMedia({ colorScheme: theme, forcedColors: "none" });
       await openStory(page, "foundations-tokens--space", theme);
-      await expect(page.locator(".tokens-bar")).not.toHaveCount(0);
-      const normalWidths = await readWidths();
+      const normalRows = await readRows();
+      expect(normalRows.length).toBeGreaterThan(0);
 
       await page.emulateMedia({ colorScheme: theme, forcedColors: "active" });
-      const canvas = await page
-        .locator("body")
-        .evaluate((body) => getComputedStyle(body).backgroundColor);
-      const barColors = await page
-        .locator(".tokens-bar")
-        .evaluateAll((bars) => bars.map((bar) => getComputedStyle(bar).backgroundColor));
-      for (const color of barColors) {
-        expect(color).not.toBe(canvas);
+      const forcedRows = await readRows();
+      expect(forcedRows.map(({ width }) => width)).toEqual(normalRows.map(({ width }) => width));
+
+      const zeroRow = forcedRows.find(({ label }) => label === "--pumba-space-0");
+      expect(zeroRow?.width).toBe(0);
+
+      const rows = page.locator(".tokens-row");
+      for (let i = 0; i < forcedRows.length; i++) {
+        const row = forcedRows[i];
+        if (!row || row.label === "--pumba-space-0") continue;
+        expect(row.width).toBeGreaterThan(0);
+        expect(row.height).toBeGreaterThan(0);
+        expect(
+          await compositedContrast(rows.nth(i).locator(".tokens-bar"), [".tokens-page"]),
+        ).toBeGreaterThanOrEqual(3);
       }
-      expect(await readWidths()).toEqual(normalWidths);
     });
   }
 });
+
+function compositedContrast(element: Locator, backdrops: string[]) {
+  return element.evaluate((node, selectors) => {
+    const context = document.createElement("canvas").getContext("2d");
+    if (!context) throw new Error("Missing canvas context");
+
+    const sample = () => {
+      const [r = 0, g = 0, b = 0] = Array.from(context.getImageData(0, 0, 1, 1).data, (byte) => {
+        const channel = byte / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const paint = (color: string, alpha = 1) => {
+      context.globalAlpha = alpha;
+      context.fillStyle = color;
+      context.fillRect(0, 0, 1, 1);
+      context.globalAlpha = 1;
+    };
+
+    paint(getComputedStyle(document.body).backgroundColor);
+    for (const selector of selectors) {
+      const ancestor = node.closest(selector);
+      if (!ancestor) throw new Error(`Missing backdrop: ${selector}`);
+      const ancestorStyle = getComputedStyle(ancestor);
+      paint(ancestorStyle.backgroundColor, Number.parseFloat(ancestorStyle.opacity));
+    }
+    const background = sample();
+
+    const style = getComputedStyle(node);
+    if (style.visibility !== "visible" || style.display === "none") return 1;
+    paint(style.backgroundColor, Number.parseFloat(style.opacity));
+    const foreground = sample();
+    return (Math.max(background, foreground) + 0.05) / (Math.min(background, foreground) + 0.05);
+  }, backdrops);
+}
 
 function boundaryContrast(input: Locator, backdrop: string) {
   return input.evaluate((field, backdrop) => {
