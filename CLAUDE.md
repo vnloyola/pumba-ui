@@ -110,12 +110,12 @@ before deciding, then record it in that file. Build a new component with
 
 ## Do not
 
-`pnpm lint` fails on a `lucide-react` import outside `icons.ts`, a primitive token in
+`pnpm lint` fails on a `@radix-ui/react-icons` import outside `icons.ts`, a primitive token in
 `packages/ui/src` CSS and a relative import without `.js`; `pnpm check:package` fails on a Base
 UI type in the emitted `.d.ts`. The rest are checked in review.
 
 - Expose Base UI types in a public signature.
-- Import `lucide-react` anywhere except `packages/ui/src/icons.ts`.
+- Import `@radix-ui/react-icons` anywhere except `packages/ui/src/icons.ts`.
 - Add a component, token or prop that no consumer needs yet.
 - Reference a primitive token from a component.
 - Copy `docs/api-conventions.md` into other files; link to it.

@@ -1,21 +1,15 @@
 import "./card.stories.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { ComponentProps } from "react";
 import { Badge } from "../badge/index.js";
-import { Button } from "../button/index.js";
 import {
+  ArrowBottomRightIcon,
   ArrowUpRightIcon,
-  CartIcon,
-  CheckIcon,
   ClockIcon,
-  DollarIcon,
-  HeartIcon,
-  MapPinIcon,
-  ShareIcon,
-  SparklesIcon,
-  StarIcon,
-  TrendingDownIcon,
-  TrendingUpIcon,
-  UsersIcon,
+  CommitIcon,
+  CrossCircledIcon,
+  LapTimerIcon,
+  MagicWandIcon,
 } from "../icons.js";
 import { Card } from "./index.js";
 
@@ -35,190 +29,89 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const porsche = "/assets/porsche.jpg";
+const sessions = [
+  {
+    id: "ses_4f2a",
+    title: "Fix flaky login test",
+    repo: "acme/web",
+    status: "Finished",
+    variant: "success",
+    time: "14 min",
+  },
+  {
+    id: "ses_9c1b",
+    title: "Add rate limiting to /auth",
+    repo: "acme/api",
+    status: "Running",
+    variant: "warning",
+    time: "2 min",
+  },
+  {
+    id: "ses_7d3e",
+    title: "Migrate CI to pnpm",
+    repo: "acme/infra",
+    status: "Failed",
+    variant: "error",
+    time: "1 h",
+  },
+] as const;
 
-export const Default: Story = {
-  render: (args) => (
-    <Card.Root {...args} className="card-story-narrow card-story-issue">
+type Session = (typeof sessions)[number];
+
+function SessionCard({
+  session,
+  className,
+  ...props
+}: { session: Session } & ComponentProps<typeof Card.Root>) {
+  return (
+    <Card.Root
+      {...props}
+      className={["card-story-narrow card-story-session", className].filter(Boolean).join(" ")}
+    >
       <Card.Header className="card-story-row">
-        <span className="card-story-id">PUM-142</span>
-        <span className="card-story-avatar" role="img" aria-label="Assigned to Ana Muñoz">
-          AM
-        </span>
-      </Card.Header>
-      <Card.Content className="card-story-issue-body">
-        <h3 className="card-story-title">Refresh the color palette</h3>
-        <p className="card-story-text">
-          Move to warm neutrals and a single tan accent, keeping every pair at WCAG AA.
-        </p>
-      </Card.Content>
-      <Card.Footer>
-        <span className="card-story-status">
-          <span className="card-story-status-ring" aria-hidden="true" />
-          In progress
-        </span>
-        <Badge size="sm">Design</Badge>
-        <span className="card-story-due">
-          <ClockIcon aria-hidden="true" size={14} />
-          Nov 28
-        </span>
-      </Card.Footer>
-    </Card.Root>
-  ),
-};
-
-export const WithHeaderAndFooter: Story = {
-  render: (args) => (
-    <Card.Root {...args} className="card-story-narrow">
-      <Card.Header className="card-story-row">
-        <h3 className="card-story-title">Monthly revenue</h3>
-        <span className="card-story-icon">
-          <DollarIcon aria-hidden="true" size={16} strokeWidth={1.75} />
-        </span>
-      </Card.Header>
-      <Card.Content>
-        <p className="card-story-value">$48,200</p>
-        <p className="card-story-text">Compared with $43,000 last month.</p>
-      </Card.Content>
-      <Card.Footer>
-        <Button size="sm" variant="secondary">
-          View report
-        </Button>
-        <Button size="sm" variant="ghost">
-          Dismiss
-        </Button>
-      </Card.Footer>
-    </Card.Root>
-  ),
-};
-
-const plan = ["Unlimited projects", "Shared reports", "Priority support"];
-
-export const Pricing: Story = {
-  render: (args) => (
-    <Card.Root {...args} className="card-story-narrow">
-      <Card.Header className="card-story-row">
-        <h3 className="card-story-title">Team</h3>
-        <Badge size="sm" variant="accent">
-          Popular
+        <span className="card-story-id">{session.id}</span>
+        <Badge size="sm" variant={session.variant}>
+          {session.status}
         </Badge>
       </Card.Header>
-      <Card.Content className="card-story-issue-body">
-        <p className="card-story-value">
-          $12<span className="card-story-text"> / seat / month</span>
-        </p>
-        <ul className="card-story-list">
-          {plan.map((feature) => (
-            <li key={feature}>
-              <CheckIcon aria-hidden="true" size={16} strokeWidth={1.75} />
-              {feature}
-            </li>
-          ))}
-        </ul>
+      <Card.Content className="card-story-session-body">
+        <h3 className="card-story-title">{session.title}</h3>
+        <p className="card-story-text">{session.repo} · opened a PR against main</p>
       </Card.Content>
       <Card.Footer>
-        <Button className="card-story-grow">Start free trial</Button>
-      </Card.Footer>
-    </Card.Root>
-  ),
-};
-
-export const Profile: Story = {
-  render: (args) => (
-    <Card.Root {...args} className="card-story-narrow">
-      <Card.Header className="card-story-person">
-        <span className="card-story-avatar card-story-avatar-lg" aria-hidden="true">
-          AM
-        </span>
-        <div>
-          <h3 className="card-story-title">Ana Muñoz</h3>
-          <p className="card-story-text">Product designer</p>
-        </div>
-      </Card.Header>
-      <Card.Footer>
-        <Button size="sm" variant="secondary">
-          Message
-        </Button>
-        <Button size="sm" variant="ghost">
-          View profile
-        </Button>
-      </Card.Footer>
-    </Card.Root>
-  ),
-};
-
-export const WithImage: Story = {
-  render: (args) => (
-    <Card.Root {...args} className="card-story-narrow">
-      <img
-        className="card-story-cover"
-        src={porsche}
-        alt="Green Porsche 911 parked on a lawn with a palm tree"
-      />
-      <Card.Header className="card-story-row">
-        <h3 className="card-story-title">Porsche 911 Classic</h3>
         <span className="card-story-meta">
-          <StarIcon aria-hidden="true" size={16} />
-          4.9
+          <CommitIcon aria-hidden="true" />3 commits
         </span>
-      </Card.Header>
-      <Card.Content>
-        <p className="card-story-meta">
-          <MapPinIcon aria-hidden="true" size={16} />
-          Stuttgart, Germany
-        </p>
-      </Card.Content>
-      <Card.Footer>
-        <Button>Book a test drive</Button>
-        <Button className="card-story-actions" variant="secondary" iconOnly aria-label="Save">
-          <HeartIcon aria-hidden="true" />
-        </Button>
-        <Button variant="secondary" iconOnly aria-label="Share">
-          <ShareIcon aria-hidden="true" />
-        </Button>
+        <span className="card-story-due">
+          <ClockIcon aria-hidden="true" />
+          {session.time} ago
+        </span>
       </Card.Footer>
     </Card.Root>
-  ),
+  );
+}
+
+export const Default: Story = {
+  render: (args) => <SessionCard {...args} session={sessions[0]} />,
 };
 
-export const Horizontal: Story = {
+export const Sessions: Story = {
   render: (args) => (
-    <Card.Root {...args} className="card-story-wide card-story-horizontal">
-      <img
-        className="card-story-thumb"
-        src={porsche}
-        alt="Green Porsche 911 parked on a lawn with a palm tree"
-      />
-      <div className="card-story-body">
-        <Card.Header>
-          <h3 className="card-story-title">Get the new Porsche 911 Classic</h3>
-          <p className="card-story-text">
-            Experience unmatched luxury and performance, where sleek design meets cutting-edge tech
-            and pure driving thrill.
-          </p>
-        </Card.Header>
-        <Card.Footer className="card-story-row">
-          <div className="card-story-price">
-            <p className="card-story-title">$36,799</p>
-            <p className="card-story-text">11 available</p>
-          </div>
-          <Button>
-            <CartIcon aria-hidden="true" />
-            Buy now
-          </Button>
-        </Card.Footer>
-      </div>
-    </Card.Root>
+    <div className="card-story-stack">
+      {sessions.map((session) => (
+        <SessionCard key={session.id} {...args} session={session} />
+      ))}
+    </div>
   ),
 };
 
 const metrics = [
-  { label: "Revenue", value: "$48,200", change: "12.5%", trend: "up", icon: DollarIcon },
-  { label: "Customers", value: "1,284", change: "4.1%", trend: "up", icon: UsersIcon },
-  { label: "Refunds", value: "32", change: "2.3%", trend: "down", icon: SparklesIcon },
+  { label: "Sessions this week", value: "42", change: "+12.5%", trend: "up", icon: LapTimerIcon },
+  { label: "PRs merged", value: "18", change: "+4.1%", trend: "up", icon: CommitIcon },
+  { label: "Failed runs", value: "3", change: "-2.3%", trend: "down", icon: CrossCircledIcon },
 ] as const;
 
-export const InALayout: Story = {
+export const InAGrid: Story = {
   render: (args) => (
     <div className="card-story-grid">
       {metrics.map(({ label, value, change, trend, icon: Icon }) => (
@@ -226,7 +119,7 @@ export const InALayout: Story = {
           <Card.Header className="card-story-row">
             <p className="card-story-text">{label}</p>
             <span className="card-story-icon">
-              <Icon aria-hidden="true" size={16} strokeWidth={1.75} />
+              <Icon aria-hidden="true" />
             </span>
           </Card.Header>
           <Card.Content>
@@ -235,13 +128,13 @@ export const InALayout: Story = {
           <Card.Footer>
             <span className="card-story-trend" data-trend={trend}>
               {trend === "up" ? (
-                <TrendingUpIcon aria-hidden="true" size={14} />
+                <ArrowUpRightIcon aria-hidden="true" />
               ) : (
-                <TrendingDownIcon aria-hidden="true" size={14} />
+                <ArrowBottomRightIcon aria-hidden="true" />
               )}
               {change}
             </span>
-            <span className="card-story-text">vs last month</span>
+            <span className="card-story-text">vs last week</span>
           </Card.Footer>
         </Card.Root>
       ))}
@@ -249,29 +142,10 @@ export const InALayout: Story = {
   ),
 };
 
-export const AsLink: Story = {
-  render: (args) => (
-    <Card.Root {...args} className="card-story-narrow" render={<a href="#whats-new" />}>
-      <Card.Header className="card-story-row">
-        <span className="card-story-icon">
-          <SparklesIcon aria-hidden="true" size={16} strokeWidth={1.75} />
-        </span>
-        <span className="card-story-icon">
-          <ArrowUpRightIcon aria-hidden="true" size={16} strokeWidth={1.75} />
-        </span>
-      </Card.Header>
-      <Card.Content>
-        <h3 className="card-story-title">What's new</h3>
-        <p className="card-story-text">See everything we shipped this month.</p>
-      </Card.Content>
-    </Card.Root>
-  ),
-};
-
 const links = [
-  { title: "Getting started", text: "Install the packages and render a first component." },
-  { title: "Tokens", text: "Colors, spacing and type as CSS variables." },
-  { title: "Theming", text: "Light and dark modes with one attribute." },
+  { title: "Getting started", text: "Connect a repo and run a first session." },
+  { title: "Invite your team", text: "Share sessions and reviews." },
+  { title: "Set up integrations", text: "Slack, Linear and CI hooks." },
 ];
 
 export const LinkStates: Story = {
@@ -281,53 +155,24 @@ export const LinkStates: Story = {
         <Card.Root
           key={title}
           {...args}
-          render={<a href={`#${title.toLowerCase().replace(" ", "-")}`} />}
+          render={<a href={`#${title.toLowerCase().replaceAll(" ", "-")}`} />}
           data-hovered={index === 1 ? "" : undefined}
           data-focus-visible={index === 2 ? "" : undefined}
         >
           <Card.Header className="card-story-row">
-            <h3 className="card-story-title">{title}</h3>
             <span className="card-story-icon">
-              <ArrowUpRightIcon aria-hidden="true" size={16} strokeWidth={1.75} />
+              <MagicWandIcon aria-hidden="true" />
+            </span>
+            <span className="card-story-icon">
+              <ArrowUpRightIcon aria-hidden="true" />
             </span>
           </Card.Header>
           <Card.Content>
+            <h3 className="card-story-title">{title}</h3>
             <p className="card-story-text">{text}</p>
           </Card.Content>
         </Card.Root>
       ))}
-    </div>
-  ),
-};
-
-export const DefaultDark: Story = {
-  render: (args, context) => (
-    <div className="card-story-dark" data-theme="dark">
-      {Default.render?.(args, context)}
-    </div>
-  ),
-};
-
-export const HorizontalDark: Story = {
-  render: (args, context) => (
-    <div className="card-story-dark" data-theme="dark">
-      {Horizontal.render?.(args, context)}
-    </div>
-  ),
-};
-
-export const InALayoutDark: Story = {
-  render: (args, context) => (
-    <div className="card-story-dark" data-theme="dark">
-      {InALayout.render?.(args, context)}
-    </div>
-  ),
-};
-
-export const LinkStatesDark: Story = {
-  render: (args, context) => (
-    <div className="card-story-dark" data-theme="dark">
-      {LinkStates.render?.(args, context)}
     </div>
   ),
 };

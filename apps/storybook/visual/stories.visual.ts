@@ -32,6 +32,32 @@ for (const { id } of stories) {
   }
 }
 
+test("controls inherit disabled styles from their fieldset", async ({ page }) => {
+  await openStory(page, "components-input--disabled-fieldset", "light");
+  const inherited = page.getByRole("group", { name: "Disabled fieldset" });
+  const explicit = page.getByRole("group", { name: "Individually disabled controls" });
+  const readStyles = (control: Locator) =>
+    control.evaluate((element) => {
+      const { backgroundColor, borderTopColor, color, cursor } = getComputedStyle(element);
+      const placeholderColor =
+        element instanceof HTMLInputElement
+          ? getComputedStyle(element, "::placeholder").color
+          : null;
+      return { backgroundColor, borderTopColor, color, cursor, placeholderColor };
+    });
+
+  for (const role of ["textbox", "button"] as const) {
+    const control = inherited.getByRole(role);
+    await expect(control).toBeDisabled();
+    const disabledStyles = await readStyles(explicit.getByRole(role));
+    expect.soft(await readStyles(control), role).toEqual(disabledStyles);
+    await control.hover();
+    await expect.soft
+      .poll(() => readStyles(control), { message: `hovered ${role}` })
+      .toEqual(disabledStyles);
+  }
+});
+
 test("RTL Tabs show fades only on edges with overflow", async ({ page }) => {
   await openStory(page, "components-tabs--right-to-left", "light");
   const list = page.getByRole("tablist", { name: "Dashboard" });
@@ -78,6 +104,36 @@ test("overflow tabs bring Billing fully into view with a slow font load", async 
 test.describe("forced colors", () => {
   test.use({ forcedColors: "active" });
 
+  test("disabled link Buttons keep distinct text and borders", async ({ page }) => {
+    const story = "components-button--as-link";
+    const link = page.getByRole("link", { name: "Read the docs" });
+    await openStory(page, story, "light");
+    const grayText = await page.evaluate(() => {
+      const probe = document.createElement("span");
+      probe.style.color = "GrayText";
+      document.body.append(probe);
+      const { color } = getComputedStyle(probe);
+      probe.remove();
+      return color;
+    });
+    await expect(link).not.toHaveCSS("color", grayText);
+    await expect(link).not.toHaveCSS("border-top-color", grayText);
+
+    await openStory(page, story, "light", "disabled:true");
+    await expect(link).toBeDisabled();
+    const expectDisabledPaint = async () => {
+      await expect(link).toHaveCSS("color", grayText);
+      await expect(link).toHaveCSS("border-top-color", grayText);
+    };
+    await expectDisabledPaint();
+    await link.hover();
+    await expectDisabledPaint();
+    await page.mouse.down();
+    expect(await link.evaluate((element) => element.matches(":active"))).toBe(true);
+    await expectDisabledPaint();
+    await page.mouse.up();
+  });
+
   test("loading Buttons keep a visible gap in the spinner", async ({ page }) => {
     await openStory(page, "components-button--loading", "light");
     const buttons = page.getByRole("button", { name: "Saving" });
@@ -93,6 +149,36 @@ test.describe("forced colors", () => {
       expect(spinner.arc).not.toBe("rgba(0, 0, 0, 0)");
       expect(spinner.gap).toBe("rgba(0, 0, 0, 0)");
     }
+  });
+
+  test("linked Cards keep a distinct hover border without changing the focus ring", async ({
+    page,
+  }) => {
+    await openStory(page, "components-card--link-states", "light");
+    const card = page.getByRole("link", { name: /^Getting started/ });
+
+    await expect(card).toHaveCSS("border-top-style", "solid");
+    await expect(card).toHaveCSS("outline-style", "none");
+    await card.hover();
+    await expect(card).toHaveCSS("border-top-style", "dashed");
+    await expect(card).toHaveCSS("outline-style", "none");
+
+    await page.mouse.move(0, 0);
+    await expect(card).toHaveCSS("border-top-style", "solid");
+    await page.keyboard.press("Tab");
+    await expect(card).toBeFocused();
+    await expect(card).toHaveCSS("outline-style", "solid");
+    await expect(card).toHaveCSS("outline-width", "2px");
+    await expect(card).toHaveCSS("outline-offset", "2px");
+    const focusColor = await card.evaluate((element) => getComputedStyle(element).outlineColor);
+
+    await card.hover();
+    await expect(card).toHaveCSS("border-top-style", "dashed");
+    await expect(card).toBeFocused();
+    await expect(card).toHaveCSS("outline-style", "solid");
+    await expect(card).toHaveCSS("outline-width", "2px");
+    await expect(card).toHaveCSS("outline-offset", "2px");
+    await expect(card).toHaveCSS("outline-color", focusColor);
   });
 
   test("invalid and disabled Inputs remain distinct from filled Inputs", async ({ page }) => {
@@ -348,16 +434,11 @@ test.describe("320px story layouts", () => {
   test.use({ viewport: { width: 320, height: 700 } });
 
   const cases = [
-    { id: "components-input--forced-states-dark", selector: "input", bounds: "#storybook-root" },
+    { id: "components-input--forced-states", selector: "input", bounds: "#storybook-root" },
     {
-      id: "components-card--horizontal",
-      selector: ".card-story-horizontal :is(img, h3, p, button)",
-      bounds: ".card-story-horizontal",
-    },
-    {
-      id: "components-card--horizontal-dark",
-      selector: ".card-story-horizontal :is(img, h3, p, button)",
-      bounds: ".card-story-horizontal",
+      id: "components-card--default",
+      selector: ".card-story-session :is(h3, p, span)",
+      bounds: ".card-story-session",
     },
     { id: "foundations-tokens--space", selector: ".tokens-bar", bounds: ".tokens-page" },
   ];

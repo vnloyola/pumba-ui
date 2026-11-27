@@ -120,9 +120,9 @@
   outline-offset: 2px;
 }
 
-.pumba-button[data-disabled],
-.pumba-button[data-disabled]:hover,
-.pumba-button[data-disabled]:active {
+.pumba-button:is(:disabled, [data-disabled]),
+.pumba-button:is(:disabled, [data-disabled]):hover,
+.pumba-button:is(:disabled, [data-disabled]):active {
   border-color: var(--pumba-color-border);
   background: var(--pumba-color-surface);
   color: var(--pumba-color-text-disabled);
@@ -144,6 +144,13 @@
 }
 
 @media (forced-colors: active) {
+  a.pumba-button[data-disabled],
+  a.pumba-button[data-disabled]:hover,
+  a.pumba-button[data-disabled]:active {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
   .pumba-button[data-loading]::before {
     forced-color-adjust: none;
     color: ButtonText;

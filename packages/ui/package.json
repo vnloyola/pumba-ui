@@ -57,6 +57,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
     "@pumba-ui/tokens": "workspace:*",
+    "@radix-ui/react-icons": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/dom": "catalog:",
     "@testing-library/react": "catalog:",
@@ -64,7 +65,6 @@
     "@types/react-dom": "catalog:",
     "axe-core": "catalog:",
     "jsdom": "catalog:",
-    "lucide-react": "catalog:",
     "postcss": "catalog:",
     "postcss-import": "catalog:",
     "publint": "catalog:",

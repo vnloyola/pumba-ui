@@ -44,18 +44,18 @@
   background: transparent;
 }
 
-.pumba-input[data-disabled] {
+.pumba-input:is(:disabled, [data-disabled]) {
   border-color: transparent;
 }
 
-.pumba-input[data-disabled],
-.pumba-input[data-disabled]:hover {
+.pumba-input:is(:disabled, [data-disabled]),
+.pumba-input:is(:disabled, [data-disabled]):hover {
   background: var(--pumba-color-field);
   color: var(--pumba-color-text-disabled);
   cursor: not-allowed;
 }
 
-.pumba-input[data-disabled]::placeholder {
+.pumba-input:is(:disabled, [data-disabled])::placeholder {
   color: var(--pumba-color-text-disabled);
 }
 
@@ -69,13 +69,13 @@
     border-width: 2px;
   }
 
-  .pumba-input[data-disabled],
-  .pumba-input[data-disabled]:hover {
+  .pumba-input:is(:disabled, [data-disabled]),
+  .pumba-input:is(:disabled, [data-disabled]):hover {
     border-color: GrayText;
     color: GrayText;
   }
 
-  .pumba-input[data-disabled]::placeholder {
+  .pumba-input:is(:disabled, [data-disabled])::placeholder {
     color: GrayText;
   }
 }

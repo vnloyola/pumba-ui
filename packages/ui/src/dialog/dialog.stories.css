@@ -45,13 +45,6 @@
   color: var(--pumba-color-text-secondary);
 }
 
-.dialog-story-dark {
-  min-height: 24rem;
-  padding: var(--pumba-space-8) var(--pumba-space-6);
-  background: var(--pumba-color-background);
-  color: var(--pumba-color-text);
-}
-
 .dialog-story-hidden {
   display: none;
 }

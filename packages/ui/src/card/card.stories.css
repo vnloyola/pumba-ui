@@ -9,9 +9,12 @@
   max-width: 22rem;
 }
 
-.card-story-wide {
+.card-story-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pumba-space-3);
   width: 100%;
-  max-width: 40rem;
+  max-width: 22rem;
 }
 
 .card-story-grid {
@@ -53,14 +56,6 @@
   letter-spacing: var(--pumba-text-heading-letter-spacing);
 }
 
-.card-story-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--pumba-space-1);
-  margin: 0;
-  color: var(--pumba-color-text-secondary);
-}
-
 .card-story-trend {
   display: inline-flex;
   align-items: center;
@@ -81,80 +76,19 @@
   color: var(--pumba-color-error-text);
 }
 
-.card-story-cover {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--pumba-radius-control);
-  object-fit: cover;
-}
-
-.card-story-horizontal {
-  flex-direction: row;
-  gap: var(--pumba-space-5);
-}
-
-.card-story-thumb {
-  flex: none;
-  width: 9rem;
-  border-radius: var(--pumba-radius-control);
-  object-fit: cover;
-}
-
-.card-story-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--pumba-space-stack);
-}
-
-.card-story-price {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-story-actions {
-  margin-inline-start: auto;
-}
-
-.card-story-dark {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: var(--pumba-space-8) var(--pumba-space-6);
-  background: var(--pumba-color-background);
-  color: var(--pumba-color-text);
-}
-
-.card-story-canvas,
-.card-story-dark {
-  container: card-story / inline-size;
-}
-
-@container card-story (width < 28rem) {
-  .card-story-horizontal {
-    flex-direction: column;
-  }
-
-  .card-story-thumb {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-  }
-
-  .card-story-horizontal .card-story-row {
-    flex-wrap: wrap;
-  }
-}
-
-.card-story-issue {
+.card-story-session {
   gap: var(--pumba-space-3);
 }
 
-.card-story-issue-body {
+.card-story-session-body {
   display: flex;
   flex-direction: column;
   gap: var(--pumba-space-1);
+}
+
+.card-story-session-body .card-story-text {
+  font-size: var(--pumba-text-label-font-size);
+  line-height: var(--pumba-text-label-line-height);
 }
 
 .card-story-id {
@@ -163,32 +97,12 @@
   font-size: var(--pumba-text-caption-font-size);
 }
 
-.card-story-avatar {
-  display: inline-grid;
-  place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: var(--pumba-radius-pill);
-  background: var(--pumba-color-accent-subtle);
-  color: var(--pumba-color-text);
-  font-size: var(--pumba-text-caption-font-size);
-  font-weight: 600;
-}
-
-.card-story-status {
+.card-story-meta {
   display: inline-flex;
   align-items: center;
   gap: var(--pumba-space-1);
   color: var(--pumba-color-text-secondary);
   font-size: var(--pumba-text-caption-font-size);
-}
-
-.card-story-status-ring {
-  width: 0.75rem;
-  height: 0.75rem;
-  border: 2px solid var(--pumba-color-warning);
-  border-radius: var(--pumba-radius-pill);
-  background: conic-gradient(var(--pumba-color-warning) 0 50%, transparent 50% 100%);
 }
 
 .card-story-due {
@@ -198,49 +112,4 @@
   margin-inline-start: auto;
   color: var(--pumba-color-text-secondary);
   font-size: var(--pumba-text-caption-font-size);
-}
-
-.card-story-issue .card-story-text,
-.card-story-person .card-story-text {
-  font-size: var(--pumba-text-label-font-size);
-  line-height: var(--pumba-text-label-line-height);
-}
-
-.card-story-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--pumba-space-2);
-  margin: var(--pumba-space-2) 0 0;
-  padding: 0;
-  list-style: none;
-  color: var(--pumba-color-text-secondary);
-  font-size: var(--pumba-text-label-font-size);
-}
-
-.card-story-list > li {
-  display: flex;
-  align-items: center;
-  gap: var(--pumba-space-2);
-}
-
-.card-story-grow {
-  flex: 1;
-}
-
-.card-story-person {
-  display: flex;
-  align-items: center;
-  gap: var(--pumba-space-3);
-}
-
-.card-story-avatar-lg {
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: var(--pumba-text-label-font-size);
-}
-
-.card-story-value > .card-story-text {
-  font-size: var(--pumba-text-label-font-size);
-  font-weight: var(--pumba-text-label-font-weight);
-  letter-spacing: normal;
 }
