@@ -30,7 +30,7 @@ function LabeledInput({ label, hint, error, ...props }: LabeledInputProps) {
       />
       {error ? (
         <p className="input-story-error" id={messageId}>
-          <WarningIcon aria-hidden="true" size={14} />
+          <WarningIcon aria-hidden="true" />
           {error}
         </p>
       ) : null}
@@ -46,7 +46,7 @@ function LabeledInput({ label, hint, error, ...props }: LabeledInputProps) {
 const meta = {
   title: "Components/Input",
   component: Input,
-  args: { "aria-label": "Email address", placeholder: "you@example.com" },
+  args: { "aria-label": "Search sessions", placeholder: "Search" },
   argTypes: {
     size: { control: "inline-radio", options: ["sm", "md", "lg"] },
     disabled: { control: "boolean" },
@@ -78,17 +78,22 @@ export const Sizes: Story = {
   ),
 };
 
-export const WithLabel: Story = {
-  render: () => <LabeledInput label="Email" hint="We will only use it to send your receipts." />,
-};
-
-export const Invalid: Story = {
+export const States: Story = {
   render: () => (
-    <LabeledInput
-      label="Email"
-      defaultValue="ana@example"
-      error="Enter a valid email address, like ana@example.com."
-    />
+    <div className="input-story-stack">
+      <LabeledInput
+        label="Environment name"
+        placeholder="staging"
+        hint="Letters, numbers and dashes."
+      />
+      <LabeledInput
+        label="API key"
+        defaultValue="sk_live_abc"
+        error="This key was revoked. Generate a new one."
+      />
+      <LabeledInput label="Workspace" defaultValue="acme" disabled />
+      <LabeledInput label="Region" defaultValue="us-east-1" readOnly />
+    </div>
   ),
 };
 
@@ -130,15 +135,20 @@ export const WithIconButton: Story = {
   render: (args) => (
     <div className="input-story-stack">
       <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
-        <Input {...args} type="search" aria-label="Search components" placeholder="Search" />
+        <Input {...args} type="search" aria-label="Search sessions" placeholder="Search sessions" />
         <Button type="submit" iconOnly aria-label="Search">
           <SearchIcon aria-hidden="true" />
         </Button>
       </form>
       <form className="input-story-row" onSubmit={(event) => event.preventDefault()}>
-        <Input {...args} type="email" aria-label="Email for the newsletter" />
+        <Input
+          {...args}
+          type="url"
+          aria-label="Repository URL"
+          placeholder="https://github.com/acme/web"
+        />
         <Button type="submit">
-          Subscribe
+          Connect
           <ArrowRightIcon aria-hidden="true" />
         </Button>
       </form>
@@ -150,7 +160,7 @@ export const InAForm: Story = {
   render: () => (
     <Card.Root render={<form onSubmit={(event) => event.preventDefault()} />}>
       <Card.Header>
-        <h3 className="input-story-title">Create your account</h3>
+        <h3 className="input-story-title">Create an environment</h3>
       </Card.Header>
       <Card.Content className="input-story-stack">
         <LabeledInput label="Full name" placeholder="Ana Torres" autoComplete="name" />
@@ -218,14 +228,6 @@ export const InAForm: Story = {
   },
 };
 
-export const Hovered: Story = {
-  render: (args) => <Input {...args} data-hovered />,
-};
-
-export const FocusVisible: Story = {
-  render: (args) => <Input {...args} data-focus-visible />,
-};
-
 export const ForcedStates: Story = {
   render: (args) => (
     <div className="input-story-grid">
@@ -236,30 +238,6 @@ export const ForcedStates: Story = {
       <Input {...args} aria-label="Read only" defaultValue="Read only" readOnly />
       <Input {...args} aria-label="Disabled" defaultValue="Disabled" disabled />
       <Input {...args} aria-label="Invalid" defaultValue="Invalid" invalid />
-    </div>
-  ),
-};
-
-export const ForcedStatesDark: Story = {
-  render: (args, context) => (
-    <div className="input-story-dark" data-theme="dark">
-      {ForcedStates.render?.(args, context)}
-    </div>
-  ),
-};
-
-export const InAFormDark: Story = {
-  render: (args, context) => (
-    <div className="input-story-dark" data-theme="dark">
-      <div className="input-story-narrow">{InAForm.render?.(args, context)}</div>
-    </div>
-  ),
-};
-
-export const WithIconButtonDark: Story = {
-  render: (args, context) => (
-    <div className="input-story-dark" data-theme="dark">
-      <div className="input-story-narrow">{WithIconButton.render?.(args, context)}</div>
     </div>
   ),
 };

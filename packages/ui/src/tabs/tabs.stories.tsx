@@ -5,7 +5,7 @@ import { expect, userEvent, within } from "storybook/test";
 import { Badge } from "../badge/index.js";
 import { Button } from "../button/index.js";
 import { Card } from "../card/index.js";
-import { DollarIcon, TrendingUpIcon, UsersIcon } from "../icons.js";
+import { ClockIcon, DashboardIcon, TokensIcon } from "../icons.js";
 import { Input } from "../input/index.js";
 import { Tabs } from "./index.js";
 
@@ -85,7 +85,7 @@ export const Default: Story = {
   render: (args) => (
     <Card.Root>
       <Card.Header>
-        <h2 className="tabs-story-heading">Settings</h2>
+        <h2 className="tabs-story-heading">Workspace settings</h2>
         <p className="tabs-story-text">Manage your profile, security and plan.</p>
       </Card.Header>
       <Tabs.Root {...args}>
@@ -100,39 +100,10 @@ export const Default: Story = {
   ),
 };
 
-export const FullWidth: Story = {
-  args: { defaultValue: "sign-in" },
-  render: (args) => (
-    <Card.Root className="tabs-story-narrow">
-      <Tabs.Root {...args}>
-        <Tabs.List aria-label="Access" className="tabs-story-full">
-          <Tabs.Tab value="sign-in">Sign in</Tabs.Tab>
-          <Tabs.Tab value="sign-up">Create account</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="sign-in">
-          <form className="tabs-story-stack" onSubmit={(event) => event.preventDefault()}>
-            <Field label="Email" type="email" autoComplete="email" />
-            <Field label="Password" type="password" autoComplete="current-password" />
-            <Button type="submit">Sign in</Button>
-          </form>
-        </Tabs.Panel>
-        <Tabs.Panel value="sign-up">
-          <form className="tabs-story-stack" onSubmit={(event) => event.preventDefault()}>
-            <Field label="Full name" autoComplete="name" />
-            <Field label="Email" type="email" autoComplete="email" />
-            <Field label="Password" type="password" autoComplete="new-password" />
-            <Button type="submit">Create account</Button>
-          </form>
-        </Tabs.Panel>
-      </Tabs.Root>
-    </Card.Root>
-  ),
-};
-
 const metrics = [
-  { label: "Revenue", value: "$48,200", change: "+12.5%" },
-  { label: "Customers", value: "1,284", change: "+4.1%" },
-  { label: "Avg. order", value: "$37.50", change: "+2.3%" },
+  { label: "Sessions this week", value: "42", change: "+12.5%" },
+  { label: "PRs merged", value: "18", change: "+4.1%" },
+  { label: "Avg. duration", value: "9 min", change: "-2.3%" },
 ] as const;
 
 export const WithIcons: Story = {
@@ -141,15 +112,15 @@ export const WithIcons: Story = {
     <Tabs.Root {...args}>
       <Tabs.List aria-label="Dashboard">
         <Tabs.Tab value="overview" className="tabs-story-tab">
-          <TrendingUpIcon aria-hidden="true" size={16} strokeWidth={1.75} />
+          <DashboardIcon aria-hidden="true" />
           Overview
         </Tabs.Tab>
-        <Tabs.Tab value="customers" className="tabs-story-tab">
-          <UsersIcon aria-hidden="true" size={16} strokeWidth={1.75} />
-          Customers
+        <Tabs.Tab value="sessions" className="tabs-story-tab">
+          <ClockIcon aria-hidden="true" />
+          Sessions
         </Tabs.Tab>
         <Tabs.Tab value="billing" className="tabs-story-tab">
-          <DollarIcon aria-hidden="true" size={16} strokeWidth={1.75} />
+          <TokensIcon aria-hidden="true" />
           Billing
         </Tabs.Tab>
       </Tabs.List>
@@ -159,13 +130,13 @@ export const WithIcons: Story = {
             <Card.Root key={label}>
               <p className="tabs-story-text">{label}</p>
               <p className="tabs-story-value">{value}</p>
-              <p className="tabs-story-caption">{change} vs last month</p>
+              <p className="tabs-story-caption">{change} vs last week</p>
             </Card.Root>
           ))}
         </div>
       </Tabs.Panel>
-      <Tabs.Panel value="customers">
-        <p className="tabs-story-text">1,284 customers, 86 of them new this month.</p>
+      <Tabs.Panel value="sessions">
+        <p className="tabs-story-text">42 sessions run this week, 3 failed.</p>
       </Tabs.Panel>
       <Tabs.Panel value="billing">
         <p className="tabs-story-text">No invoices are due.</p>
@@ -306,29 +277,4 @@ export const KeyboardNavigation: Story = {
     await expect(billing).toHaveAttribute("aria-selected", "true");
     await expect(account).toHaveAttribute("aria-selected", "false");
   },
-};
-
-export const DefaultDark: Story = {
-  render: (args, context) => (
-    <div className="tabs-story-dark" data-theme="dark">
-      <div>{Default.render?.(args, context)}</div>
-    </div>
-  ),
-};
-
-export const FullWidthDark: Story = {
-  args: { defaultValue: "sign-in" },
-  render: (args, context) => (
-    <div className="tabs-story-dark" data-theme="dark">
-      <div>{FullWidth.render?.(args, context)}</div>
-    </div>
-  ),
-};
-
-export const ForcedStatesDark: Story = {
-  render: (args, context) => (
-    <div className="tabs-story-dark" data-theme="dark">
-      <div>{ForcedStates.render?.(args, context)}</div>
-    </div>
-  ),
 };

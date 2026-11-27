@@ -135,53 +135,53 @@
     },
     "accent": {
       "$type": "color",
-      "$value": "{primitive.color.brand.700}",
+      "$value": "{primitive.color.neutral.900}",
       "$extensions": {
         "mode": {
-          "light": "{primitive.color.brand.700}",
-          "dark": "{primitive.color.brand.300}"
+          "light": "{primitive.color.neutral.900}",
+          "dark": "{primitive.color.neutral.50}"
         }
       },
-      "$description": "Main interactive color."
+      "$description": "Main interactive color. To use a colored accent, point the accent tokens at another primitive ramp (e.g. brand)."
     },
     "accent-hover": {
       "$type": "color",
-      "$value": "{primitive.color.brand.800}",
+      "$value": "{primitive.color.neutral.800}",
       "$extensions": {
         "mode": {
-          "light": "{primitive.color.brand.800}",
-          "dark": "{primitive.color.brand.200}"
+          "light": "{primitive.color.neutral.800}",
+          "dark": "{primitive.color.neutral.200}"
         }
       }
     },
     "accent-pressed": {
       "$type": "color",
-      "$value": "{primitive.color.brand.900}",
+      "$value": "{primitive.color.neutral.700}",
       "$extensions": {
         "mode": {
-          "light": "{primitive.color.brand.900}",
-          "dark": "{primitive.color.brand.100}"
+          "light": "{primitive.color.neutral.700}",
+          "dark": "{primitive.color.neutral.300}"
         }
       }
     },
     "accent-subtle": {
       "$type": "color",
-      "$value": "{primitive.color.brand.100}",
+      "$value": "{primitive.color.neutral.100}",
       "$extensions": {
         "mode": {
-          "light": "{primitive.color.brand.100}",
-          "dark": "{primitive.color.brand.900}"
+          "light": "{primitive.color.neutral.100}",
+          "dark": "{primitive.color.neutral.800}"
         }
       },
       "$description": "Tinted background, for example a selected item."
     },
     "accent-subtle-pressed": {
       "$type": "color",
-      "$value": "{primitive.color.brand.200}",
+      "$value": "{primitive.color.neutral.200}",
       "$extensions": {
         "mode": {
-          "light": "{primitive.color.brand.200}",
-          "dark": "{primitive.color.brand.800}"
+          "light": "{primitive.color.neutral.200}",
+          "dark": "{primitive.color.neutral.700}"
         }
       },
       "$description": "Tinted background of a low-emphasis control while pressed."
@@ -199,11 +199,11 @@
     },
     "focus": {
       "$type": "color",
-      "$value": "{primitive.color.brand.700}",
+      "$value": "{primitive.color.neutral.600}",
       "$extensions": {
         "mode": {
-          "light": "{primitive.color.brand.700}",
-          "dark": "{primitive.color.brand.300}"
+          "light": "{primitive.color.neutral.600}",
+          "dark": "{primitive.color.neutral.400}"
         }
       },
       "$description": "Focus ring."

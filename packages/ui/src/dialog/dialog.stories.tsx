@@ -25,20 +25,20 @@ type Story = StoryObj<typeof meta>;
 
 const openInFrame = { docs: { story: { inline: false, height: "32rem" } } };
 
-function ConfirmDelete({ container }: { container?: HTMLElement | null }) {
+function ConfirmEndSession() {
   return (
-    <Dialog.Content container={container}>
-      <Dialog.Title>Delete this project?</Dialog.Title>
+    <Dialog.Content>
+      <Dialog.Title>End this session?</Dialog.Title>
       <Dialog.Description>
-        All files, comments and members of "Website redesign" will be removed. This action cannot be
-        undone.
+        The workspace and unmerged changes of "Fix flaky login test" will be removed. This action
+        cannot be undone.
       </Dialog.Description>
       <div className="dialog-story-actions">
         <Dialog.Close>
           <Button variant="secondary">Cancel</Button>
         </Dialog.Close>
         <Dialog.Close>
-          <Button variant="destructive">Delete project</Button>
+          <Button variant="destructive">End session</Button>
         </Dialog.Close>
       </div>
     </Dialog.Content>
@@ -49,22 +49,9 @@ export const Default: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
       <Dialog.Trigger>
-        <Button variant="destructive">Delete project</Button>
+        <Button variant="destructive">End session</Button>
       </Dialog.Trigger>
-      <ConfirmDelete />
-    </Dialog.Root>
-  ),
-};
-
-export const OpenByDefault: Story = {
-  args: { defaultOpen: true },
-  parameters: openInFrame,
-  render: (args) => (
-    <Dialog.Root {...args}>
-      <Dialog.Trigger>
-        <Button variant="destructive">Delete project</Button>
-      </Dialog.Trigger>
-      <ConfirmDelete />
+      <ConfirmEndSession />
     </Dialog.Root>
   ),
 };
@@ -162,7 +149,7 @@ export const Controlled: Story = {
         <Button onClick={() => setOpen(true)}>Open from outside</Button>
         <p className="dialog-story-text">The dialog is {open ? "open" : "closed"}.</p>
         <Dialog.Root open={open} onOpenChange={setOpen}>
-          <ConfirmDelete />
+          <ConfirmEndSession />
         </Dialog.Root>
       </div>
     );
@@ -175,18 +162,18 @@ export const HiddenFirstControl: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
       <Dialog.Content>
-        <Dialog.Title>Rename project</Dialog.Title>
+        <Dialog.Title>Rename environment</Dialog.Title>
         <Dialog.Description>The first control in the markup is not visible.</Dialog.Description>
         <button type="button" className="dialog-story-hidden">
           Hidden shortcut
         </button>
-        <Input aria-label="Project name" defaultValue="Website redesign" />
+        <Input aria-label="Environment name" defaultValue="staging" />
       </Dialog.Content>
     </Dialog.Root>
   ),
   play: async () => {
     const dialog = await within(document.body).findByRole("dialog");
-    const input = within(dialog).getByRole("textbox", { name: "Project name" });
+    const input = within(dialog).getByRole("textbox", { name: "Environment name" });
     await waitFor(() => expect(input).toHaveFocus());
   },
 };
@@ -195,20 +182,20 @@ export const KeyboardNavigation: Story = {
   render: (args) => (
     <Dialog.Root {...args}>
       <Dialog.Trigger>
-        <Button variant="destructive">Delete project</Button>
+        <Button variant="destructive">End session</Button>
       </Dialog.Trigger>
-      <ConfirmDelete />
+      <ConfirmEndSession />
     </Dialog.Root>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole("button", { name: "Delete project" });
+    const trigger = canvas.getByRole("button", { name: "End session" });
     await userEvent.tab();
     await expect(trigger).toHaveFocus();
     await userEvent.keyboard("{Enter}");
     const dialog = await within(document.body).findByRole("dialog");
     const cancel = within(dialog).getByRole("button", { name: "Cancel" });
-    const confirm = within(dialog).getByRole("button", { name: "Delete project" });
+    const confirm = within(dialog).getByRole("button", { name: "End session" });
     await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
     await userEvent.tab();
     await userEvent.tab();
@@ -218,22 +205,5 @@ export const KeyboardNavigation: Story = {
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(within(document.body).queryByRole("dialog")).toBeNull());
     await expect(trigger).toHaveFocus();
-  },
-};
-
-export const OpenDark: Story = {
-  parameters: openInFrame,
-  render: () => {
-    const [container, setContainer] = useState<HTMLElement | null>(null);
-    return (
-      <div className="dialog-story-dark" data-theme="dark" ref={setContainer}>
-        <Dialog.Root defaultOpen>
-          <Dialog.Trigger>
-            <Button variant="destructive">Delete project</Button>
-          </Dialog.Trigger>
-          <ConfirmDelete container={container} />
-        </Dialog.Root>
-      </div>
-    );
   },
 };

@@ -8,17 +8,9 @@ const readFiles = (dir) =>
 const primitive = Object.assign({}, ...readFiles("src/primitives").map((file) => file.primitive));
 const semantic = Object.assign({}, ...readFiles("src/semantic"));
 
-const lookup = (reference) =>
-  reference
-    .slice(1, -1)
-    .split(".")
-    .reduce((node, key) => node[key], { primitive }).$value;
+const steps = Object.keys(primitive.radius);
+const step = (reference) => steps.indexOf(reference.match(/\{primitive\.radius\.(\w+)\}/)[1]);
 
-const rem = (value) => Number.parseFloat(value);
-
-test("a surface radius is the control radius plus the inset", () => {
-  const control = rem(lookup(semantic.radius.control.$value));
-  const surface = rem(lookup(semantic.radius.surface.$value));
-  const inset = rem(lookup(semantic.space.inset.$value));
-  assert.equal(surface, control + inset);
+test("a surface radius is the step above the control radius", () => {
+  assert.equal(step(semantic.radius.surface.$value), step(semantic.radius.control.$value) + 1);
 });

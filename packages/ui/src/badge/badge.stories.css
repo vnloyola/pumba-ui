@@ -8,6 +8,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: var(--pumba-space-3);
 }
 
@@ -41,13 +42,5 @@
 .badge-story-text {
   margin: 0;
   color: var(--pumba-color-text-secondary);
-}
-
-.badge-story-dark {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: var(--pumba-space-8) var(--pumba-space-6);
-  background: var(--pumba-color-background);
-  color: var(--pumba-color-text);
+  font-size: var(--pumba-text-caption-font-size);
 }

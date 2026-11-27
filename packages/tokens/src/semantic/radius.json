@@ -7,7 +7,7 @@
     },
     "surface": {
       "$type": "dimension",
-      "$value": "{primitive.radius.2xl}",
+      "$value": "{primitive.radius.lg}",
       "$description": "Cards, dialogs and popovers."
     },
     "pill": {

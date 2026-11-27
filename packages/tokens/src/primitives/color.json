@@ -61,6 +61,7 @@
         }
       },
       "brand": {
+        "$description": "Accent palette slot: to give Pumba a colored accent, fill this ramp and point the semantic accent tokens at it.",
         "50": {
           "$value": "oklch(0.975 0.014 55)",
           "$type": "color"

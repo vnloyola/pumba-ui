@@ -328,16 +328,11 @@ test.describe("320px story layouts", () => {
   test.use({ viewport: { width: 320, height: 700 } });
 
   const cases = [
-    { id: "components-input--forced-states-dark", selector: "input", bounds: "#storybook-root" },
+    { id: "components-input--forced-states", selector: "input", bounds: "#storybook-root" },
     {
-      id: "components-card--horizontal",
-      selector: ".card-story-horizontal :is(img, h3, p, button)",
-      bounds: ".card-story-horizontal",
-    },
-    {
-      id: "components-card--horizontal-dark",
-      selector: ".card-story-horizontal :is(img, h3, p, button)",
-      bounds: ".card-story-horizontal",
+      id: "components-card--default",
+      selector: ".card-story-session :is(h3, p, span)",
+      bounds: ".card-story-session",
     },
     { id: "foundations-tokens--space", selector: ".tokens-bar", bounds: ".tokens-page" },
   ];
