@@ -17,3 +17,10 @@
     gap: var(--pumba-space-1);
   }
 }
+
+@media (forced-colors: active) {
+  .tokens-bar {
+    forced-color-adjust: none;
+    background-color: Highlight;
+  }
+}

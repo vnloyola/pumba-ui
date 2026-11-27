@@ -253,7 +253,7 @@ test.describe("forced colors", () => {
     await expect(disabled).not.toHaveCSS("box-shadow", "none");
   });
 
-  for (const theme of ["light", "dark"]) {
+  for (const theme of ["light", "dark"] as const) {
     test(`color swatches keep their token colors (${theme})`, async ({ page }) => {
       const readSwatches = () =>
         page
@@ -270,8 +270,119 @@ test.describe("forced colors", () => {
       await page.emulateMedia({ forcedColors: "active" });
       expect(await readSwatches()).toEqual(authored);
     });
+
+    test(`motion demos stay visible and move in forced colors (${theme})`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: theme, forcedColors: "active" });
+      await openStory(page, "foundations-tokens--motion", theme);
+
+      const demos = page.locator(".tokens-motion");
+      await expect(demos).not.toHaveCount(0);
+
+      for (const demo of await demos.all()) {
+        const dot = demo.locator(".tokens-motion-dot");
+        const box = await dot.boundingBox();
+        if (!box) throw new Error("Missing motion dot bounding box");
+        expect(box.width).toBeGreaterThan(0);
+        expect(box.height).toBeGreaterThan(0);
+        expect(
+          await compositedContrast(dot, [".tokens-page", ".tokens-motion-track"]),
+        ).toBeGreaterThanOrEqual(3);
+      }
+
+      const first = demos.first();
+      const dot = first.locator(".tokens-motion-dot");
+      const beforeBox = await dot.boundingBox();
+      if (!beforeBox) throw new Error("Missing motion dot bounding box");
+      await first.getByRole("button", { name: "Play" }).click();
+      await expect(first).toHaveAttribute("data-moved", "true");
+      await expect
+        .poll(async () => (await dot.boundingBox())?.x ?? -1)
+        .toBeGreaterThan(beforeBox.x);
+      expect(
+        await compositedContrast(dot, [".tokens-page", ".tokens-motion-track"]),
+      ).toBeGreaterThanOrEqual(3);
+    });
+
+    test(`space bars stay visible and keep their widths in forced colors (${theme})`, async ({
+      page,
+    }) => {
+      const readRows = () =>
+        page.locator(".tokens-row").evaluateAll((rows) =>
+          rows.map((row) => {
+            const label = row.querySelector("code")?.textContent?.trim() ?? "";
+            const bar = row.querySelector(".tokens-bar");
+            if (!bar) throw new Error(`Missing space bar for ${label}`);
+            const rect = bar.getBoundingClientRect();
+            return { label, width: rect.width, height: rect.height };
+          }),
+        );
+
+      await page.emulateMedia({ colorScheme: theme, forcedColors: "none" });
+      await openStory(page, "foundations-tokens--space", theme);
+      const normalRows = await readRows();
+      expect(normalRows.length).toBeGreaterThan(0);
+
+      await page.emulateMedia({ colorScheme: theme, forcedColors: "active" });
+      const forcedRows = await readRows();
+      expect(forcedRows.map(({ width }) => width)).toEqual(normalRows.map(({ width }) => width));
+
+      const zeroRow = forcedRows.find(({ label }) => label === "--pumba-space-0");
+      expect(zeroRow).toBeDefined();
+      expect(zeroRow?.width).toBe(0);
+
+      const rows = page.locator(".tokens-row");
+      let nonzeroCount = 0;
+      for (let i = 0; i < forcedRows.length; i++) {
+        const row = forcedRows[i];
+        if (!row || row.label === "--pumba-space-0") continue;
+        nonzeroCount += 1;
+        expect(row.width).toBeGreaterThan(0);
+        expect(row.height).toBeGreaterThan(0);
+        expect(
+          await compositedContrast(rows.nth(i).locator(".tokens-bar"), [".tokens-page"]),
+        ).toBeGreaterThanOrEqual(3);
+      }
+      expect(nonzeroCount).toBeGreaterThan(0);
+    });
   }
 });
+
+function compositedContrast(element: Locator, backdrops: string[]) {
+  return element.evaluate((node, selectors) => {
+    const context = document.createElement("canvas").getContext("2d");
+    if (!context) throw new Error("Missing canvas context");
+
+    const sample = () => {
+      const [r = 0, g = 0, b = 0] = Array.from(context.getImageData(0, 0, 1, 1).data, (byte) => {
+        const channel = byte / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const paint = (color: string, alpha = 1) => {
+      context.globalAlpha = alpha;
+      context.fillStyle = color;
+      context.fillRect(0, 0, 1, 1);
+      context.globalAlpha = 1;
+    };
+
+    paint(getComputedStyle(document.documentElement).backgroundColor);
+    paint(getComputedStyle(document.body).backgroundColor);
+    for (const selector of selectors) {
+      const ancestor = node.closest(selector);
+      if (!ancestor) throw new Error(`Missing backdrop: ${selector}`);
+      const ancestorStyle = getComputedStyle(ancestor);
+      paint(ancestorStyle.backgroundColor, Number.parseFloat(ancestorStyle.opacity));
+    }
+    const background = sample();
+
+    const style = getComputedStyle(node);
+    if (style.visibility !== "visible" || style.display === "none") return 1;
+    paint(style.backgroundColor, Number.parseFloat(style.opacity));
+    const foreground = sample();
+    return (Math.max(background, foreground) + 0.05) / (Math.min(background, foreground) + 0.05);
+  }, backdrops);
+}
 
 function boundaryContrast(input: Locator, backdrop: string) {
   return input.evaluate((field, backdrop) => {
